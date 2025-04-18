@@ -331,13 +331,13 @@ local function createGui()
         local settingsSubRadius = 240
         local settingsItems = {
             { name = "toggleKeybindFrame", angle = 0 },
-            { name = "actionKeybindFrame", angle = 60 },
-            { name = "cubeKeybindFrame", angle = 120 },
-            { name = "cubeSizeFrame", angle = 180 },
-            { name = "cubeThicknessFrame", angle = 240 },
-            { name = "cubeTransparencyFrame", angle = 300 },
-            { name = "cubeFloorButton", text = "Floor: Off", angle = 360 },
-            { name = "destroyMenuButton", text = "Destroy", angle = 420 }
+            { name = "actionKeybindFrame", angle = 45 },
+            { name = "cubeKeybindFrame", angle = 90 },
+            { name = "cubeSizeFrame", angle = 135 },
+            { name = "cubeThicknessFrame", angle = 180 },
+            { name = "cubeTransparencyFrame", angle = 225 },
+            { name = "cubeFloorButton", text = "Floor: Off", angle = 270 },
+            { name = "destroyMenuButton", text = "Destroy", angle = 315 }
         }
 
         local settingsElements = {}
