@@ -92,8 +92,8 @@ local function createGui()
     print("GUI Created - Enabled:", gui.Enabled)
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 300, 0, 460)
-    frame.Position = UDim2.new(0.5, -150, 0.5, -230)
+    frame.Size = UDim2.new(0, 300, 0, 505)
+    frame.Position = UDim2.new(0.5, -150, 0.5, -252.5)
     frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     frame.BorderColor3 = Color3.fromRGB(150, 0, 0)
     frame.BorderSizePixel = 2
@@ -479,7 +479,8 @@ local StateManager = {
     cubeSize = 25,
     cubeThickness = 1,
     cubeTransparency = 0.7,
-    isCubeFloorEnabled = false
+    isCubeFloorEnabled = false,
+    connections = {}
 }
 
 function StateManager.toggleState(button, stateKey, label, callback)
@@ -556,15 +557,14 @@ function StateManager.toggleCube(spawnCubeButton)
                 table.insert(cubeConfig.parts, {
                     name = "floor",
                     size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    offset = Vector3.new(0, -cubeSize.Y / 2 + wallThickness / 2, 0)
+                    offset = Vector3.new(0, -cubeSize.Y / 2 - 3 + wallThickness, 0)
                 })
             end
 
             local parts = {}
             local playerPos = player.Character.HumanoidRootPart.Position
             local playerHeightOffset = 2.5
-            local verticalShift = StateManager.isCubeFloorEnabled and (wallThickness / 2) or 0
-            local centerPos = playerPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset + verticalShift, 0)
+            local centerPos = playerPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset, 0)
 
             for _, partConfig in ipairs(cubeConfig.parts) do
                 parts[partConfig.name] = createCubePart(partConfig.size, centerPos + partConfig.offset, cubeModel, cubeConfig.props)
@@ -591,8 +591,7 @@ function StateManager.toggleCube(spawnCubeButton)
                 local newWallThickness = StateManager.cubeThickness
                 local newTransparency = StateManager.cubeTransparency
                 local newPos = player.Character.HumanoidRootPart.Position
-                local newVerticalShift = StateManager.isCubeFloorEnabled and (newWallThickness / 2) or 0
-                local newCenterPos = newPos + Vector3.new(0, newCubeSize.Y / 2 - playerHeightOffset + newVerticalShift, 0)
+                local newCenterPos = newPos + Vector3.new(0, newCubeSize.Y / 2 - playerHeightOffset, 0)
 
                 for _, partConfig in ipairs(cubeConfig.parts) do
                     local part = parts[partConfig.name]
@@ -612,7 +611,7 @@ function StateManager.toggleCube(spawnCubeButton)
                             offset = Vector3.new(0, newCubeSize.Y / 2 - newWallThickness / 2, 0)
                         elseif partConfig.name == "floor" then
                             size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
-                            offset = Vector3.new(0, -newCubeSize.Y / 2 + newWallThickness / 2, 0)
+                            offset = Vector3.new(0, -newCubeSize.Y / 2 - 3 + newWallThickness, 0)
                         end
                         part.Size = size
                         part.Position = newCenterPos + offset
@@ -991,6 +990,17 @@ local function cleanup()
         StateManager.cubeConnection:Disconnect()
         StateManager.cubeConnection = nil
     end
+    for _, connection in ipairs(StateManager.connections) do
+        connection:Disconnect()
+    end
+    StateManager.connections = {}
+    StateManager.toggleKeybind = nil
+    StateManager.actionKeybind = nil
+    StateManager.cubeKeybind = nil
+    StateManager.guiToggleKeybind = nil
+    StateManager.isDeleteModeEnabled = false
+    StateManager.isActionKeyHeld = false
+    StateManager.isCubeSpawned = false
     gui:Destroy()
     selectionBox:Destroy()
     AudioManager.deleteSound:Destroy()
@@ -1053,7 +1063,7 @@ removeKeybindsButton.MouseButton1Click:Connect(function()
 end)
 
 -- Input Handling
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+StateManager.connections.inputBegan = UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
     if input.KeyCode == StateManager.guiToggleKeybind then
         StateManager.toggleGui(frame)
@@ -1066,7 +1076,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     end
 end)
 
-UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+StateManager.connections.inputEnded = UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
     if input.KeyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = false
@@ -1074,7 +1084,7 @@ UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
 end)
 
 -- Outline Handling
-RunService.RenderStepped:Connect(function()
+StateManager.connections.outline = RunService.RenderStepped:Connect(function()
     DeleteRestoreManager.handleOutline(
         mouse,
         selectionBox,
@@ -1087,7 +1097,7 @@ end)
 
 -- Delete Objects or Terrain
 local debounce = false
-mouse.Button1Down:Connect(function()
+StateManager.connections.delete = mouse.Button1Down:Connect(function()
     if debounce or not StateManager.isDeleteModeEnabled or not StateManager.isActionKeyHeld then
         debounce = false
         return
@@ -1153,7 +1163,7 @@ mouse.Button1Down:Connect(function()
 end)
 
 -- Restore Objects
-mouse.Button2Down:Connect(function()
+StateManager.connections.restore = mouse.Button2Down:Connect(function()
     if not StateManager.isActionKeyHeld or not StateManager.isRightClickRestoreEnabled or #DeleteRestoreManager.deletedObjects == 0 then return end
     local data = table.remove(DeleteRestoreManager.deletedObjects)
     local success, err = pcall(function()
