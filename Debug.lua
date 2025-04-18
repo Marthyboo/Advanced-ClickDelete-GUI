@@ -118,20 +118,16 @@ local function createGui()
     })
 
     -- Tab Buttons
-    local mainTabButton = createButton(frame, UDim2.new(0, 70, 0, 25), UDim2.new(0, 5, 0, 40), "Main", {
+    local mainTabButton = createButton(frame, UDim2.new(0, 90, 0, 25), UDim2.new(0, 5, 0, 40), "Main", {
         BackgroundColor3 = Color3.fromRGB(200, 0, 0),
         Font = Enum.Font.SourceSansBold
     })
 
-    local audioTabButton = createButton(frame, UDim2.new(0, 70, 0, 25), UDim2.new(0, 75, 0, 40), "Audio", {
+    local audioTabButton = createButton(frame, UDim2.new(0, 90, 0, 25), UDim2.new(0, 95, 0, 40), "Audio", {
         Font = Enum.Font.SourceSansBold
     })
 
-    local areaDeleteTabButton = createButton(frame, UDim2.new(0, 70, 0, 25), UDim2.new(0, 145, 0, 40), "Area Delete", {
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local settingsTabButton = createButton(frame, UDim2.new(0, 70, 0, 25), UDim2.new(0, 215, 0, 40), "Settings", {
+    local settingsTabButton = createButton(frame, UDim2.new(0, 90, 0, 25), UDim2.new(0, 185, 0, 40), "Settings", {
         Font = Enum.Font.SourceSansBold
     })
 
@@ -150,13 +146,6 @@ local function createGui()
     audioTabFrame.Visible = false
     audioTabFrame.Parent = frame
 
-    local areaDeleteTabFrame = Instance.new("Frame")
-    areaDeleteTabFrame.Size = UDim2.new(1, -10, 0, 385)
-    areaDeleteTabFrame.Position = UDim2.new(0, 5, 0, 70)
-    areaDeleteTabFrame.BackgroundTransparency = 1
-    areaDeleteTabFrame.Visible = false
-    areaDeleteTabFrame.Parent = frame
-
     local settingsTabFrame = Instance.new("Frame")
     settingsTabFrame.Size = UDim2.new(1, -10, 0, 385)
     settingsTabFrame.Position = UDim2.new(0, 5, 0, 70)
@@ -172,12 +161,10 @@ local function createGui()
     local rightClickRestoreButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 70), "Right-Click Restore: On")
     local spawnCubeButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 70), "Spawn Cube: Off")
     local restoreAllButton = createButton(mainTabFrame, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 105), "Restore All")
-    local undoButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 140), "Undo")
-    local redoButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 140), "Redo")
 
     local logFrame = Instance.new("ScrollingFrame")
-    logFrame.Size = UDim2.new(1, 0, 0, 170)
-    logFrame.Position = UDim2.new(0, 0, 0, 180)
+    logFrame.Size = UDim2.new(1, 0, 0, 200)
+    logFrame.Position = UDim2.new(0, 0, 0, 150)
     logFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     logFrame.BorderColor3 = Color3.fromRGB(100, 0, 0)
     logFrame.BorderSizePixel = 1
@@ -279,23 +266,6 @@ local function createGui()
     restoreVolumeFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
     restoreVolumeFill.BorderSizePixel = 0
     restoreVolumeFill.Parent = restoreVolumeSlider
-
-    -- Area Delete Tab Contents
-    local areaDeleteToggleButton = createButton(areaDeleteTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 0), "Area Delete: Off")
-    local deleteRadiusLabel = createLabel(areaDeleteTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 35), "Delete Radius: 10", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local deleteRadiusSlider = createButton(areaDeleteTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 55), "", {
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    })
-
-    local deleteRadiusFill = Instance.new("Frame")
-    deleteRadiusFill.Size = UDim2.new(0.2, 0, 1, 0)
-    deleteRadiusFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    deleteRadiusFill.BorderSizePixel = 0
-    deleteRadiusFill.Parent = deleteRadiusSlider
 
     -- Settings Tab Contents
     local toggleKeybindLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 0), "Toggle Keybind:", {
@@ -445,11 +415,9 @@ local function createGui()
         frame = frame,
         mainTabButton = mainTabButton,
         audioTabButton = audioTabButton,
-        areaDeleteTabButton = areaDeleteTabButton,
         settingsTabButton = settingsTabButton,
         mainTabFrame = mainTabFrame,
         audioTabFrame = audioTabFrame,
-        areaDeleteTabFrame = areaDeleteTabFrame,
         settingsTabFrame = settingsTabFrame,
         toggleButton = toggleButton,
         protectButton = protectButton,
@@ -457,8 +425,6 @@ local function createGui()
         outlineButton = outlineButton,
         rightClickRestoreButton = rightClickRestoreButton,
         restoreAllButton = restoreAllButton,
-        undoButton = undoButton,
-        redoButton = redoButton,
         logFrame = logFrame,
         audioToggleButton = audioToggleButton,
         deleteAudioIdTextBox = deleteAudioIdTextBox,
@@ -488,14 +454,10 @@ local function createGui()
         cubeThicknessLabel = cubeThicknessLabel,
         cubeThicknessSlider = cubeThicknessSlider,
         cubeThicknessFill = cubeThicknessFill,
+        cubeFloorButton = cubeFloorButton,
         cubeTransparencyLabel = cubeTransparencyLabel,
         cubeTransparencySlider = cubeTransparencySlider,
-        cubeTransparencyFill = cubeTransparencyFill,
-        cubeFloorButton = cubeFloorButton,
-        areaDeleteToggleButton = areaDeleteToggleButton,
-        deleteRadiusLabel = deleteRadiusLabel,
-        deleteRadiusSlider = deleteRadiusSlider,
-        deleteRadiusFill = deleteRadiusFill
+        cubeTransparencyFill = cubeTransparencyFill
     }
 end
 
@@ -517,9 +479,7 @@ local StateManager = {
     cubeSize = 25,
     cubeThickness = 1,
     cubeTransparency = 0.7,
-    isCubeFloorEnabled = false,
-    isAreaDeleteEnabled = false,
-    deleteRadius = 10
+    isCubeFloorEnabled = false
 }
 
 function StateManager.toggleState(button, stateKey, label, callback)
@@ -629,6 +589,7 @@ function StateManager.toggleCube(spawnCubeButton)
                 end
                 local newCubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
                 local newWallThickness = StateManager.cubeThickness
+                local newTransparency = StateManager.cubeTransparency
                 local newPos = player.Character.HumanoidRootPart.Position
                 local newVerticalShift = StateManager.isCubeFloorEnabled and (newWallThickness / 2) or 0
                 local newCenterPos = newPos + Vector3.new(0, newCubeSize.Y / 2 - playerHeightOffset + newVerticalShift, 0)
@@ -655,7 +616,7 @@ function StateManager.toggleCube(spawnCubeButton)
                         end
                         part.Size = size
                         part.Position = newCenterPos + offset
-                        part.Transparency = StateManager.cubeTransparency
+                        part.Transparency = newTransparency
                     end
                 end
             end)
@@ -724,8 +685,6 @@ end
 -- DeleteRestoreManager
 local DeleteRestoreManager = {
     deletedObjects = {},
-    undoStack = {},
-    redoStack = {},
     MAX_TERRAIN_BACKUPS = 5,
     deletedStorage = Instance.new("Folder", game.ReplicatedStorage),
     characterCache = {}
@@ -774,99 +733,6 @@ function DeleteRestoreManager.checkTerrain(mouse)
     return nil
 end
 
-function DeleteRestoreManager.undo(logFrame, isAudioEnabled, restoreSound)
-    if #DeleteRestoreManager.undoStack == 0 then return end
-    local action = table.remove(DeleteRestoreManager.undoStack)
-    local success, err = pcall(function()
-        if action.type == "delete" then
-            for _, data in ipairs(action.data) do
-                if data.object then
-                    data.object.Parent = data.originalParent
-                    table.insert(DeleteRestoreManager.deletedObjects, data)
-                elseif data.region then
-                    game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
-                    table.insert(DeleteRestoreManager.deletedObjects, data)
-                end
-            end
-            if isAudioEnabled then restoreSound:Play() end
-        elseif action.type == "restore" then
-            for _, data in ipairs(action.data) do
-                if data.object then
-                    data.object.Parent = DeleteRestoreManager.deletedStorage
-                elseif data.region then
-                    local region = DeleteRestoreManager.getTerrainRegion(data.position)
-                    game.Workspace.Terrain:FillRegion(region, 4, Enum.Material.Air)
-                end
-                for i, obj in ipairs(DeleteRestoreManager.deletedObjects) do
-                    if obj == data then
-                        table.remove(DeleteRestoreManager.deletedObjects, i)
-                        break
-                    end
-                end
-            end
-            if isAudioEnabled then AudioManager.deleteSound:Play() end
-        end
-    end)
-    if success then
-        table.insert(DeleteRestoreManager.redoStack, action)
-        if #DeleteRestoreManager.redoStack > 10 then
-            table.remove(DeleteRestoreManager.redoStack, 1)
-        end
-        DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
-    else
-        warn("Undo failed: " .. tostring(err))
-    end
-end
-
-function DeleteRestoreManager.redo(logFrame, isAudioEnabled, restoreSound)
-    if #DeleteRestoreManager.redoStack == 0 then return end
-    local action = table.remove(DeleteRestoreManager.redoStack)
-    local success, err = pcall(function()
-        if action.type == "delete" then
-            for _, data in ipairs(action.data) do
-                if data.object then
-                    data.object.Parent = DeleteRestoreManager.deletedStorage
-                    for i, obj in ipairs(DeleteRestoreManager.deletedObjects) do
-                        if obj == data then
-                            table.remove(DeleteRestoreManager.deletedObjects, i)
-                            break
-                        end
-                    end
-                elseif data.region then
-                    local region = DeleteRestoreManager.getTerrainRegion(data.position)
-                    game.Workspace.Terrain:FillRegion(region, 4, Enum.Material.Air)
-                    for i, obj in ipairs(DeleteRestoreManager.deletedObjects) do
-                        if obj == data then
-                            table.remove(DeleteRestoreManager.deletedObjects, i)
-                            break
-                        end
-                    end
-                end
-            end
-            if isAudioEnabled then AudioManager.deleteSound:Play() end
-        elseif action.type == "restore" then
-            for _, data in ipairs(action.data) do
-                if data.object then
-                    data.object.Parent = data.originalParent
-                elseif data.region then
-                    game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
-                end
-                table.insert(DeleteRestoreManager.deletedObjects, data)
-            end
-            if isAudioEnabled then restoreSound:Play() end
-        end
-    end)
-    if success then
-        table.insert(DeleteRestoreManager.undoStack, action)
-        if #DeleteRestoreManager.undoStack > 10 then
-            table.remove(DeleteRestoreManager.undoStack, 1)
-        end
-        DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
-    else
-        warn("Redo failed: " .. tostring(err))
-    end
-end
-
 function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
     for _, child in ipairs(logFrame:GetChildren()) do
         if child:IsA("Frame") then child:Destroy() end
@@ -895,17 +761,7 @@ function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSoun
                     data.object.Parent = data.originalParent
                 end)
                 if success then
-                    for i, obj in ipairs(DeleteRestoreManager.deletedObjects) do
-                        if obj == data then
-                            table.remove(DeleteRestoreManager.deletedObjects, i)
-                            break
-                        end
-                    end
-                    table.insert(DeleteRestoreManager.undoStack, { type = "restore", data = { data } })
-                    if #DeleteRestoreManager.undoStack > 10 then
-                        table.remove(DeleteRestoreManager.undoStack, 1)
-                    end
-                    DeleteRestoreManager.redoStack = {}
+                    table.remove(DeleteRestoreManager.deletedObjects, i)
                     DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
                     if isAudioEnabled then restoreSound:Play() end
                 else
@@ -916,17 +772,7 @@ function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSoun
                     game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
                 end)
                 if success then
-                    for i, obj in ipairs(DeleteRestoreManager.deletedObjects) do
-                        if obj == data then
-                            table.remove(DeleteRestoreManager.deletedObjects, i)
-                            break
-                        end
-                    end
-                    table.insert(DeleteRestoreManager.undoStack, { type = "restore", data = { data } })
-                    if #DeleteRestoreManager.undoStack > 10 then
-                        table.remove(DeleteRestoreManager.undoStack, 1)
-                    end
-                    DeleteRestoreManager.redoStack = {}
+                    table.remove(DeleteRestoreManager.deletedObjects, i)
                     DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
                     if isAudioEnabled then restoreSound:Play() end
                 else
@@ -941,7 +787,6 @@ function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSoun
 end
 
 function DeleteRestoreManager.restoreAll(isAudioEnabled, restoreSound)
-    local restored = {}
     for i = #DeleteRestoreManager.deletedObjects, 1, -1 do
         local data = DeleteRestoreManager.deletedObjects[i]
         local success, err = pcall(function()
@@ -951,18 +796,10 @@ function DeleteRestoreManager.restoreAll(isAudioEnabled, restoreSound)
                 game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
             end
             if isAudioEnabled then restoreSound:Play() end
-            table.insert(restored, data)
         end)
         if not success then
             warn("Failed to restore: " .. tostring(err))
         end
-    end
-    if #restored > 0 then
-        table.insert(DeleteRestoreManager.undoStack, { type = "restore", data = restored })
-        if #DeleteRestoreManager.undoStack > 10 then
-            table.remove(DeleteRestoreManager.undoStack, 1)
-        end
-        DeleteRestoreManager.redoStack = {}
     end
     DeleteRestoreManager.deletedObjects = {}
 end
@@ -996,11 +833,9 @@ local gui = guiElements.gui
 local frame = guiElements.frame
 local mainTabButton = guiElements.mainTabButton
 local audioTabButton = guiElements.audioTabButton
-local areaDeleteTabButton = guiElements.areaDeleteTabButton
 local settingsTabButton = guiElements.settingsTabButton
 local mainTabFrame = guiElements.mainTabFrame
 local audioTabFrame = guiElements.audioTabFrame
-local areaDeleteTabFrame = guiElements.areaDeleteTabFrame
 local settingsTabFrame = guiElements.settingsTabFrame
 local toggleButton = guiElements.toggleButton
 local protectButton = guiElements.protectButton
@@ -1008,8 +843,6 @@ local terrainButton = guiElements.terrainButton
 local outlineButton = guiElements.outlineButton
 local rightClickRestoreButton = guiElements.rightClickRestoreButton
 local restoreAllButton = guiElements.restoreAllButton
-local undoButton = guiElements.undoButton
-local redoButton = guiElements.redoButton
 local logFrame = guiElements.logFrame
 local audioToggleButton = guiElements.audioToggleButton
 local deleteAudioIdTextBox = guiElements.deleteAudioIdTextBox
@@ -1039,14 +872,10 @@ local cubeSizeFill = guiElements.cubeSizeFill
 local cubeThicknessLabel = guiElements.cubeThicknessLabel
 local cubeThicknessSlider = guiElements.cubeThicknessSlider
 local cubeThicknessFill = guiElements.cubeThicknessFill
+local cubeFloorButton = guiElements.cubeFloorButton
 local cubeTransparencyLabel = guiElements.cubeTransparencyLabel
 local cubeTransparencySlider = guiElements.cubeTransparencySlider
 local cubeTransparencyFill = guiElements.cubeTransparencyFill
-local cubeFloorButton = guiElements.cubeFloorButton
-local areaDeleteToggleButton = guiElements.areaDeleteToggleButton
-local deleteRadiusLabel = guiElements.deleteRadiusLabel
-local deleteRadiusSlider = guiElements.deleteRadiusSlider
-local deleteRadiusFill = guiElements.deleteRadiusFill
 
 -- Visual feedback
 local selectionBox = Instance.new("SelectionBox", game.Workspace)
@@ -1070,10 +899,10 @@ local function applyHover(button)
 end
 for _, btn in ipairs({
     toggleButton, protectButton, terrainButton, outlineButton, rightClickRestoreButton, spawnCubeButton,
-    restoreAllButton, undoButton, redoButton, audioToggleButton, setDeleteAudioIdButton, setRestoreAudioIdButton,
-    mainTabButton, audioTabButton, areaDeleteTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
+    restoreAllButton, audioToggleButton, setDeleteAudioIdButton, setRestoreAudioIdButton,
+    mainTabButton, audioTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
     destroyMenuButton, destroyAndRevertButton, setToggleKeybindButton, setActionKeybindButton,
-    setCubeKeybindButton, cubeFloorButton, areaDeleteToggleButton
+    setCubeKeybindButton, cubeFloorButton
 }) do
     applyHover(btn)
 end
@@ -1082,17 +911,14 @@ end
 local function switchTab(activeButton, activeFrame)
     mainTabFrame.Visible = activeFrame == mainTabFrame
     audioTabFrame.Visible = activeFrame == audioTabFrame
-    areaDeleteTabFrame.Visible = activeFrame == areaDeleteTabFrame
     settingsTabFrame.Visible = activeFrame == settingsTabFrame
     mainTabButton.BackgroundColor3 = activeButton == mainTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
     audioTabButton.BackgroundColor3 = activeButton == audioTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
-    areaDeleteTabButton.BackgroundColor3 = activeButton == areaDeleteTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
     settingsTabButton.BackgroundColor3 = activeButton == settingsTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
 end
 
 mainTabButton.MouseButton1Click:Connect(function() switchTab(mainTabButton, mainTabFrame) end)
 audioTabButton.MouseButton1Click:Connect(function() switchTab(audioTabButton, audioTabFrame) end)
-areaDeleteTabButton.MouseButton1Click:Connect(function() switchTab(areaDeleteTabButton, areaDeleteTabFrame) end)
 settingsTabButton.MouseButton1Click:Connect(function() switchTab(settingsTabButton, settingsTabFrame) end)
 
 -- StateManager Connections
@@ -1135,10 +961,6 @@ cubeFloorButton.MouseButton1Click:Connect(function()
     end)
 end)
 
-areaDeleteToggleButton.MouseButton1Click:Connect(function()
-    StateManager.toggleState(areaDeleteToggleButton, "isAreaDeleteEnabled", "Area Delete: ")
-end)
-
 -- AudioManager Connections
 setDeleteAudioIdButton.MouseButton1Click:Connect(function()
     AudioManager.setAudioId(deleteAudioIdTextBox, AudioManager.deleteSound)
@@ -1155,20 +977,11 @@ AudioManager.setupVolumeSlider(restoreVolumeSlider, restoreVolumeFill, restoreVo
 StateManager.setupSlider(cubeSizeSlider, cubeSizeFill, cubeSizeLabel, "cubeSize", 10, 50, "Cube Size: %d")
 StateManager.setupSlider(cubeThicknessSlider, cubeThicknessFill, cubeThicknessLabel, "cubeThickness", 0.2, 25, "Cube Thickness: %.1f")
 StateManager.setupSlider(cubeTransparencySlider, cubeTransparencyFill, cubeTransparencyLabel, "cubeTransparency", 0, 1, "Cube Transparency: %.1f")
-StateManager.setupSlider(deleteRadiusSlider, deleteRadiusFill, deleteRadiusLabel, "deleteRadius", 5, 50, "Delete Radius: %d")
 
 -- DeleteRestoreManager Connections
 restoreAllButton.MouseButton1Click:Connect(function()
     DeleteRestoreManager.restoreAll(StateManager.isAudioEnabled, AudioManager.restoreSound)
     DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
-end)
-
-undoButton.MouseButton1Click:Connect(function()
-    DeleteRestoreManager.undo(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
-end)
-
-redoButton.MouseButton1Click:Connect(function()
-    DeleteRestoreManager.redo(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
 end)
 
 local function cleanup()
@@ -1281,41 +1094,6 @@ mouse.Button1Down:Connect(function()
     end
     debounce = true
 
-    local deletedData = {}
-    if StateManager.isAreaDeleteEnabled then
-        local hitPosition = mouse.Hit.Position
-        local region = Region3.new(
-            hitPosition - Vector3.new(StateManager.deleteRadius, StateManager.deleteRadius, StateManager.deleteRadius),
-            hitPosition + Vector3.new(StateManager.deleteRadius, StateManager.deleteRadius, StateManager.deleteRadius)
-        )
-        local parts = game.Workspace:FindPartsInRegion3(region, nil, 1000)
-        for _, part in ipairs(parts) do
-            if part:IsA("Terrain") or DeleteRestoreManager.isBodyPartOrCharacter(part, StateManager.isCharacterProtected) then
-                continue
-            end
-            local success, err = pcall(function()
-                local originalParent = part.Parent
-                part.Parent = DeleteRestoreManager.deletedStorage
-                table.insert(deletedData, { object = part, originalParent = originalParent, name = part.Name })
-                table.insert(DeleteRestoreManager.deletedObjects, { object = part, originalParent = originalParent, name = part.Name })
-            end)
-            if not success then
-                warn("Failed to delete object in area: " .. tostring(err))
-            end
-        end
-        if #deletedData > 0 then
-            table.insert(DeleteRestoreManager.undoStack, { type = "delete", data = deletedData })
-            if #DeleteRestoreManager.undoStack > 10 then
-                table.remove(DeleteRestoreManager.undoStack, 1)
-            end
-            DeleteRestoreManager.redoStack = {}
-            if StateManager.isAudioEnabled then AudioManager.deleteSound:Play() end
-            DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
-        end
-        debounce = false
-        return
-    end
-
     if StateManager.isTerrainDeletionEnabled then
         local hitPosition = DeleteRestoreManager.checkTerrain(mouse)
         if hitPosition then
@@ -1323,7 +1101,6 @@ mouse.Button1Down:Connect(function()
             local region = DeleteRestoreManager.getTerrainRegion(hitPosition)
             local regionMin = region.CFrame.Position - region.Size / 2
             local backup = terrain:CopyRegion(region)
-            table.insert(deletedData, { region = backup, position = regionMin, name = "Terrain" })
             table.insert(DeleteRestoreManager.deletedObjects, { region = backup, position = regionMin, name = "Terrain" })
 
             local terrainCount = 0
@@ -1345,11 +1122,6 @@ mouse.Button1Down:Connect(function()
                 if StateManager.isAudioEnabled then AudioManager.deleteSound:Play() end
             end)
             if success then
-                table.insert(DeleteRestoreManager.undoStack, { type = "delete", data = deletedData })
-                if #DeleteRestoreManager.undoStack > 10 then
-                    table.remove(DeleteRestoreManager.undoStack, 1)
-                end
-                DeleteRestoreManager.redoStack = {}
                 DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
             else
                 warn("Failed to clear terrain: " .. tostring(err))
@@ -1365,65 +1137,44 @@ mouse.Button1Down:Connect(function()
         return
     end
 
-    table.insert(deletedData, { object = target, originalParent = target.Parent, name = target.Name })
     table.insert(DeleteRestoreManager.deletedObjects, { object = target, originalParent = target.Parent, name = target.Name })
     local success, err = pcall(function()
         target.Parent = DeleteRestoreManager.deletedStorage
         if StateManager.isAudioEnabled then AudioManager.deleteSound:Play() end
     end)
     if success then
-        table.insert(DeleteRestoreManager.undoStack, { type = "delete", data = deletedData })
-        if #DeleteRestoreManager.undoStack > 10 then
-            table.remove(DeleteRestoreManager.undoStack, 1)
-        end
-        DeleteRestoreManager.redoStack = {}
         DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
     else
         warn("Failed to delete object: " .. tostring(err))
-        for i, obj in ipairs(DeleteRestoreManager.deletedObjects) do
-            if obj.object == target then
-                table.remove(DeleteRestoreManager.deletedObjects, i)
-                break
-            end
-        end
     end
+
+    task.wait(0.1)
     debounce = false
 end)
 
--- Right-Click Restore
+-- Restore Objects
 mouse.Button2Down:Connect(function()
-    if not StateManager.isRightClickRestoreEnabled or not StateManager.isDeleteModeEnabled or not StateManager.isActionKeyHeld then
-        return
-    end
-    local target = mouse.Target
-    if not target then return end
-
-    for i = #DeleteRestoreManager.deletedObjects, 1, -1 do
-        local data = DeleteRestoreManager.deletedObjects[i]
-        if data.object == target and target.Parent == DeleteRestoreManager.deletedStorage then
-            local success, err = pcall(function()
-                target.Parent = data.originalParent
-            end)
-            if success then
-                table.remove(DeleteRestoreManager.deletedObjects, i)
-                table.insert(DeleteRestoreManager.undoStack, { type = "restore", data = { data } })
-                if #DeleteRestoreManager.undoStack > 10 then
-                    table.remove(DeleteRestoreManager.undoStack, 1)
-                end
-                DeleteRestoreManager.redoStack = {}
-                DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
-                if StateManager.isAudioEnabled then AudioManager.restoreSound:Play() end
-            else
-                warn("Failed to restore object: " .. tostring(err))
-            end
-            break
+    if not StateManager.isActionKeyHeld or not StateManager.isRightClickRestoreEnabled or #DeleteRestoreManager.deletedObjects == 0 then return end
+    local data = table.remove(DeleteRestoreManager.deletedObjects)
+    local success, err = pcall(function()
+        if data.object then
+            data.object.Parent = data.originalParent
+        elseif data.region then
+            game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
         end
+        if StateManager.isAudioEnabled then AudioManager.restoreSound:Play() end
+    end)
+    if success then
+        DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
+    else
+        warn("Failed to restore: " .. tostring(err))
     end
 end)
 
--- Character Respawn Handling
+-- Handle Character Respawn
 player.CharacterAdded:Connect(function(character)
     print("Character respawned:", character.Name)
+    DeleteRestoreManager.characterCache = {}
     if StateManager.isCubeSpawned then
         StateManager.toggleCube(spawnCubeButton)
         StateManager.toggleCube(spawnCubeButton)
