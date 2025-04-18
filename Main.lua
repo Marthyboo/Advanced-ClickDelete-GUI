@@ -385,12 +385,27 @@ local function createGui()
     cubeThicknessFill.BorderSizePixel = 0
     cubeThicknessFill.Parent = cubeThicknessSlider
 
-    local cubeFloorButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 240), "Cube Floor: Off")
+    local cubeTransparencyLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 240), "Cube Transparency: 0.7", {
+        TextColor3 = Color3.fromRGB(200, 200, 200),
+        Font = Enum.Font.SourceSansBold
+    })
 
-    local restoreKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 275), "Restore All Keybinds")
-    local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 310), "Remove Every Keybind")
-    local destroyMenuButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 345), "Destroy Menu")
-    local destroyAndRevertButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 345), "Destroy & Revert")
+    local cubeTransparencySlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 260), "", {
+        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    })
+
+    local cubeTransparencyFill = Instance.new("Frame")
+    cubeTransparencyFill.Size = UDim2.new(0.7, 0, 1, 0)
+    cubeTransparencyFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    cubeTransparencyFill.BorderSizePixel = 0
+    cubeTransparencyFill.Parent = cubeTransparencySlider
+
+    local cubeFloorButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 285), "Cube Floor: Off")
+
+    local restoreKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 320), "Restore All Keybinds")
+    local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 355), "Remove Every Keybind")
+    local destroyMenuButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 390), "Destroy Menu")
+    local destroyAndRevertButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 390), "Destroy & Revert")
 
     gui.Parent = playerGui
     print("DeleteGui successfully parented to PlayerGui")
@@ -439,7 +454,10 @@ local function createGui()
         cubeThicknessLabel = cubeThicknessLabel,
         cubeThicknessSlider = cubeThicknessSlider,
         cubeThicknessFill = cubeThicknessFill,
-        cubeFloorButton = cubeFloorButton
+        cubeFloorButton = cubeFloorButton,
+        cubeTransparencyLabel = cubeTransparencyLabel,
+        cubeTransparencySlider = cubeTransparencySlider,
+        cubeTransparencyFill = cubeTransparencyFill
     }
 end
 
@@ -460,6 +478,7 @@ local StateManager = {
     cubeConnection = nil,
     cubeSize = 25,
     cubeThickness = 1,
+    cubeTransparency = 0.7,
     isCubeFloorEnabled = false
 }
 
@@ -523,52 +542,32 @@ function StateManager.toggleCube(spawnCubeButton)
             cubeModel.Name = cubeName
             local cubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
             local wallThickness = StateManager.cubeThickness
-            local props = { transparency = 0.7, brickColor = BrickColor.new("Really red") }
+            local cubeConfig = {
+                props = { transparency = StateManager.cubeTransparency, brickColor = BrickColor.new("Really red") },
+                parts = {
+                    { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, 0, 0) },
+                    { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, 0, 0) },
+                    { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness), offset = Vector3.new(0, 0, -cubeSize.Z / 2 + wallThickness / 2) },
+                    { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness), offset = Vector3.new(0, 0, cubeSize.Z / 2 - wallThickness / 2) },
+                    { name = "ceiling", size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z), offset = Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0) }
+                }
+            }
+            if StateManager.isCubeFloorEnabled then
+                table.insert(cubeConfig.parts, {
+                    name = "floor",
+                    size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
+                    offset = Vector3.new(0, -cubeSize.Y / 2 + wallThickness / 2, 0)
+                })
+            end
+
+            local parts = {}
             local playerPos = player.Character.HumanoidRootPart.Position
             local playerHeightOffset = 2.5
             local verticalShift = StateManager.isCubeFloorEnabled and (wallThickness / 2) or 0
             local centerPos = playerPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset + verticalShift, 0)
 
-            -- Create cube parts
-            local parts = {
-                leftWall = createCubePart(
-                    Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z),
-                    centerPos + Vector3.new(-cubeSize.X / 2 + wallThickness / 2, 0, 0),
-                    cubeModel,
-                    props
-                ),
-                rightWall = createCubePart(
-                    Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z),
-                    centerPos + Vector3.new(cubeSize.X / 2 - wallThickness / 2, 0, 0),
-                    cubeModel,
-                    props
-                ),
-                frontWall = createCubePart(
-                    Vector3.new(cubeSize.X, cubeSize.Y, wallThickness),
-                    centerPos + Vector3.new(0, 0, -cubeSize.Z / 2 + wallThickness / 2),
-                    cubeModel,
-                    props
-                ),
-                backWall = createCubePart(
-                    Vector3.new(cubeSize.X, cubeSize.Y, wallThickness),
-                    centerPos + Vector3.new(0, 0, cubeSize.Z / 2 - wallThickness / 2),
-                    cubeModel,
-                    props
-                ),
-                ceiling = createCubePart(
-                    Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    centerPos + Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0),
-                    cubeModel,
-                    props
-                )
-            }
-            if StateManager.isCubeFloorEnabled then
-                parts.floor = createCubePart(
-                    Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    centerPos + Vector3.new(0, -cubeSize.Y / 2 + wallThickness / 2, 0),
-                    cubeModel,
-                    props
-                )
+            for _, partConfig in ipairs(cubeConfig.parts) do
+                parts[partConfig.name] = createCubePart(partConfig.size, centerPos + partConfig.offset, cubeModel, cubeConfig.props)
             end
 
             cubeModel.Parent = game.Workspace
@@ -588,27 +587,37 @@ function StateManager.toggleCube(spawnCubeButton)
                     spawnCubeButton.Text = "Spawn Cube: Off"
                     return
                 end
-                local cubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
-                local wallThickness = StateManager.cubeThickness
-                parts.leftWall.Size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z)
-                parts.rightWall.Size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z)
-                parts.frontWall.Size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness)
-                parts.backWall.Size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness)
-                parts.ceiling.Size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z)
-                if parts.floor then
-                    parts.floor.Size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z)
-                end
-
+                local newCubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
+                local newWallThickness = StateManager.cubeThickness
+                local newTransparency = StateManager.cubeTransparency
                 local newPos = player.Character.HumanoidRootPart.Position
-                local verticalShift = StateManager.isCubeFloorEnabled and (wallThickness / 2) or 0
-                local newCenterPos = newPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset + verticalShift, 0)
-                parts.leftWall.Position = newCenterPos + Vector3.new(-cubeSize.X / 2 + wallThickness / 2, 0, 0)
-                parts.rightWall.Position = newCenterPos + Vector3.new(cubeSize.X / 2 - wallThickness / 2, 0, 0)
-                parts.frontWall.Position = newCenterPos + Vector3.new(0, 0, -cubeSize.Z / 2 + wallThickness / 2)
-                parts.backWall.Position = newCenterPos + Vector3.new(0, 0, cubeSize.Z / 2 - wallThickness / 2)
-                parts.ceiling.Position = newCenterPos + Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0)
-                if parts.floor then
-                    parts.floor.Position = newCenterPos + Vector3.new(0, -cubeSize.Y / 2 + wallThickness / 2, 0)
+                local newVerticalShift = StateManager.isCubeFloorEnabled and (newWallThickness / 2) or 0
+                local newCenterPos = newPos + Vector3.new(0, newCubeSize.Y / 2 - playerHeightOffset + newVerticalShift, 0)
+
+                for _, partConfig in ipairs(cubeConfig.parts) do
+                    local part = parts[partConfig.name]
+                    if part then
+                        local size = partConfig.size
+                        local offset = partConfig.offset
+                        if partConfig.name == "leftWall" or partConfig.name == "rightWall" then
+                            size = Vector3.new(newWallThickness, newCubeSize.Y, newCubeSize.Z)
+                            offset = partConfig.name == "leftWall" and Vector3.new(-newCubeSize.X / 2 + newWallThickness / 2, 0, 0) or
+                                     Vector3.new(newCubeSize.X / 2 - newWallThickness / 2, 0, 0)
+                        elseif partConfig.name == "frontWall" or partConfig.name == "backWall" then
+                            size = Vector3.new(newCubeSize.X, newCubeSize.Y, newWallThickness)
+                            offset = partConfig.name == "frontWall" and Vector3.new(0, 0, -newCubeSize.Z / 2 + newWallThickness / 2) or
+                                     Vector3.new(0, 0, newCubeSize.Z / 2 - newWallThickness / 2)
+                        elseif partConfig.name == "ceiling" then
+                            size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
+                            offset = Vector3.new(0, newCubeSize.Y / 2 - newWallThickness / 2, 0)
+                        elseif partConfig.name == "floor" then
+                            size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
+                            offset = Vector3.new(0, -newCubeSize.Y / 2 + newWallThickness / 2, 0)
+                        end
+                        part.Size = size
+                        part.Position = newCenterPos + offset
+                        part.Transparency = newTransparency
+                    end
                 end
             end)
 
@@ -715,7 +724,7 @@ function DeleteRestoreManager.getTerrainRegion(position)
 end
 
 function DeleteRestoreManager.checkTerrain(mouse)
-    local terrain = game.Workspace.Dll
+    local terrain = game.Workspace.Terrain
     local hitPosition = mouse.Hit.Position
     local cellPos = terrain:WorldToCell(hitPosition)
     if terrain:GetCell(cellPos.X, cellPos.Y, cellPos.Z) ~= Enum.Material.Air then
@@ -864,6 +873,9 @@ local cubeThicknessLabel = guiElements.cubeThicknessLabel
 local cubeThicknessSlider = guiElements.cubeThicknessSlider
 local cubeThicknessFill = guiElements.cubeThicknessFill
 local cubeFloorButton = guiElements.cubeFloorButton
+local cubeTransparencyLabel = guiElements.cubeTransparencyLabel
+local cubeTransparencySlider = guiElements.cubeTransparencySlider
+local cubeTransparencyFill = guiElements.cubeTransparencyFill
 
 -- Visual feedback
 local selectionBox = Instance.new("SelectionBox", game.Workspace)
@@ -964,6 +976,7 @@ AudioManager.setupVolumeSlider(restoreVolumeSlider, restoreVolumeFill, restoreVo
 -- Slider Connections
 StateManager.setupSlider(cubeSizeSlider, cubeSizeFill, cubeSizeLabel, "cubeSize", 10, 50, "Cube Size: %d")
 StateManager.setupSlider(cubeThicknessSlider, cubeThicknessFill, cubeThicknessLabel, "cubeThickness", 0.2, 25, "Cube Thickness: %.1f")
+StateManager.setupSlider(cubeTransparencySlider, cubeTransparencyFill, cubeTransparencyLabel, "cubeTransparency", 0, 1, "Cube Transparency: %.1f")
 
 -- DeleteRestoreManager Connections
 restoreAllButton.MouseButton1Click:Connect(function()
