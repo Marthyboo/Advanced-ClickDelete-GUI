@@ -1,5 +1,9 @@
+local new = Instance.new
+local rgb = Color3.fromRGB
+local ud = UDim2.new
+
 -- Services
-local UserInputService = game:GetService("UserInputService")
+local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local PhysicsService = game:GetService("PhysicsService")
@@ -47,19 +51,32 @@ local function notify(title, message)
     print(string.format("[%s]: %s", title, message))
 end
 
+-- Default UI properties
+local defaultButtonProps = {
+    BackgroundColor3 = rgb(30, 30, 30),
+    BorderColor3 = rgb(100, 0, 0),
+    BorderSizePixel = 1,
+    TextColor3 = rgb(255, 255, 255),
+    Font = Enum.Font.SourceSans,
+    TextSize = 16
+}
+local defaultLabelProps = {
+    BackgroundTransparency = 1,
+    TextColor3 = rgb(255, 255, 255),
+    Font = Enum.Font.SourceSans,
+    TextSize = 14
+}
+
 -- Helper Functions for UI Creation
 local function createButton(parent, size, position, text, extraProps)
-    local button = Instance.new("TextButton")
+    local button = new("TextButton")
     button.Size = size
     button.Position = position
-    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    button.BorderColor3 = Color3.fromRGB(100, 0, 0)
-    button.BorderSizePixel = 1
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Text = text
-    button.Font = Enum.Font.SourceSans
-    button.TextSize = 16
     button.Parent = parent
+    for key, value in pairs(defaultButtonProps) do
+        button[key] = value
+    end
     for key, value in pairs(extraProps or {}) do
         button[key] = value
     end
@@ -67,15 +84,14 @@ local function createButton(parent, size, position, text, extraProps)
 end
 
 local function createLabel(parent, size, position, text, extraProps)
-    local label = Instance.new("TextLabel")
+    local label = new("TextLabel")
     label.Size = size
     label.Position = position
-    label.BackgroundTransparency = 1
-    label.TextColor3 = Color3.fromRGB(255, 255, 255)
     label.Text = text
-    label.Font = Enum.Font.SourceSans
-    label.TextSize = 14
     label.Parent = parent
+    for key, value in pairs(defaultLabelProps) do
+        label[key] = value
+    end
     for key, value in pairs(extraProps or {}) do
         label[key] = value
     end
@@ -84,18 +100,19 @@ end
 
 -- GUI Creation Function
 local function createGui()
-    local gui = Instance.new("ScreenGui")
+    print("Starting createGui")
+    local gui = new("ScreenGui")
     gui.Name = "DeleteGui"
     gui.ResetOnSpawn = false
     gui.Enabled = true
     gui.IgnoreGuiInset = true
     print("GUI Created - Enabled:", gui.Enabled)
 
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 300, 0, 460)
-    frame.Position = UDim2.new(0.5, -150, 0.5, -230)
-    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    frame.BorderColor3 = Color3.fromRGB(150, 0, 0)
+    local frame = new("Frame")
+    frame.Size = ud(0, 300, 0, 400)
+    frame.Position = ud(0.5, -150, 0.5, -200)
+    frame.BackgroundColor3 = rgb(20, 20, 20)
+    frame.BorderColor3 = rgb(150, 0, 0)
     frame.BorderSizePixel = 2
     frame.Active = true
     frame.Draggable = true
@@ -103,295 +120,264 @@ local function createGui()
     frame.Parent = gui
     print("Frame Created - Visible:", frame.Visible)
 
-    local framePadding = Instance.new("UIPadding")
+    local framePadding = new("UIPadding")
     framePadding.PaddingTop = UDim.new(0, 5)
     framePadding.PaddingBottom = UDim.new(0, 5)
     framePadding.PaddingLeft = UDim.new(0, 5)
     framePadding.PaddingRight = UDim.new(0, 5)
     framePadding.Parent = frame
 
-    local title = createLabel(frame, UDim2.new(1, -10, 0, 30), UDim2.new(0, 5, 0, 5), "Delete Tool", {
+    local title = createLabel(frame, ud(1, -10, 0, 30), ud(0, 5, 0, 5), "Delete Tool", {
         BackgroundTransparency = 0,
-        BackgroundColor3 = Color3.fromRGB(200, 0, 0),
+        BackgroundColor3 = rgb(200, 0, 0),
         Font = Enum.Font.SourceSansBold,
         TextSize = 18
     })
 
     -- Tab Buttons
-    local mainTabButton = createButton(frame, UDim2.new(0, 90, 0, 25), UDim2.new(0, 5, 0, 40), "Main", {
-        BackgroundColor3 = Color3.fromRGB(200, 0, 0),
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local audioTabButton = createButton(frame, UDim2.new(0, 90, 0, 25), UDim2.new(0, 95, 0, 40), "Audio", {
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local settingsTabButton = createButton(frame, UDim2.new(0, 90, 0, 25), UDim2.new(0, 185, 0, 40), "Settings", {
-        Font = Enum.Font.SourceSansBold
-    })
+    local tabButtons = {
+        { name = "Main", pos = ud(0, 5, 0, 40), props = { BackgroundColor3 = rgb(200, 0, 0), Font = Enum.Font.SourceSansBold } },
+        { name = "Audio", pos = ud(0, 95, 0, 40), props = { Font = Enum.Font.SourceSansBold } },
+        { name = "Settings", pos = ud(0, 185, 0, 40), props = { Font = Enum.Font.SourceSansBold } }
+    }
+    local tabButtonInstances = {}
+    for i, tab in ipairs(tabButtons) do
+        tabButtonInstances[i] = createButton(frame, ud(0, 90, 0, 25), tab.pos, tab.name, tab.props)
+    end
+    local mainTabButton, audioTabButton, settingsTabButton = tabButtonInstances[1], tabButtonInstances[2], tabButtonInstances[3]
 
     -- Tab Frames
-    local mainTabFrame = Instance.new("Frame")
-    mainTabFrame.Size = UDim2.new(1, -10, 0, 385)
-    mainTabFrame.Position = UDim2.new(0, 5, 0, 70)
-    mainTabFrame.BackgroundTransparency = 1
+    local tabFrameProps = { Size = ud(1, -10, 0, 280), Position = ud(0, 5, 0, 70), BackgroundTransparency = 1 }
+    local mainTabFrame = new("Frame")
     mainTabFrame.Visible = true
     mainTabFrame.Parent = frame
-
-    local audioTabFrame = Instance.new("Frame")
-    audioTabFrame.Size = UDim2.new(1, -10, 0, 385)
-    audioTabFrame.Position = UDim2.new(0, 5, 0, 70)
-    audioTabFrame.BackgroundTransparency = 1
+    local audioTabFrame = new("Frame")
     audioTabFrame.Visible = false
     audioTabFrame.Parent = frame
-
-    local settingsTabFrame = Instance.new("Frame")
-    settingsTabFrame.Size = UDim2.new(1, -10, 0, 385)
-    settingsTabFrame.Position = UDim2.new(0, 5, 0, 70)
-    settingsTabFrame.BackgroundTransparency = 1
+    local settingsTabFrame = new("Frame")
     settingsTabFrame.Visible = false
     settingsTabFrame.Parent = frame
+    for key, value in pairs(tabFrameProps) do
+        mainTabFrame[key] = value
+        audioTabFrame[key] = value
+        settingsTabFrame[key] = value
+    end
+
+    -- Settings Tab Layout
+    print("Creating settingsTabFrame UIListLayout")
+    local settingsLayout = new("UIListLayout")
+    settingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    settingsLayout.Padding = UDim.new(0, 3)
+    settingsLayout.Parent = settingsTabFrame
 
     -- Main Tab Contents
-    local toggleButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 0), "Delete Mode: Off")
-    local protectButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 0), "Protect Character: Off")
-    local terrainButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 35), "Terrain Deletion: Off")
-    local outlineButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 35), "Outline: On")
-    local rightClickRestoreButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 70), "Right-Click Restore: On")
-    local spawnCubeButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 70), "Spawn Cube: Off")
-    local restoreAllButton = createButton(mainTabFrame, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 105), "Restore All")
+    local mainButtons = {
+        { name = "toggleButton", text = "Delete Mode: Off", size = ud(0, 130, 0, 30), pos = ud(0, 0, 0, 0) },
+        { name = "protectButton", text = "Protect Character: Off", size = ud(0, 130, 0, 30), pos = ud(0, 140, 0, 0) },
+        { name = "terrainButton", text = "Terrain Deletion: Off", size = ud(0, 130, 0, 30), pos = ud(0, 0, 0, 35) },
+        { name = "outlineButton", text = "Outline: On", size = ud(0, 130, 0, 30), pos = ud(0, 140, 0, 35) },
+        { name = "rightClickRestoreButton", text = "Right-Click Restore: On", size = ud(0, 130, 0, 30), pos = ud(0, 0, 0, 70) },
+        { name = "spawnCubeButton", text = "Spawn Cube: Off", size = ud(0, 130, 0, 30), pos = ud(0, 140, 0, 70) },
+        { name = "restoreAllButton", text = "Restore All", size = ud(1, 0, 0, 30), pos = ud(0, 0, 0, 105) }
+    }
+    local mainButtonInstances = {}
+    for _, btn in ipairs(mainButtons) do
+        mainButtonInstances[btn.name] = createButton(mainTabFrame, btn.size, btn.pos, btn.text)
+    end
 
-    local logFrame = Instance.new("ScrollingFrame")
-    logFrame.Size = UDim2.new(1, 0, 0, 200)
-    logFrame.Position = UDim2.new(0, 0, 0, 150)
-    logFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    logFrame.BorderColor3 = Color3.fromRGB(100, 0, 0)
+    local logFrame = new("ScrollingFrame")
+    logFrame.Size = ud(1, 0, 0, 140)
+    logFrame.Position = ud(0, 0, 0, 140)
+    logFrame.BackgroundColor3 = rgb(30, 30, 30)
+    logFrame.BorderColor3 = rgb(100, 0, 0)
     logFrame.BorderSizePixel = 1
-    logFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    logFrame.CanvasSize = ud(0, 0, 0, 0)
     logFrame.ScrollBarThickness = 6
     logFrame.Parent = mainTabFrame
 
-    local logLayout = Instance.new("UIListLayout")
+    local logLayout = new("UIListLayout")
     logLayout.SortOrder = Enum.SortOrder.LayoutOrder
     logLayout.Padding = UDim.new(0, 3)
     logLayout.Parent = logFrame
 
     -- Audio Tab Contents
-    local audioToggleButton = createButton(audioTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 0), "Audio: On")
-    local deleteAudioIdLabel = createLabel(audioTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 35), "Delete Audio ID:", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
+    local audioToggleButton = createButton(audioTabFrame, ud(0, 130, 0, 30), ud(0, 0, 0, 0), "Audio: On")
+    local deleteAudioIdLabel = createLabel(audioTabFrame, ud(1, 0, 0, 20), ud(0, 0, 0, 35), "Delete Audio ID:", {
+        TextColor3 = rgb(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    local deleteAudioIdFrame = Instance.new("Frame")
-    deleteAudioIdFrame.Size = UDim2.new(1, 0, 0, 25)
-    deleteAudioIdFrame.Position = UDim2.new(0, 0, 0, 55)
+    local deleteAudioIdFrame = new("Frame")
+    deleteAudioIdFrame.Size = ud(1, 0, 0, 25)
+    deleteAudioIdFrame.Position = ud(0, 0, 0, 55)
     deleteAudioIdFrame.BackgroundTransparency = 1
     deleteAudioIdFrame.Parent = audioTabFrame
 
-    local deleteAudioIdTextBox = Instance.new("TextBox")
-    deleteAudioIdTextBox.Size = UDim2.new(0, 210, 0, 25)
-    deleteAudioIdTextBox.Position = UDim2.new(0, 0, 0, 0)
-    deleteAudioIdTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    deleteAudioIdTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
+    local deleteAudioIdTextBox = new("TextBox")
+    deleteAudioIdTextBox.Size = ud(0, 210, 0, 25)
+    deleteAudioIdTextBox.Position = ud(0, 0, 0, 0)
+    deleteAudioIdTextBox.BackgroundColor3 = rgb(50, 50, 50)
+    deleteAudioIdTextBox.BorderColor3 = rgb(100, 0, 0)
     deleteAudioIdTextBox.BorderSizePixel = 1
-    deleteAudioIdTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    deleteAudioIdTextBox.TextColor3 = rgb(255, 255, 255)
     deleteAudioIdTextBox.PlaceholderText = "e.g., 4676738150"
     deleteAudioIdTextBox.Text = "4676738150"
     deleteAudioIdTextBox.Font = Enum.Font.SourceSans
     deleteAudioIdTextBox.TextSize = 14
     deleteAudioIdTextBox.Parent = deleteAudioIdFrame
 
-    local setDeleteAudioIdButton = createButton(deleteAudioIdFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 215, 0, 0), "Set", {
+    local setDeleteAudioIdButton = createButton(deleteAudioIdFrame, ud(0, 50, 0, 25), ud(0, 215, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    local restoreAudioIdLabel = createLabel(audioTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 85), "Restore Audio ID:", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
+    local restoreAudioIdLabel = createLabel(audioTabFrame, ud(1, 0, 0, 20), ud(0, 0, 0, 85), "Restore Audio ID:", {
+        TextColor3 = rgb(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    local restoreAudioIdFrame = Instance.new("Frame")
-    restoreAudioIdFrame.Size = UDim2.new(1, 0, 0, 25)
-    restoreAudioIdFrame.Position = UDim2.new(0, 0, 0, 105)
+    local restoreAudioIdFrame = new("Frame")
+    restoreAudioIdFrame.Size = ud(1, 0, 0, 25)
+    restoreAudioIdFrame.Position = ud(0, 0, 0, 105)
     restoreAudioIdFrame.BackgroundTransparency = 1
     restoreAudioIdFrame.Parent = audioTabFrame
 
-    local restoreAudioIdTextBox = Instance.new("TextBox")
-    restoreAudioIdTextBox.Size = UDim2.new(0, 210, 0, 25)
-    restoreAudioIdTextBox.Position = UDim2.new(0, 0, 0, 0)
-    restoreAudioIdTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    restoreAudioIdTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
+    local restoreAudioIdTextBox = new("TextBox")
+    restoreAudioIdTextBox.Size = ud(0, 210, 0, 25)
+    restoreAudioIdTextBox.Position = ud(0, 0, 0, 0)
+    restoreAudioIdTextBox.BackgroundColor3 = rgb(50, 50, 50)
+    restoreAudioIdTextBox.BorderColor3 = rgb(100, 0, 0)
     restoreAudioIdTextBox.BorderSizePixel = 1
-    restoreAudioIdTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    restoreAudioIdTextBox.TextColor3 = rgb(255, 250, 255)
     restoreAudioIdTextBox.PlaceholderText = "e.g., 773858658"
     restoreAudioIdTextBox.Text = "773858658"
     restoreAudioIdTextBox.Font = Enum.Font.SourceSans
     restoreAudioIdTextBox.TextSize = 14
     restoreAudioIdTextBox.Parent = restoreAudioIdFrame
 
-    local setRestoreAudioIdButton = createButton(restoreAudioIdFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 215, 0, 0), "Set", {
+    local setRestoreAudioIdButton = createButton(restoreAudioIdFrame, ud(0, 50, 0, 25), ud(0, 215, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    local deleteVolumeLabel = createLabel(audioTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 135), "Delete Volume: 1.0", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
+    local deleteVolumeLabel = createLabel(audioTabFrame, ud(1, 0, 0, 20), ud(0, 0, 0, 135), "Delete Volume: 1.0", {
+        TextColor3 = rgb(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    local deleteVolumeSlider = createButton(audioTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 155), "", {
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    local deleteVolumeSlider = createButton(audioTabFrame, ud(1, 0, 0, 20), ud(0, 0, 0, 155), "", {
+        BackgroundColor3 = rgb(50, 50, 50)
     })
 
-    local deleteVolumeFill = Instance.new("Frame")
-    deleteVolumeFill.Size = UDim2.new(1, 0, 1, 0)
-    deleteVolumeFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    local deleteVolumeFill = new("Frame")
+    deleteVolumeFill.Size = ud(1, 0, 1, 0)
+    deleteVolumeFill.BackgroundColor3 = rgb(200, 0, 0)
     deleteVolumeFill.BorderSizePixel = 0
     deleteVolumeFill.Parent = deleteVolumeSlider
 
-    local restoreVolumeLabel = createLabel(audioTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 180), "Restore Volume: 1.0", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
+    local restoreVolumeLabel = createLabel(audioTabFrame, ud(1, 0, 0, 20), ud(0, 0, 0, 180), "Restore Volume: 1.0", {
+        TextColor3 = rgb(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    local restoreVolumeSlider = createButton(audioTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 200), "", {
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    local restoreVolumeSlider = createButton(audioTabFrame, ud(1, 0, 0, 20), ud(0, 0, 0, 200), "", {
+        BackgroundColor3 = rgb(50, 50, 50)
     })
 
-    local restoreVolumeFill = Instance.new("Frame")
-    restoreVolumeFill.Size = UDim2.new(1, 0, 1, 0)
-    restoreVolumeFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    local restoreVolumeFill = new("Frame")
+    restoreVolumeFill.Size = ud(1, 0, 1, 0)
+    restoreVolumeFill.BackgroundColor3 = rgb(200, 0, 0)
     restoreVolumeFill.BorderSizePixel = 0
     restoreVolumeFill.Parent = restoreVolumeSlider
 
     -- Settings Tab Contents
-    local toggleKeybindLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 0), "Toggle Keybind:", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
-        Font = Enum.Font.SourceSansBold
+    print("Creating toggleKeybindFrame")
+    local keybindFrames = {
+        { name = "toggle", labelText = "Toggle Keybind:", placeholder = "e.g., H, G", defaultText = "H", stateKey = "toggleKeybind" },
+        { name = "action", labelText = "Action Keybind:", placeholder = "e.g., T, R", defaultText = "T", stateKey = "actionKeybind" },
+        { name = "cube", labelText = "Cube Keybind:", placeholder = "e.g., C, V", defaultText = "C", stateKey = "cubeKeybind" }
+    }
+    local keybindElements = {}
+    for i, kf in ipairs(keybindFrames) do
+        local frame = new("Frame")
+        frame.Size = ud(1, 0, 0, 25)
+        frame.BackgroundTransparency = 1
+        frame.LayoutOrder = i
+        frame.Parent = settingsTabFrame
+
+        local label = createLabel(frame, ud(0, 110, 0, 25), ud(0, 0, 0, 0), kf.labelText, {
+            TextColor3 = rgb(200, 200, 200),
+            Font = Enum.Font.SourceSansBold
+        })
+
+        local textBox = new("TextBox")
+        textBox.Size = ud(0, 50, 0, 25)
+        textBox.Position = ud(0, 115, 0, 0)
+        textBox.BackgroundColor3 = rgb(50, 50, 50)
+        textBox.BorderColor3 = rgb(100, 0, 0)
+        textBox.BorderSizePixel = 1
+        textBox.TextColor3 = rgb(255, 255, 255)
+        textBox.PlaceholderText = kf.placeholder
+        textBox.Text = kf.defaultText
+        textBox.Font = Enum.Font.SourceSans
+        textBox.TextSize = 14
+        textBox.Parent = frame
+
+        local button = createButton(frame, ud(0, 50, 0, 25), ud(0, 170, 0, 0), "Set", {
+            Font = Enum.Font.SourceSansBold,
+            TextSize = 14
+        })
+
+        keybindElements[kf.name] = { frame = frame, label = label, textBox = textBox, button = button }
+    end
+
+    local sliders = {
+        { labelText = "Cube Size: 25", stateKey = "cubeSize", minVal = 10, maxVal = 50, format = "Cube Size: %d", fillSize = ud(0.5, 0, 1, 0), layoutOrder = 4 },
+        { labelText = "Cube Thickness: 1.0", stateKey = "cubeThickness", minVal = 0.2, maxVal = 25, format = "Cube Thickness: %.1f", fillSize = ud(0.032, 0, 1, 0), layoutOrder = 6 },
+        { labelText = "Cube Transparency: 0.7", stateKey = "cubeTransparency", minVal = 0, maxVal = 1, format = "Cube Transparency: %.1f", fillSize = ud(0.7, 0, 1, 0), layoutOrder = 8 }
+    }
+    local sliderElements = {}
+    for _, sl in ipairs(sliders) do
+        local label = createLabel(settingsTabFrame, ud(1, 0, 0, 20), ud(), sl.labelText, {
+            TextColor3 = rgb(200, 200, 200),
+            Font = Enum.Font.SourceSansBold,
+            LayoutOrder = sl.layoutOrder
+        })
+        local slider = createButton(settingsTabFrame, ud(1, 0, 0, 20), ud(), "", {
+            BackgroundColor3 = rgb(50, 50, 50),
+            LayoutOrder = sl.layoutOrder + 1
+        })
+        local fill = new("Frame")
+        fill.Size = sl.fillSize
+        fill.BackgroundColor3 = rgb(200, 0, 0)
+        fill.BorderSizePixel = 0
+        fill.Parent = slider
+        sliderElements[sl.stateKey] = { label = label, slider = slider, fill = fill, minVal = sl.minVal, maxVal = sl.maxVal, format = sl.format }
+    end
+
+    local cubeFloorDestroyFrame = new("Frame")
+    cubeFloorDestroyFrame.Size = ud(1, 0, 0, 30)
+    cubeFloorDestroyFrame.BackgroundTransparency = 1
+    cubeFloorDestroyFrame.LayoutOrder = 10
+    cubeFloorDestroyFrame.Parent = settingsTabFrame
+
+    local cubeFloorButton = createButton(cubeFloorDestroyFrame, ud(0, 130, 0, 30), ud(0, 0, 0, 0), "Cube Floor: Off")
+    local destroyMenuButton = createButton(cubeFloorDestroyFrame, ud(0, 130, 0, 30), ud(0, 135, 0, 0), "Destroy Menu")
+
+    local restoreDestroyRevertFrame = new("Frame")
+    restoreDestroyRevertFrame.Size = ud(1, 0, 0, 30)
+    restoreDestroyRevertFrame.BackgroundTransparency = 1
+    restoreDestroyRevertFrame.LayoutOrder = 11
+    restoreDestroyRevertFrame.Parent = settingsTabFrame
+
+    local restoreKeybindsButton = createButton(restoreDestroyRevertFrame, ud(0, 130, 0, 30), ud(0, 0, 0, 0), "Restore All Keybinds")
+    local destroyAndRevertButton = createButton(restoreDestroyRevertFrame, ud(0, 130, 0, 30), ud(0, 135, 0, 0), "Destroy & Revert")
+
+    local removeKeybindsButton = createButton(settingsTabFrame, ud(0, 130, 0, 30), ud(), "Remove Every Keybind", {
+        LayoutOrder = 12
     })
 
-    local toggleKeybindFrame = Instance.new("Frame")
-    toggleKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
-    toggleKeybindFrame.Position = UDim2.new(0, 0, 0, 20)
-    toggleKeybindFrame.BackgroundTransparency = 1
-    toggleKeybindFrame.Parent = settingsTabFrame
-
-    local toggleKeybindTextBox = Instance.new("TextBox")
-    toggleKeybindTextBox.Size = UDim2.new(0, 210, 0, 25)
-    toggleKeybindTextBox.Position = UDim2.new(0, 0, 0, 0)
-    toggleKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    toggleKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-    toggleKeybindTextBox.BorderSizePixel = 1
-    toggleKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    toggleKeybindTextBox.PlaceholderText = "e.g., H, G"
-    toggleKeybindTextBox.Text = "H"
-    toggleKeybindTextBox.Font = Enum.Font.SourceSans
-    toggleKeybindTextBox.TextSize = 14
-    toggleKeybindTextBox.Parent = toggleKeybindFrame
-
-    local setToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 215, 0, 0), "Set", {
-        Font = Enum.Font.SourceSansBold,
-        TextSize = 14
-    })
-
-    local actionKeybindLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 50), "Action Keybind:", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local actionKeybindFrame = Instance.new("Frame")
-    actionKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
-    actionKeybindFrame.Position = UDim2.new(0, 0, 0, 70)
-    actionKeybindFrame.BackgroundTransparency = 1
-    actionKeybindFrame.Parent = settingsTabFrame
-
-    local actionKeybindTextBox = Instance.new("TextBox")
-    actionKeybindTextBox.Size = UDim2.new(0, 210, 0, 25)
-    actionKeybindTextBox.Position = UDim2.new(0, 0, 0, 0)
-    actionKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    actionKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-    actionKeybindTextBox.BorderSizePixel = 1
-    actionKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    actionKeybindTextBox.PlaceholderText = "e.g., T, R"
-    actionKeybindTextBox.Text = "T"
-    actionKeybindTextBox.Font = Enum.Font.SourceSans
-    actionKeybindTextBox.TextSize = 14
-    actionKeybindTextBox.Parent = actionKeybindFrame
-
-    local setActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 215, 0, 0), "Set", {
-        Font = Enum.Font.SourceSansBold,
-        TextSize = 14
-    })
-
-    local cubeKeybindLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 100), "Cube Keybind:", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local cubeKeybindFrame = Instance.new("Frame")
-    cubeKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
-    cubeKeybindFrame.Position = UDim2.new(0, 0, 0, 120)
-    cubeKeybindFrame.BackgroundTransparency = 1
-    cubeKeybindFrame.Parent = settingsTabFrame
-
-    local cubeKeybindTextBox = Instance.new("TextBox")
-    cubeKeybindTextBox.Size = UDim2.new(0, 210, 0, 25)
-    cubeKeybindTextBox.Position = UDim2.new(0, 0, 0, 0)
-    cubeKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    cubeKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-    cubeKeybindTextBox.BorderSizePixel = 1
-    cubeKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    cubeKeybindTextBox.PlaceholderText = "e.g., C, V"
-    cubeKeybindTextBox.Text = "C"
-    cubeKeybindTextBox.Font = Enum.Font.SourceSans
-    cubeKeybindTextBox.TextSize = 14
-    cubeKeybindTextBox.Parent = cubeKeybindFrame
-
-    local setCubeKeybindButton = createButton(cubeKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 215, 0, 0), "Set", {
-        Font = Enum.Font.SourceSansBold,
-        TextSize = 14
-    })
-
-    local cubeSizeLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 150), "Cube Size: 25", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local cubeSizeSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 170), "", {
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    })
-
-    local cubeSizeFill = Instance.new("Frame")
-    cubeSizeFill.Size = UDim2.new(0.5, 0, 1, 0)
-    cubeSizeFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    cubeSizeFill.BorderSizePixel = 0
-    cubeSizeFill.Parent = cubeSizeSlider
-
-    local cubeThicknessLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 195), "Cube Thickness: 1.0", {
-        TextColor3 = Color3.fromRGB(200, 200, 200),
-        Font = Enum.Font.SourceSansBold
-    })
-
-    local cubeThicknessSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(0, 0, 0, 215), "", {
-        BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    })
-
-    local cubeThicknessFill = Instance.new("Frame")
-    cubeThicknessFill.Size = UDim2.new(0.032, 0, 1, 0)
-    cubeThicknessFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    cubeThicknessFill.BorderSizePixel = 0
-    cubeThicknessFill.Parent = cubeThicknessSlider
-
-    local cubeFloorButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 240), "Cube Floor: Off")
-
-    local restoreKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 275), "Restore All Keybinds")
-    local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 310), "Remove Every Keybind")
-    local destroyMenuButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 345), "Destroy Menu")
-    local destroyAndRevertButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 345), "Destroy & Revert")
-
+    print("GUI parenting to PlayerGui")
     gui.Parent = playerGui
     print("DeleteGui successfully parented to PlayerGui")
 
@@ -404,12 +390,12 @@ local function createGui()
         mainTabFrame = mainTabFrame,
         audioTabFrame = audioTabFrame,
         settingsTabFrame = settingsTabFrame,
-        toggleButton = toggleButton,
-        protectButton = protectButton,
-        terrainButton = terrainButton,
-        outlineButton = outlineButton,
-        rightClickRestoreButton = rightClickRestoreButton,
-        restoreAllButton = restoreAllButton,
+        toggleButton = mainButtonInstances.toggleButton,
+        protectButton = mainButtonInstances.protectButton,
+        terrainButton = mainButtonInstances.terrainButton,
+        outlineButton = mainButtonInstances.outlineButton,
+        rightClickRestoreButton = mainButtonInstances.rightClickRestoreButton,
+        restoreAllButton = mainButtonInstances.restoreAllButton,
         logFrame = logFrame,
         audioToggleButton = audioToggleButton,
         deleteAudioIdTextBox = deleteAudioIdTextBox,
@@ -422,24 +408,27 @@ local function createGui()
         restoreVolumeLabel = restoreVolumeLabel,
         restoreVolumeSlider = restoreVolumeSlider,
         restoreVolumeFill = restoreVolumeFill,
-        toggleKeybindTextBox = toggleKeybindTextBox,
-        setToggleKeybindButton = setToggleKeybindButton,
-        actionKeybindTextBox = actionKeybindTextBox,
-        setActionKeybindButton = setActionKeybindButton,
+        toggleKeybindTextBox = keybindElements.toggle.textBox,
+        setToggleKeybindButton = keybindElements.toggle.button,
+        actionKeybindTextBox = keybindElements.action.textBox,
+        setActionKeybindButton = keybindElements.action.button,
         restoreKeybindsButton = restoreKeybindsButton,
         removeKeybindsButton = removeKeybindsButton,
         destroyMenuButton = destroyMenuButton,
         destroyAndRevertButton = destroyAndRevertButton,
-        spawnCubeButton = spawnCubeButton,
-        cubeKeybindTextBox = cubeKeybindTextBox,
-        setCubeKeybindButton = setCubeKeybindButton,
-        cubeSizeLabel = cubeSizeLabel,
-        cubeSizeSlider = cubeSizeSlider,
-        cubeSizeFill = cubeSizeFill,
-        cubeThicknessLabel = cubeThicknessLabel,
-        cubeThicknessSlider = cubeThicknessSlider,
-        cubeThicknessFill = cubeThicknessFill,
-        cubeFloorButton = cubeFloorButton
+        spawnCubeButton = mainButtonInstances.spawnCubeButton,
+        cubeKeybindTextBox = keybindElements.cube.textBox,
+        setCubeKeybindButton = keybindElements.cube.button,
+        cubeSizeLabel = sliderElements.cubeSize.label,
+        cubeSizeSlider = sliderElements.cubeSize.slider,
+        cubeSizeFill = sliderElements.cubeSize.fill,
+        cubeThicknessLabel = sliderElements.cubeThickness.label,
+        cubeThicknessSlider = sliderElements.cubeThickness.slider,
+        cubeThicknessFill = sliderElements.cubeThickness.fill,
+        cubeFloorButton = cubeFloorButton,
+        cubeTransparencyLabel = sliderElements.cubeTransparency.label,
+        cubeTransparencySlider = sliderElements.cubeTransparency.slider,
+        cubeTransparencyFill = sliderElements.cubeTransparency.fill
     }
 end
 
@@ -460,7 +449,9 @@ local StateManager = {
     cubeConnection = nil,
     cubeSize = 25,
     cubeThickness = 1,
-    isCubeFloorEnabled = false
+    cubeTransparency = 0.7,
+    isCubeFloorEnabled = false,
+    connections = {}
 }
 
 function StateManager.toggleState(button, stateKey, label, callback)
@@ -478,7 +469,7 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
     slider.MouseButton1Down:Connect(function()
         dragging = true
     end)
-    UserInputService.InputEnded:Connect(function(input)
+    UIS.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
@@ -487,7 +478,7 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
         if dragging then
             local relativeX = x - slider.AbsolutePosition.X
             local fraction = math.clamp(relativeX / slider.AbsoluteSize.X, 0, 1)
-            fill.Size = UDim2.new(fraction, 0, 1, 0)
+            fill.Size = ud(fraction, 0, 1, 0)
             StateManager[stateKey] = minVal + fraction * (maxVal - minVal)
             label.Text = string.format(formatStr, StateManager[stateKey])
         end
@@ -495,7 +486,7 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
 end
 
 local function createCubePart(size, position, parent, props)
-    local part = Instance.new("Part")
+    local part = new("Part")
     part.Size = size
     part.Position = position
     part.Anchored = true
@@ -519,56 +510,35 @@ function StateManager.toggleCube(spawnCubeButton)
             end
             if existingCube then existingCube:Destroy() end
 
-            local cubeModel = Instance.new("Model")
+            local cubeModel = new("Model")
             cubeModel.Name = cubeName
             local cubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
             local wallThickness = StateManager.cubeThickness
-            local props = { transparency = 0.7, brickColor = BrickColor.new("Really red") }
-            local playerPos = player.Character.HumanoidRootPart.Position
-            local playerHeightOffset = 2.5
-            local verticalShift = StateManager.isCubeFloorEnabled and (wallThickness / 2) or 0
-            local centerPos = playerPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset + verticalShift, 0)
-
-            -- Create cube parts
-            local parts = {
-                leftWall = createCubePart(
-                    Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z),
-                    centerPos + Vector3.new(-cubeSize.X / 2 + wallThickness / 2, 0, 0),
-                    cubeModel,
-                    props
-                ),
-                rightWall = createCubePart(
-                    Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z),
-                    centerPos + Vector3.new(cubeSize.X / 2 - wallThickness / 2, 0, 0),
-                    cubeModel,
-                    props
-                ),
-                frontWall = createCubePart(
-                    Vector3.new(cubeSize.X, cubeSize.Y, wallThickness),
-                    centerPos + Vector3.new(0, 0, -cubeSize.Z / 2 + wallThickness / 2),
-                    cubeModel,
-                    props
-                ),
-                backWall = createCubePart(
-                    Vector3.new(cubeSize.X, cubeSize.Y, wallThickness),
-                    centerPos + Vector3.new(0, 0, cubeSize.Z / 2 - wallThickness / 2),
-                    cubeModel,
-                    props
-                ),
-                ceiling = createCubePart(
-                    Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    centerPos + Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0),
-                    cubeModel,
-                    props
-                )
+            local cubeConfig = {
+                props = { transparency = StateManager.cubeTransparency, brickColor = BrickColor.new("Really red") },
+                parts = {
+                    { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, 0, 0) },
+                    { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, 0, 0) },
+                    { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness), offset = Vector3.new(0, 0, -cubeSize.Z / 2 + wallThickness / 2) },
+                    { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness), offset = Vector3.new(0, 0, cubeSize.Z / 2 - wallThickness / 2) },
+                    { name = "ceiling", size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z), offset = Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0) }
+                }
             }
             if StateManager.isCubeFloorEnabled then
-                parts.floor = createCubePart(
-                    Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    centerPos + Vector3.new(0, -cubeSize.Y / 2 + wallThickness / 2, 0),
-                    cubeModel,
-                    props
-                )
+                table.insert(cubeConfig.parts, {
+                    name = "floor",
+                    size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
+                    offset = Vector3.new(0, -cubeSize.Y / 2 - 3 + wallThickness, 0)
+                })
+            end
+
+            local parts = {}
+            local playerPos = player.Character.HumanoidRootPart.Position
+            local playerHeightOffset = 2.5
+            local centerPos = playerPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset, 0)
+
+            for _, partConfig in ipairs(cubeConfig.parts) do
+                parts[partConfig.name] = createCubePart(partConfig.size, centerPos + partConfig.offset, cubeModel, cubeConfig.props)
             end
 
             cubeModel.Parent = game.Workspace
@@ -588,27 +558,36 @@ function StateManager.toggleCube(spawnCubeButton)
                     spawnCubeButton.Text = "Spawn Cube: Off"
                     return
                 end
-                local cubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
-                local wallThickness = StateManager.cubeThickness
-                parts.leftWall.Size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z)
-                parts.rightWall.Size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z)
-                parts.frontWall.Size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness)
-                parts.backWall.Size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness)
-                parts.ceiling.Size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z)
-                if parts.floor then
-                    parts.floor.Size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z)
-                end
-
+                local newCubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
+                local newWallThickness = StateManager.cubeThickness
+                local newTransparency = StateManager.cubeTransparency
                 local newPos = player.Character.HumanoidRootPart.Position
-                local verticalShift = StateManager.isCubeFloorEnabled and (wallThickness / 2) or 0
-                local newCenterPos = newPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset + verticalShift, 0)
-                parts.leftWall.Position = newCenterPos + Vector3.new(-cubeSize.X / 2 + wallThickness / 2, 0, 0)
-                parts.rightWall.Position = newCenterPos + Vector3.new(cubeSize.X / 2 - wallThickness / 2, 0, 0)
-                parts.frontWall.Position = newCenterPos + Vector3.new(0, 0, -cubeSize.Z / 2 + wallThickness / 2)
-                parts.backWall.Position = newCenterPos + Vector3.new(0, 0, cubeSize.Z / 2 - wallThickness / 2)
-                parts.ceiling.Position = newCenterPos + Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0)
-                if parts.floor then
-                    parts.floor.Position = newCenterPos + Vector3.new(0, -cubeSize.Y / 2 + wallThickness / 2, 0)
+                local newCenterPos = newPos + Vector3.new(0, newCubeSize.Y / 2 - playerHeightOffset, 0)
+
+                for _, partConfig in ipairs(cubeConfig.parts) do
+                    local part = parts[partConfig.name]
+                    if part then
+                        local size = partConfig.size
+                        local offset = partConfig.offset
+                        if partConfig.name == "leftWall" or partConfig.name == "rightWall" then
+                            size = Vector3.new(newWallThickness, newCubeSize.Y, newCubeSize.Z)
+                            offset = partConfig.name == "leftWall" and Vector3.new(-newCubeSize.X / 2 + newWallThickness / 2, 0, 0) or
+                                     Vector3.new(newCubeSize.X / 2 - newWallThickness / 2, 0, 0)
+                        elseif partConfig.name == "frontWall" or partConfig.name == "backWall" then
+                            size = Vector3.new(newCubeSize.X, newCubeSize.Y, newWallThickness)
+                            offset = partConfig.name == "frontWall" and Vector3.new(0, 0, -newCubeSize.Z / 2 + newWallThickness / 2) or
+                                     Vector3.new(0, 0, newCubeSize.Z / 2 - newWallThickness / 2)
+                        elseif partConfig.name == "ceiling" then
+                            size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
+                            offset = Vector3.new(0, newCubeSize.Y / 2 - newWallThickness / 2, 0)
+                        elseif partConfig.name == "floor" then
+                            size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
+                            offset = Vector3.new(0, -newCubeSize.Y / 2 - 3 + newWallThickness, 0)
+                        end
+                        part.Size = size
+                        part.Position = newCenterPos + offset
+                        part.Transparency = newTransparency
+                    end
                 end
             end)
 
@@ -629,8 +608,8 @@ end
 
 -- AudioManager
 local AudioManager = {
-    deleteSound = Instance.new("Sound", game.Workspace),
-    restoreSound = Instance.new("Sound", game.Workspace)
+    deleteSound = new("Sound", game.Workspace),
+    restoreSound = new("Sound", game.Workspace)
 }
 AudioManager.deleteSound.SoundId = "rbxassetid://4676738150"
 AudioManager.deleteSound.Volume = 1
@@ -657,7 +636,7 @@ function AudioManager.setupVolumeSlider(slider, fill, label, sound)
     slider.MouseButton1Down:Connect(function()
         dragging = true
     end)
-    UserInputService.InputEnded:Connect(function(input)
+    UIS.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
@@ -666,7 +645,7 @@ function AudioManager.setupVolumeSlider(slider, fill, label, sound)
         if dragging then
             local relativeX = x - slider.AbsolutePosition.X
             local fraction = math.clamp(relativeX / slider.AbsoluteSize.X, 0, 1)
-            fill.Size = UDim2.new(fraction, 0, 1, 0)
+            fill.Size = ud(fraction, 0, 1, 0)
             sound.Volume = fraction
             label.Text = string.format("%s Volume: %.1f", label.Text:match("^(.-) Volume"), fraction)
         end
@@ -677,7 +656,7 @@ end
 local DeleteRestoreManager = {
     deletedObjects = {},
     MAX_TERRAIN_BACKUPS = 5,
-    deletedStorage = Instance.new("Folder", game.ReplicatedStorage),
+    deletedStorage = new("Folder", game.ReplicatedStorage),
     characterCache = {}
 }
 DeleteRestoreManager.deletedStorage.Name = "DeletedObjects"
@@ -715,7 +694,7 @@ function DeleteRestoreManager.getTerrainRegion(position)
 end
 
 function DeleteRestoreManager.checkTerrain(mouse)
-    local terrain = game.Workspace.Dll
+    local terrain = game.Workspace.Terrain
     local hitPosition = mouse.Hit.Position
     local cellPos = terrain:WorldToCell(hitPosition)
     if terrain:GetCell(cellPos.X, cellPos.Y, cellPos.Z) ~= Enum.Material.Air then
@@ -733,16 +712,16 @@ function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSoun
     local maxDisplay = 50
     for i, data in ipairs(DeleteRestoreManager.deletedObjects) do
         if i > maxDisplay then break end
-        local entryFrame = Instance.new("Frame")
-        entryFrame.Size = UDim2.new(1, -10, 0, 25)
+        local entryFrame = new("Frame")
+        entryFrame.Size = ud(1, -10, 0, 25)
         entryFrame.BackgroundTransparency = 1
         entryFrame.LayoutOrder = i
         entryFrame.Parent = logFrame
 
-        createLabel(entryFrame, UDim2.new(0, 170, 1, 0), UDim2.new(0, 0, 0, 0),
+        createLabel(entryFrame, ud(0, 170, 1, 0), ud(0, 0, 0, 0),
             (data.name or "Unnamed") .. (data.object and " (Parent: " .. (data.originalParent and data.originalParent.Name or "None") .. ")" or ""))
 
-        local restoreButton = createButton(entryFrame, UDim2.new(0, 70, 1, 0), UDim2.new(1, -70, 0, 0), "Restore", {
+        local restoreButton = createButton(entryFrame, ud(0, 70, 1, 0), ud(1, -70, 0, 0), "Restore", {
             Font = Enum.Font.SourceSansBold
         })
 
@@ -774,7 +753,7 @@ function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSoun
 
         canvasHeight = canvasHeight + 28
     end
-    logFrame.CanvasSize = UDim2.new(0, 0, 0, canvasHeight)
+    logFrame.CanvasSize = ud(0, 0, 0, canvasHeight)
 end
 
 function DeleteRestoreManager.restoreAll(isAudioEnabled, restoreSound)
@@ -864,24 +843,27 @@ local cubeThicknessLabel = guiElements.cubeThicknessLabel
 local cubeThicknessSlider = guiElements.cubeThicknessSlider
 local cubeThicknessFill = guiElements.cubeThicknessFill
 local cubeFloorButton = guiElements.cubeFloorButton
+local cubeTransparencyLabel = guiElements.cubeTransparencyLabel
+local cubeTransparencySlider = guiElements.cubeTransparencySlider
+local cubeTransparencyFill = guiElements.cubeTransparencyFill
 
 -- Visual feedback
-local selectionBox = Instance.new("SelectionBox", game.Workspace)
+local selectionBox = new("SelectionBox", game.Workspace)
 selectionBox.Name = "DeleteSelectionBox"
 selectionBox.LineThickness = 0.01
-selectionBox.Color3 = Color3.fromRGB(255, 0, 0)
+selectionBox.Color3 = rgb(255, 0, 0)
 selectionBox.Visible = false
 
 -- Hover effect
 local function applyHover(button)
     button.MouseEnter:Connect(function()
-        if button.BackgroundColor3 ~= Color3.fromRGB(200, 0, 0) then
-            button.BackgroundColor3 = Color3.fromRGB(220, 0, 0)
+        if button.BackgroundColor3 ~= rgb(200, 0, 0) then
+            button.BackgroundColor3 = rgb(220, 0, 0)
         end
     end)
     button.MouseLeave:Connect(function()
-        if button.BackgroundColor3 ~= Color3.fromRGB(200, 0, 0) then
-            button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        if button.BackgroundColor3 ~= rgb(200, 0, 0) then
+            button.BackgroundColor3 = rgb(30, 30, 30)
         end
     end)
 end
@@ -900,9 +882,9 @@ local function switchTab(activeButton, activeFrame)
     mainTabFrame.Visible = activeFrame == mainTabFrame
     audioTabFrame.Visible = activeFrame == audioTabFrame
     settingsTabFrame.Visible = activeFrame == settingsTabFrame
-    mainTabButton.BackgroundColor3 = activeButton == mainTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
-    audioTabButton.BackgroundColor3 = activeButton == audioTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
-    settingsTabButton.BackgroundColor3 = activeButton == settingsTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
+    mainTabButton.BackgroundColor3 = activeButton == mainTabButton and rgb(200, 0, 0) or rgb(30, 30, 30)
+    audioTabButton.BackgroundColor3 = activeButton == audioTabButton and rgb(200, 0, 0) or rgb(30, 30, 30)
+    settingsTabButton.BackgroundColor3 = activeButton == settingsTabButton and rgb(200, 0, 0) or rgb(30, 30, 30)
 end
 
 mainTabButton.MouseButton1Click:Connect(function() switchTab(mainTabButton, mainTabFrame) end)
@@ -962,8 +944,9 @@ AudioManager.setupVolumeSlider(deleteVolumeSlider, deleteVolumeFill, deleteVolum
 AudioManager.setupVolumeSlider(restoreVolumeSlider, restoreVolumeFill, restoreVolumeLabel, AudioManager.restoreSound)
 
 -- Slider Connections
-StateManager.setupSlider(cubeSizeSlider, cubeSizeFill, cubeSizeLabel, "cubeSize", 10, 50, "Cube Size: %d")
-StateManager.setupSlider(cubeThicknessSlider, cubeThicknessFill, cubeThicknessLabel, "cubeThickness", 0.2, 25, "Cube Thickness: %.1f")
+for _, sl in pairs(sliderElements) do
+    StateManager.setupSlider(sl.slider, sl.fill, sl.label, sl.stateKey, sl.minVal, sl.maxVal, sl.format)
+end
 
 -- DeleteRestoreManager Connections
 restoreAllButton.MouseButton1Click:Connect(function()
@@ -978,6 +961,17 @@ local function cleanup()
         StateManager.cubeConnection:Disconnect()
         StateManager.cubeConnection = nil
     end
+    for _, connection in ipairs(StateManager.connections) do
+        connection:Disconnect()
+    end
+    StateManager.connections = {}
+    StateManager.toggleKeybind = nil
+    StateManager.actionKeybind = nil
+    StateManager.cubeKeybind = nil
+    StateManager.guiToggleKeybind = nil
+    StateManager.isDeleteModeEnabled = false
+    StateManager.isActionKeyHeld = false
+    StateManager.isCubeSpawned = false
     gui:Destroy()
     selectionBox:Destroy()
     AudioManager.deleteSound:Destroy()
@@ -1040,7 +1034,7 @@ removeKeybindsButton.MouseButton1Click:Connect(function()
 end)
 
 -- Input Handling
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+StateManager.connections.inputBegan = UIS.InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
     if input.KeyCode == StateManager.guiToggleKeybind then
         StateManager.toggleGui(frame)
@@ -1053,7 +1047,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     end
 end)
 
-UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+StateManager.connections.inputEnded = UIS.InputEnded:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
     if input.KeyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = false
@@ -1061,7 +1055,7 @@ UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
 end)
 
 -- Outline Handling
-RunService.RenderStepped:Connect(function()
+StateManager.connections.outline = RunService.RenderStepped:Connect(function()
     DeleteRestoreManager.handleOutline(
         mouse,
         selectionBox,
@@ -1074,7 +1068,7 @@ end)
 
 -- Delete Objects or Terrain
 local debounce = false
-mouse.Button1Down:Connect(function()
+StateManager.connections.delete = mouse.Button1Down:Connect(function()
     if debounce or not StateManager.isDeleteModeEnabled or not StateManager.isActionKeyHeld then
         debounce = false
         return
@@ -1140,7 +1134,7 @@ mouse.Button1Down:Connect(function()
 end)
 
 -- Restore Objects
-mouse.Button2Down:Connect(function()
+StateManager.connections.restore = mouse.Button2Down:Connect(function()
     if not StateManager.isActionKeyHeld or not StateManager.isRightClickRestoreEnabled or #DeleteRestoreManager.deletedObjects == 0 then return end
     local data = table.remove(DeleteRestoreManager.deletedObjects)
     local success, err = pcall(function()
