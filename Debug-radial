@@ -1,4 +1,3 @@
-
 -- Services
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
@@ -42,16 +41,18 @@ local function createButton(parent, size, position, text, extraProps)
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
         btn.Text = text
         btn.Font = Enum.Font.SourceSans
-        btn.TextSize = 12
-        btn.TextScaled = true
+        btn.TextSize = 16
+        btn.TextScaled = false
         btn.TextWrapped = true
         btn.Parent = parent
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0.5, 0)
         corner.Parent = btn
         local padding = Instance.new("UIPadding")
-        padding.PaddingTop = UDim.new(0, 5)
-        padding.PaddingBottom = UDim.new(0, 5)
+        padding.PaddingTop = UDim.new(0, 6)
+        padding.PaddingBottom = UDim.new(0, 6)
+        padding.PaddingLeft = UDim.new(0, 6)
+        padding.PaddingRight = UDim.new(0, 6)
         padding.Parent = btn
         for key, value in pairs(extraProps or {}) do
             btn[key] = value
@@ -61,6 +62,12 @@ local function createButton(parent, size, position, text, extraProps)
         end)
         btn.MouseLeave:Connect(function()
             btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        end)
+        btn.MouseButton1Down:Connect(function()
+            btn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+        end)
+        btn.MouseButton1Up:Connect(function()
+            btn.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
         end)
         return btn
     end)
@@ -106,8 +113,8 @@ local function createLabel(parent, size, position, text, extraProps)
         lbl.TextColor3 = Color3.fromRGB(255, 255, 255)
         lbl.Text = text
         lbl.Font = Enum.Font.SourceSans
-        lbl.TextSize = 10
-        lbl.TextScaled = true
+        lbl.TextSize = 14
+        lbl.TextScaled = false
         lbl.TextWrapped = true
         lbl.Parent = parent
         for key, value in pairs(extraProps or {}) do
@@ -120,6 +127,42 @@ local function createLabel(parent, size, position, text, extraProps)
         return label
     else
         warn("Failed to create label:", text, "Error:", label)
+        return nil
+    end
+end
+
+local function createTextBox(parent, size, position, placeholder, extraProps)
+    local success, textBox = pcall(function()
+        local tb = Instance.new("TextBox")
+        tb.Size = size
+        tb.Position = position
+        tb.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        tb.BorderColor3 = Color3.fromRGB(100, 0, 0)
+        tb.TextColor3 = Color3.fromRGB(255, 255, 255)
+        tb.PlaceholderText = placeholder
+        tb.Text = extraProps and extraProps.Text or ""
+        tb.Font = Enum.Font.SourceSans
+        tb.TextSize = 14
+        tb.TextScaled = false
+        tb.TextWrapped = true
+        tb.Parent = parent
+        for key, value in pairs(extraProps or {}) do
+            tb[key] = value
+        end
+        tb.FocusLost:Connect(function()
+            if tb.Text == "" then
+                tb.BorderColor3 = Color3.fromRGB(200, 0, 0)
+            else
+                tb.BorderColor3 = Color3.fromRGB(100, 0, 0)
+            end
+        end)
+        return tb
+    end)
+    if success then
+        print("Created textbox:", placeholder, "at", position)
+        return textBox
+    else
+        warn("Failed to create textbox:", placeholder, "Error:", textBox)
         return nil
     end
 end
@@ -152,27 +195,27 @@ local function createGui()
         print("GUI created - Enabled:", gui.Enabled)
 
         -- Central Button
-        local centralButton = createButton(gui, UDim2.new(0, 60, 0, 60), UDim2.new(0.5, -30, 0.5, -30), "Menu", {
+        local centralButton = createButton(gui, UDim2.new(0, 64, 0, 64), UDim2.new(0.5, -32, 0.5, -32), "Menu", {
             BackgroundColor3 = Color3.fromRGB(200, 0, 0),
             Font = Enum.Font.SourceSansBold,
-            TextSize = 14
+            TextSize = 18
         })
         if not centralButton then return nil end
 
         -- Primary Ring Frame
-        local primaryRingFrame = createFrame(gui, UDim2.new(0, 400, 0, 400), UDim2.new(0.5, -200, 0.5, -200), {
+        local primaryRingFrame = createFrame(gui, UDim2.new(0, 420, 0, 420), UDim2.new(0.5, -210, 0.5, -210), {
             Visible = false
         })
         if not primaryRingFrame then return nil end
 
         -- Secondary Ring Frame
-        local secondaryRingFrame = createFrame(gui, UDim2.new(0, 500, 0, 500), UDim2.new(0.5, -250, 0.5, -250), {
+        local secondaryRingFrame = createFrame(gui, UDim2.new(0, 520, 0, 520), UDim2.new(0.5, -260, 0.5, -260), {
             Visible = false
         })
         if not secondaryRingFrame then return nil end
 
         -- Primary Buttons
-        local primaryRadius = 120
+        local primaryRadius = 130
         local primaryButtons = {
             { name = "Main", angle = 0, button = nil, subFrame = nil },
             { name = "Audio", angle = 120, button = nil, subFrame = nil },
@@ -183,9 +226,9 @@ local function createGui()
             local rad = math.rad(tab.angle)
             local x = primaryRadius * math.cos(rad)
             local y = primaryRadius * math.sin(rad)
-            tab.button = createButton(primaryRingFrame, UDim2.new(0, 50, 0, 50), UDim2.new(0.5, x - 25, 0.5, y - 25), tab.name, {
+            tab.button = createButton(primaryRingFrame, UDim2.new(0, 54, 0, 54), UDim2.new(0.5, x - 27, 0.5, y - 27), tab.name, {
                 Font = Enum.Font.SourceSansBold,
-                TextSize = 12
+                TextSize = 16
             })
             if not tab.button then return nil end
             tab.subFrame = createFrame(secondaryRingFrame, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), {
@@ -195,7 +238,7 @@ local function createGui()
         end
 
         -- Main Tab Sub-Menu
-        local mainSubRadius = 200
+        local mainSubRadius = 240
         local mainButtons = {
             { name = "toggleButton", text = "Delete Mode: Off", angle = 0 },
             { name = "protectButton", text = "Protect: Off", angle = 51.43 },
@@ -211,12 +254,12 @@ local function createGui()
             local rad = math.rad(btn.angle)
             local x = mainSubRadius * math.cos(rad)
             local y = mainSubRadius * math.sin(rad)
-            mainElements[btn.name] = createButton(primaryButtons[1].subFrame, UDim2.new(0, 60, 0, 60), UDim2.new(0.5, x - 30, 0.5, y - 30), btn.text)
+            mainElements[btn.name] = createButton(primaryButtons[1].subFrame, UDim2.new(0, 64, 0, 64), UDim2.new(0.5, x - 32, 0.5, y - 32), btn.text)
             if not mainElements[btn.name] then return nil end
         end
 
         -- Log Frame
-        local logFrame = createFrame(primaryButtons[1].subFrame, UDim2.new(0, 100, 0, 60), UDim2.new(0.5, -50, 0.5, -80), {
+        local logFrame = createFrame(primaryButtons[1].subFrame, UDim2.new(0, 120, 0, 100), UDim2.new(0.5, -60, 0.5, -120), {
             BackgroundColor3 = Color3.fromRGB(30, 30, 30),
             BorderColor3 = Color3.fromRGB(100, 0, 0),
             BorderSizePixel = 1
@@ -224,11 +267,11 @@ local function createGui()
         if not logFrame then return nil end
         local logLayout = Instance.new("UIListLayout")
         logLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        logLayout.Padding = UDim.new(0, 5)
+        logLayout.Padding = UDim.new(0, 6)
         logLayout.Parent = logFrame
 
         -- Audio Tab Sub-Menu
-        local audioSubRadius = 200
+        local audioSubRadius = 240
         local audioItems = {
             { name = "audioToggleButton", text = "Audio: On", angle = 0 },
             { name = "deleteAudioFrame", angle = 72 },
@@ -243,51 +286,31 @@ local function createGui()
             local x = audioSubRadius * math.cos(rad)
             local y = audioSubRadius * math.sin(rad)
             if item.name == "audioToggleButton" then
-                audioElements[item.name] = createButton(primaryButtons[2].subFrame, UDim2.new(0, 60, 0, 60), UDim2.new(0.5, x - 30, 0.5, y - 30), item.text)
+                audioElements[item.name] = createButton(primaryButtons[2].subFrame, UDim2.new(0, 64, 0, 64), UDim2.new(0.5, x - 32, 0.5, y - 32), item.text)
             else
-                audioElements[item.name] = createFrame(primaryButtons[2].subFrame, UDim2.new(0, 100, 0, 60), UDim2.new(0.5, x - 50, 0.5, y - 30), {
+                audioElements[item.name] = createFrame(primaryButtons[2].subFrame, UDim2.new(0, 120, 0, 80), UDim2.new(0.5, x - 60, 0.5, y - 40), {
                     BackgroundColor3 = Color3.fromRGB(30, 30, 30),
                     BorderColor3 = Color3.fromRGB(100, 0, 0),
                     BorderSizePixel = 1
                 })
                 local layout = Instance.new("UIListLayout")
                 layout.SortOrder = Enum.SortOrder.LayoutOrder
-                layout.Padding = UDim.new(0, 5)
+                layout.Padding = UDim.new(0, 6)
                 layout.Parent = audioElements[item.name]
             end
             if not audioElements[item.name] then return nil end
         end
 
-        audioElements.deleteAudioLabel = createLabel(audioElements.deleteAudioFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Del Audio ID:")
-        audioElements.deleteAudioIdTextBox = Instance.new("TextBox")
-        audioElements.deleteAudioIdTextBox.Size = UDim2.new(0, 70, 0, 20)
-        audioElements.deleteAudioIdTextBox.Position = UDim2.new(0, 0, 0, 20)
-        audioElements.deleteAudioIdTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        audioElements.deleteAudioIdTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-        audioElements.deleteAudioIdTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-        audioElements.deleteAudioIdTextBox.PlaceholderText = "e.g., 4676738150"
-        audioElements.deleteAudioIdTextBox.Text = "4676738150"
-        audioElements.deleteAudioIdTextBox.Font = Enum.Font.SourceSans
-        audioElements.deleteAudioIdTextBox.TextSize = 10
-        audioElements.deleteAudioIdTextBox.Parent = audioElements.deleteAudioFrame
-        audioElements.setDeleteAudioIdButton = createButton(audioElements.deleteAudioFrame, UDim2.new(0, 25, 0, 20), UDim2.new(0, 75, 0, 20), "Set")
+        audioElements.deleteAudioLabel = createLabel(audioElements.deleteAudioFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Del Audio ID:")
+        audioElements.deleteAudioIdTextBox = createTextBox(audioElements.deleteAudioFrame, UDim2.new(0, 80, 0, 24), UDim2.new(0, 5, 0, 24), "e.g., 4676738150", { Text = "4676738150" })
+        audioElements.setDeleteAudioIdButton = createButton(audioElements.deleteAudioFrame, UDim2.new(0, 35, 0, 24), UDim2.new(0, 85, 0, 24), "Set")
 
-        audioElements.restoreAudioLabel = createLabel(audioElements.restoreAudioFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Res Audio ID:")
-        audioElements.restoreAudioIdTextBox = Instance.new("TextBox")
-        audioElements.restoreAudioIdTextBox.Size = UDim2.new(0, 70, 0, 20)
-        audioElements.restoreAudioIdTextBox.Position = UDim2.new(0, 0, 0, 20)
-        audioElements.restoreAudioIdTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        audioElements.restoreAudioIdTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-        audioElements.restoreAudioIdTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-        audioElements.restoreAudioIdTextBox.PlaceholderText = "e.g., 773858658"
-        audioElements.restoreAudioIdTextBox.Text = "773858658"
-        audioElements.restoreAudioIdTextBox.Font = Enum.Font.SourceSans
-        audioElements.restoreAudioIdTextBox.TextSize = 10
-        audioElements.restoreAudioIdTextBox.Parent = audioElements.restoreAudioFrame
-        audioElements.setRestoreAudioIdButton = createButton(audioElements.restoreAudioFrame, UDim2.new(0, 25, 0, 20), UDim2.new(0, 75, 0, 20), "Set")
+        audioElements.restoreAudioLabel = createLabel(audioElements.restoreAudioFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Res Audio ID:")
+        audioElements.restoreAudioIdTextBox = createTextBox(audioElements.restoreAudioFrame, UDim2.new(0, 80, 0, 24), UDim2.new(0, 5, 0, 24), "e.g., 773858658", { Text = "773858658" })
+        audioElements.setRestoreAudioIdButton = createButton(audioElements.restoreAudioFrame, UDim2.new(0, 35, 0, 24), UDim2.new(0, 85, 0, 24), "Set")
 
-        audioElements.deleteVolumeLabel = createLabel(audioElements.deleteVolumeFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Del Vol: 1.0")
-        audioElements.deleteVolumeSlider = createButton(audioElements.deleteVolumeFrame, UDim2.new(1, 0, 0, 12), UDim2.new(0, 0, 0, 20), "", {
+        audioElements.deleteVolumeLabel = createLabel(audioElements.deleteVolumeFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Del Vol: 1.0")
+        audioElements.deleteVolumeSlider = createButton(audioElements.deleteVolumeFrame, UDim2.new(1, -10, 0, 16), UDim2.new(0, 5, 0, 24), "", {
             BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         })
         audioElements.deleteVolumeFill = createFrame(audioElements.deleteVolumeSlider, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), {
@@ -295,8 +318,8 @@ local function createGui()
             BorderSizePixel = 0
         })
 
-        audioElements.restoreVolumeLabel = createLabel(audioElements.restoreVolumeFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Res Vol: 1.0")
-        audioElements.restoreVolumeSlider = createButton(audioElements.restoreVolumeFrame, UDim2.new(1, 0, 0, 12), UDim2.new(0, 0, 0, 20), "", {
+        audioElements.restoreVolumeLabel = createLabel(audioElements.restoreVolumeFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Res Vol: 1.0")
+        audioElements.restoreVolumeSlider = createButton(audioElements.restoreVolumeFrame, UDim2.new(1, -10, 0, 16), UDim2.new(0, 5, 0, 24), "", {
             BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         })
         audioElements.restoreVolumeFill = createFrame(audioElements.restoreVolumeSlider, UDim2.new(1, 0, 1, 0), UDim2.new(0, 0, 0, 0), {
@@ -305,7 +328,7 @@ local function createGui()
         })
 
         -- Settings Tab Sub-Menu
-        local settingsSubRadius = 200
+        local settingsSubRadius = 240
         local settingsItems = {
             { name = "toggleKeybindFrame", angle = 0 },
             { name = "actionKeybindFrame", angle = 60 },
@@ -323,65 +346,35 @@ local function createGui()
             local x = settingsSubRadius * math.cos(rad)
             local y = settingsSubRadius * math.sin(rad)
             if item.text then
-                settingsElements[item.name] = createButton(primaryButtons[3].subFrame, UDim2.new(0, 60, 0, 60), UDim2.new(0.5, x - 30, 0.5, y - 30), item.text)
+                settingsElements[item.name] = createButton(primaryButtons[3].subFrame, UDim2.new(0, 64, 0, 64), UDim2.new(0.5, x - 32, 0.5, y - 32), item.text)
             else
-                settingsElements[item.name] = createFrame(primaryButtons[3].subFrame, UDim2.new(0, 100, 0, 60), UDim2.new(0.5, x - 50, 0.5, y - 30), {
+                settingsElements[item.name] = createFrame(primaryButtons[3].subFrame, UDim2.new(0, 120, 0, 80), UDim2.new(0.5, x - 60, 0.5, y - 40), {
                     BackgroundColor3 = Color3.fromRGB(30, 30, 30),
                     BorderColor3 = Color3.fromRGB(100, 0, 0),
                     BorderSizePixel = 1
                 })
                 local layout = Instance.new("UIListLayout")
                 layout.SortOrder = Enum.SortOrder.LayoutOrder
-                layout.Padding = UDim.new(0, 5)
+                layout.Padding = UDim.new(0, 6)
                 layout.Parent = settingsElements[item.name]
             end
             if not settingsElements[item.name] then return nil end
         end
 
-        settingsElements.toggleKeybindLabel = createLabel(settingsElements.toggleKeybindFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Toggle Key:")
-        settingsElements.toggleKeybindTextBox = Instance.new("TextBox")
-        settingsElements.toggleKeybindTextBox.Size = UDim2.new(0, 50, 0, 20)
-        settingsElements.toggleKeybindTextBox.Position = UDim2.new(0, 0, 0, 20)
-        settingsElements.toggleKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        settingsElements.toggleKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-        settingsElements.toggleKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-        settingsElements.toggleKeybindTextBox.PlaceholderText = "e.g., H"
-        settingsElements.toggleKeybindTextBox.Text = "H"
-        settingsElements.toggleKeybindTextBox.Font = Enum.Font.SourceSans
-        settingsElements.toggleKeybindTextBox.TextSize = 10
-        settingsElements.toggleKeybindTextBox.Parent = settingsElements.toggleKeybindFrame
-        settingsElements.setToggleKeybindButton = createButton(settingsElements.toggleKeybindFrame, UDim2.new(0, 40, 0, 20), UDim2.new(0, 55, 0, 20), "Set")
+        settingsElements.toggleKeybindLabel = createLabel(settingsElements.toggleKeybindFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Toggle Key:")
+        settingsElements.toggleKeybindTextBox = createTextBox(settingsElements.toggleKeybindFrame, UDim2.new(0, 70, 0, 24), UDim2.new(0, 5, 0, 24), "e.g., H", { Text = "H" })
+        settingsElements.setToggleKeybindButton = createButton(settingsElements.toggleKeybindFrame, UDim2.new(0, 45, 0, 24), UDim2.new(0, 75, 0, 24), "Set")
 
-        settingsElements.actionKeybindLabel = createLabel(settingsElements.actionKeybindFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Action Key:")
-        settingsElements.actionKeybindTextBox = Instance.new("TextBox")
-        settingsElements.actionKeybindTextBox.Size = UDim2.new(0, 50, 0, 20)
-        settingsElements.actionKeybindTextBox.Position = UDim2.new(0, 0, 0, 20)
-        settingsElements.actionKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        settingsElements.actionKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-        settingsElements.actionKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-        settingsElements.actionKeybindTextBox.PlaceholderText = "e.g., T"
-        settingsElements.actionKeybindTextBox.Text = "T"
-        settingsElements.actionKeybindTextBox.Font = Enum.Font.SourceSans
-        settingsElements.actionKeybindTextBox.TextSize = 10
-        settingsElements.actionKeybindTextBox.Parent = settingsElements.actionKeybindFrame
-        settingsElements.setActionKeybindButton = createButton(settingsElements.actionKeybindFrame, UDim2.new(0, 40, 0, 20), UDim2.new(0, 55, 0, 20), "Set")
+        settingsElements.actionKeybindLabel = createLabel(settingsElements.actionKeybindFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Action Key:")
+        settingsElements.actionKeybindTextBox = createTextBox(settingsElements.actionKeybindFrame, UDim2.new(0, 70, 0, 24), UDim2.new(0, 5, 0, 24), "e.g., T", { Text = "T" })
+        settingsElements.setActionKeybindButton = createButton(settingsElements.actionKeybindFrame, UDim2.new(0, 45, 0, 24), UDim2.new(0, 75, 0, 24), "Set")
 
-        settingsElements.cubeKeybindLabel = createLabel(settingsElements.cubeKeybindFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Cube Key:")
-        settingsElements.cubeKeybindTextBox = Instance.new("TextBox")
-        settingsElements.cubeKeybindTextBox.Size = UDim2.new(0, 50, 0, 20)
-        settingsElements.cubeKeybindTextBox.Position = UDim2.new(0, 0, 0, 20)
-        settingsElements.cubeKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-        settingsElements.cubeKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-        settingsElements.cubeKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-        settingsElements.cubeKeybindTextBox.PlaceholderText = "e.g., C"
-        settingsElements.cubeKeybindTextBox.Text = "C"
-        settingsElements.cubeKeybindTextBox.Font = Enum.Font.SourceSans
-        settingsElements.cubeKeybindTextBox.TextSize = 10
-        settingsElements.cubeKeybindTextBox.Parent = settingsElements.cubeKeybindFrame
-        settingsElements.setCubeKeybindButton = createButton(settingsElements.cubeKeybindFrame, UDim2.new(0, 40, 0, 20), UDim2.new(0, 55, 0, 20), "Set")
+        settingsElements.cubeKeybindLabel = createLabel(settingsElements.cubeKeybindFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Cube Key:")
+        settingsElements.cubeKeybindTextBox = createTextBox(settingsElements.cubeKeybindFrame, UDim2.new(0, 70, 0, 24), UDim2.new(0, 5, 0, 24), "e.g., C", { Text = "C" })
+        settingsElements.setCubeKeybindButton = createButton(settingsElements.cubeKeybindFrame, UDim2.new(0, 45, 0, 24), UDim2.new(0, 75, 0, 24), "Set")
 
-        settingsElements.cubeSizeLabel = createLabel(settingsElements.cubeSizeFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Size: 25")
-        settingsElements.cubeSizeSlider = createButton(settingsElements.cubeSizeFrame, UDim2.new(1, 0, 0, 12), UDim2.new(0, 0, 0, 20), "", {
+        settingsElements.cubeSizeLabel = createLabel(settingsElements.cubeSizeFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Size: 25")
+        settingsElements.cubeSizeSlider = createButton(settingsElements.cubeSizeFrame, UDim2.new(1, -10, 0, 16), UDim2.new(0, 5, 0, 24), "", {
             BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         })
         settingsElements.cubeSizeFill = createFrame(settingsElements.cubeSizeSlider, UDim2.new(0.5, 0, 1, 0), UDim2.new(0, 0, 0, 0), {
@@ -389,8 +382,8 @@ local function createGui()
             BorderSizePixel = 0
         })
 
-        settingsElements.cubeThicknessLabel = createLabel(settingsElements.cubeThicknessFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Thick: 1.0")
-        settingsElements.cubeThicknessSlider = createButton(settingsElements.cubeThicknessFrame, UDim2.new(1, 0, 0, 12), UDim2.new(0, 0, 0, 20), "", {
+        settingsElements.cubeThicknessLabel = createLabel(settingsElements.cubeThicknessFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Thick: 1.0")
+        settingsElements.cubeThicknessSlider = createButton(settingsElements.cubeThicknessFrame, UDim2.new(1, -10, 0, 16), UDim2.new(0, 5, 0, 24), "", {
             BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         })
         settingsElements.cubeThicknessFill = createFrame(settingsElements.cubeThicknessSlider, UDim2.new(0.032, 0, 1, 0), UDim2.new(0, 0, 0, 0), {
@@ -398,8 +391,8 @@ local function createGui()
             BorderSizePixel = 0
         })
 
-        settingsElements.cubeTransparencyLabel = createLabel(settingsElements.cubeTransparencyFrame, UDim2.new(1, 0, 0, 15), UDim2.new(0, 0, 0, 0), "Trans: 0.7")
-        settingsElements.cubeTransparencySlider = createButton(settingsElements.cubeTransparencyFrame, UDim2.new(1, 0, 0, 12), UDim2.new(0, 0, 0, 20), "", {
+        settingsElements.cubeTransparencyLabel = createLabel(settingsElements.cubeTransparencyFrame, UDim2.new(1, 0, 0, 18), UDim2.new(0, 0, 0, 0), "Trans: 0.7")
+        settingsElements.cubeTransparencySlider = createButton(settingsElements.cubeTransparencyFrame, UDim2.new(1, -10, 0, 16), UDim2.new(0, 5, 0, 24), "", {
             BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         })
         settingsElements.cubeTransparencyFill = createFrame(settingsElements.cubeTransparencySlider, UDim2.new(0.7, 0, 1, 0), UDim2.new(0, 0, 0, 0), {
@@ -416,16 +409,16 @@ local function createGui()
                 local rad = math.rad(tab.angle)
                 local x = primaryRadius * math.cos(rad)
                 local y = primaryRadius * math.sin(rad)
-                tab.button.Position = UDim2.new(0.5, 0, 0.5, 0)
-                tab.button.Size = UDim2.new(0, 0, 0, 0)
-                tweenElement(tab.button, { Position = UDim2.new(0.5, x - 25, 0.5, y - 25), Size = UDim2.new(0, 50, 0, 50) }, 0.3, (i - 1) * 0.05)
+                tab.button.Position = UDim2.new(0.5, x - 27, 0.5, y - 27)
+                tab.button.Size = UDim2.new(0, 54, 0, 54)
+                tweenElement(tab.button, { Size = UDim2.new(0, 54, 0, 54) }, 0.2, (i - 1) * 0.05)
             end
             print("Primary ring opened")
         end
 
         local function closePrimaryRing()
             for i, tab in ipairs(primaryButtons) do
-                tweenElement(tab.button, { Position = UDim2.new(0.5, 0, 0.5, 0), Size = UDim2.new(0, 0, 0, 0) }, 0.3, (i - 1) * 0.05)
+                tweenElement(tab.button, { Size = UDim2.new(0, 0, 0, 0) }, 0.2, (i - 1) * 0.05)
             end
             task.delay(0.3, function()
                 primaryRingFrame.Visible = false
@@ -443,12 +436,10 @@ local function createGui()
                     for j, child in ipairs(children) do
                         if child:IsA("GuiButton") or child:IsA("Frame") then
                             local origPos = child.Position
-                            child.Position = UDim2.new(0.5, 0, 0.5, 0)
-                            child.Size = child:IsA("Frame") and UDim2.new(0, 0, 0, 0) or UDim2.new(0, 0, 0, 0)
-                            tweenElement(child, {
-                                Position = origPos,
-                                Size = child:IsA("Frame") and UDim2.new(0, child.Size.X.Offset, 0, child.Size.Y.Offset) or UDim2.new(0, 60, 0, 60)
-                            }, 0.3, (j - 1) * 0.05)
+                            local origSize = child.Size
+                            child.Position = origPos
+                            child.Size = origSize
+                            tweenElement(child, { Size = origSize }, 0.2, (j - 1) * 0.05)
                         end
                     end
                 end
@@ -566,6 +557,11 @@ function StateManager.toggleState(button, stateKey, label, callback)
     if callback then callback() end
 end
 
+function StateManager.updateToggleButton(button, stateKey, label)
+    if not button then return end
+    button.Text = label .. (StateManager[stateKey] and "On" or "Off")
+end
+
 function StateManager.toggleGui(centralButton)
     if not centralButton then
         warn("Cannot toggle GUI, centralButton is nil")
@@ -581,15 +577,15 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
         return
     end
     local dragging = false
-    slider.MouseButton1Down:Connect(function()
+    local connection1 = slider.MouseButton1Down:Connect(function()
         dragging = true
     end)
-    UserInputService.InputEnded:Connect(function(input)
+    local connection2 = UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
     end)
-    slider.MouseMoved:Connect(function(x)
+    local connection3 = slider.MouseMoved:Connect(function(x)
         if dragging then
             local relativeX = x - slider.AbsolutePosition.X
             local fraction = math.clamp(relativeX / slider.AbsoluteSize.X, 0, 1)
@@ -599,6 +595,9 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
             print("Slider", stateKey, "set to", StateManager[stateKey])
         end
     end)
+    table.insert(StateManager.connections, connection1)
+    table.insert(StateManager.connections, connection2)
+    table.insert(StateManager.connections, connection3)
 end
 
 function StateManager.updateLogFrame(logFrame)
@@ -608,14 +607,16 @@ function StateManager.updateLogFrame(logFrame)
     end
     for i, item in ipairs(StateManager.deletedItems) do
         if i > 3 then break end
-        local itemFrame = createFrame(logFrame, UDim2.new(1, -10, 0, 15), UDim2.new(0, 5, 0, 0), {
+        local itemFrame = createFrame(logFrame, UDim2.new(1, -10, 0, 24), UDim2.new(0, 5, 0, 0), {
             BackgroundTransparency = 1
         })
-        local itemLabel = createLabel(itemFrame, UDim2.new(0.7, 0, 1, 0), UDim2.new(0, 0, 0, 0), item.name)
+        local displayName = string.sub(item.name, 1, 15)
+        if #item.name > 15 then displayName = displayName .. "..." end
+        local itemLabel = createLabel(itemFrame, UDim2.new(0.7, 0, 1, 0), UDim2.new(0, 0, 0, 0), displayName)
         local restoreButton = createButton(itemFrame, UDim2.new(0.3, -5, 1, 0), UDim2.new(0.7, 0, 0, 0), "Restore", {
-            TextSize = 8
+            TextSize = 14
         })
-        restoreButton.MouseButton1Click:Connect(function()
+        local connection = restoreButton.MouseButton1Click:Connect(function()
             item:Restore()
             table.remove(StateManager.deletedItems, i)
             StateManager.updateLogFrame(logFrame)
@@ -629,6 +630,7 @@ function StateManager.updateLogFrame(logFrame)
             end
             print("Restored item:", item.name)
         end)
+        table.insert(StateManager.connections, connection)
     end
 end
 
@@ -697,6 +699,7 @@ function StateManager.toggleCube(spawnCubeButton)
 
             if StateManager.cubeConnection then
                 StateManager.cubeConnection:Disconnect()
+                StateManager.cubeConnection = nil
             end
             StateManager.cubeConnection = RunService.Heartbeat:Connect(function()
                 if not StateManager.isCubeSpawned or not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
@@ -732,6 +735,7 @@ function StateManager.toggleCube(spawnCubeButton)
                     end
                 end
             end)
+            table.insert(StateManager.connections, StateManager.cubeConnection)
         else
             if existingCube then existingCube:Destroy() end
             if StateManager.cubeConnection then
@@ -792,37 +796,43 @@ local destroyMenuButton = guiElements.destroyMenuButton
 
 -- Connect Main Tab Buttons
 if toggleButton then
-    toggleButton.MouseButton1Click:Connect(function()
+    local connection = toggleButton.MouseButton1Click:Connect(function()
         StateManager.toggleState(toggleButton, "isDeleteModeEnabled", "Delete Mode: ")
     end)
+    table.insert(StateManager.connections, connection)
 end
 if protectButton then
-    protectButton.MouseButton1Click:Connect(function()
+    local connection = protectButton.MouseButton1Click:Connect(function()
         StateManager.toggleState(protectButton, "isCharacterProtected", "Protect: ")
     end)
+    table.insert(StateManager.connections, connection)
 end
 if terrainButton then
-    terrainButton.MouseButton1Click:Connect(function()
+    local connection = terrainButton.MouseButton1Click:Connect(function()
         StateManager.toggleState(terrainButton, "isTerrainDeletionEnabled", "Terrain: ")
     end)
+    table.insert(StateManager.connections, connection)
 end
 if outlineButton then
-    outlineButton.MouseButton1Click:Connect(function()
+    local connection = outlineButton.MouseButton1Click:Connect(function()
         StateManager.toggleState(outlineButton, "isOutlineEnabled", "Outline: ")
     end)
+    table.insert(StateManager.connections, connection)
 end
 if rightClickRestoreButton then
-    rightClickRestoreButton.MouseButton1Click:Connect(function()
+    local connection = rightClickRestoreButton.MouseButton1Click:Connect(function()
         StateManager.toggleState(rightClickRestoreButton, "isRightClickRestoreEnabled", "R-Click: ")
     end)
+    table.insert(StateManager.connections, connection)
 end
 if spawnCubeButton then
-    spawnCubeButton.MouseButton1Click:Connect(function()
+    local connection = spawnCubeButton.MouseButton1Click:Connect(function()
         StateManager.toggleCube(spawnCubeButton)
     end)
+    table.insert(StateManager.connections, connection)
 end
 if restoreAllButton then
-    restoreAllButton.MouseButton1Click:Connect(function()
+    local connection = restoreAllButton.MouseButton1Click:Connect(function()
         for _, item in ipairs(StateManager.deletedItems) do
             item:Restore()
         end
@@ -838,35 +848,43 @@ if restoreAllButton then
         end
         print("Restored all items")
     end)
+    table.insert(StateManager.connections, connection)
 end
 
 -- Connect Audio Tab Buttons
 if audioToggleButton then
-    audioToggleButton.MouseButton1Click:Connect(function()
+    local connection = audioToggleButton.MouseButton1Click:Connect(function()
         StateManager.toggleState(audioToggleButton, "isAudioEnabled", "Audio: ")
     end)
+    table.insert(StateManager.connections, connection)
 end
 if setDeleteAudioIdButton and deleteAudioIdTextBox then
-    setDeleteAudioIdButton.MouseButton1Click:Connect(function()
+    local connection = setDeleteAudioIdButton.MouseButton1Click:Connect(function()
         local id = tonumber(deleteAudioIdTextBox.Text)
-        if id then
+        if id and id > 0 then
             StateManager.deleteAudioId = id
+            deleteAudioIdTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
             print("Delete Audio ID set to:", id)
         else
+            deleteAudioIdTextBox.BorderColor3 = Color3.fromRGB(200, 0, 0)
             warn("Invalid Delete Audio ID")
         end
     end)
+    table.insert(StateManager.connections, connection)
 end
 if setRestoreAudioIdButton and restoreAudioIdTextBox then
-    setRestoreAudioIdButton.MouseButton1Click:Connect(function()
+    local connection = setRestoreAudioIdButton.MouseButton1Click:Connect(function()
         local id = tonumber(restoreAudioIdTextBox.Text)
-        if id then
+        if id and id > 0 then
             StateManager.restoreAudioId = id
+            restoreAudioIdTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
             print("Restore Audio ID set to:", id)
         else
+            restoreAudioIdTextBox.BorderColor3 = Color3.fromRGB(200, 0, 0)
             warn("Invalid Restore Audio ID")
         end
     end)
+    table.insert(StateManager.connections, connection)
 end
 if deleteVolumeSlider and deleteVolumeFill and deleteVolumeLabel then
     StateManager.setupSlider(deleteVolumeSlider, deleteVolumeFill, deleteVolumeLabel, "deleteVolume", 0, 3, "Del Vol: %.1f")
@@ -877,37 +895,46 @@ end
 
 -- Connect Settings Tab Buttons
 if setToggleKeybindButton and toggleKeybindTextBox then
-    setToggleKeybindButton.MouseButton1Click:Connect(function()
+    local connection = setToggleKeybindButton.MouseButton1Click:Connect(function()
         local key = Enum.KeyCode[toggleKeybindTextBox.Text]
         if key then
             StateManager.toggleKeybind = key
+            toggleKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
             print("Toggle keybind set to:", toggleKeybindTextBox.Text)
         else
+            toggleKeybindTextBox.BorderColor3 = Color3.fromRGB(200, 0, 0)
             warn("Invalid keybind")
         end
     end)
+    table.insert(StateManager.connections, connection)
 end
 if setActionKeybindButton and actionKeybindTextBox then
-    setActionKeybindButton.MouseButton1Click:Connect(function()
+    local connection = setActionKeybindButton.MouseButton1Click:Connect(function()
         local key = Enum.KeyCode[actionKeybindTextBox.Text]
         if key then
             StateManager.actionKeybind = key
+            actionKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
             print("Action keybind set to:", actionKeybindTextBox.Text)
         else
+            actionKeybindTextBox.BorderColor3 = Color3.fromRGB(200, 0, 0)
             warn("Invalid keybind")
         end
     end)
+    table.insert(StateManager.connections, connection)
 end
 if setCubeKeybindButton and cubeKeybindTextBox then
-    setCubeKeybindButton.MouseButton1Click:Connect(function()
+    local connection = setCubeKeybindButton.MouseButton1Click:Connect(function()
         local key = Enum.KeyCode[cubeKeybindTextBox.Text]
         if key then
             StateManager.cubeKeybind = key
+            cubeKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
             print("Cube keybind set to:", cubeKeybindTextBox.Text)
         else
+            cubeKeybindTextBox.BorderColor3 = Color3.fromRGB(200, 0, 0)
             warn("Invalid keybind")
         end
     end)
+    table.insert(StateManager.connections, connection)
 end
 if cubeSizeSlider and cubeSizeFill and cubeSizeLabel then
     StateManager.setupSlider(cubeSizeSlider, cubeSizeFill, cubeSizeLabel, "cubeSize", 5, 50, "Size: %.0f")
@@ -919,15 +946,17 @@ if cubeTransparencySlider and cubeTransparencyFill and cubeTransparencyLabel the
     StateManager.setupSlider(cubeTransparencySlider, cubeTransparencyFill, cubeTransparencyLabel, "cubeTransparency", 0, 1, "Trans: %.1f")
 end
 if cubeFloorButton then
-    cubeFloorButton.MouseButton1Click:Connect(function()
+    local connection = cubeFloorButton.MouseButton1Click:Connect(function()
         StateManager.toggleState(cubeFloorButton, "isCubeFloorEnabled", "Floor: ")
     end)
+    table.insert(StateManager.connections, connection)
 end
 if destroyMenuButton then
-    destroyMenuButton.MouseButton1Click:Connect(function()
+    local connection = destroyMenuButton.MouseButton1Click:Connect(function()
         StateManager.cleanup()
         print("Menu destroyed")
     end)
+    table.insert(StateManager.connections, connection)
 end
 
 -- Object Deletion and Restoration
@@ -994,6 +1023,7 @@ StateManager.connections.inputBegan = UserInputService.InputBegan:Connect(functi
         StateManager.toggleGui(centralButton)
     elseif input.KeyCode == StateManager.toggleKeybind and toggleButton then
         StateManager.toggleState(toggleButton, "isDeleteModeEnabled", "Delete Mode: ")
+        StateManager.updateToggleButton(toggleButton, "isDeleteModeEnabled", "Delete Mode: ")
     elseif input.KeyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = true
     elseif input.KeyCode == StateManager.cubeKeybind and spawnCubeButton then
@@ -1029,20 +1059,27 @@ end)
 
 -- Cleanup
 function StateManager.cleanup()
-    for _, connection in ipairs(StateManager.connections) do
-        connection:Disconnect()
+    for key, connection in pairs(StateManager.connections) do
+        if connection then
+            connection:Disconnect()
+            print("Disconnected connection:", key)
+        end
     end
     StateManager.connections = {}
     if StateManager.cubeConnection then
         StateManager.cubeConnection:Disconnect()
+        StateManager.cubeConnection = nil
+        print("Disconnected cube connection")
     end
     if guiElements.gui then
         guiElements.gui:Destroy()
+        print("GUI destroyed")
     end
     if selectionBox then
         selectionBox:Destroy()
+        print("SelectionBox destroyed")
     end
-    print("GUI and connections cleaned up")
+    print("Cleanup complete, all connections and GUI removed")
 end
 
 -- Test cleanup after 120 seconds
