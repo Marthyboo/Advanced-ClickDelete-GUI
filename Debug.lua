@@ -309,6 +309,12 @@ local function createGui()
         TextSize = 14
     })
 
+    print("Creating removeToggleKeybindButton")
+    local removeToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
+        Font = Enum.Font.SourceSansBold,
+        TextSize = 14
+    })
+
     print("Creating actionKeybindFrame")
     local actionKeybindFrame = Instance.new("Frame")
     actionKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
@@ -338,6 +344,12 @@ local function createGui()
 
     print("Creating setActionKeybindButton")
     local setActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
+        Font = Enum.Font.SourceSansBold,
+        TextSize = 14
+    })
+
+    print("Creating removeActionKeybindButton")
+    local removeActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
@@ -375,6 +387,12 @@ local function createGui()
         TextSize = 14
     })
 
+    print("Creating removeShapeKeybindButton")
+    local removeShapeKeybindButton = createButton(shapeKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
+        Font = Enum.Font.SourceSansBold,
+        TextSize = 14
+    })
+
     print("Creating scrollWheelKeybindFrame")
     local scrollWheelKeybindFrame = Instance.new("Frame")
     scrollWheelKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
@@ -404,6 +422,12 @@ local function createGui()
 
     print("Creating setScrollWheelKeybindButton")
     local setScrollWheelKeybindButton = createButton(scrollWheelKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
+        Font = Enum.Font.SourceSansBold,
+        TextSize = 14
+    })
+
+    print("Creating removeScrollWheelKeybindButton")
+    local removeScrollWheelKeybindButton = createButton(scrollWheelKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
@@ -566,12 +590,16 @@ local function createGui()
         restoreVolumeFill = restoreVolumeFill,
         toggleKeybindTextBox = toggleKeybindTextBox,
         setToggleKeybindButton = setToggleKeybindButton,
+        removeToggleKeybindButton = removeToggleKeybindButton,
         actionKeybindTextBox = actionKeybindTextBox,
         setActionKeybindButton = setActionKeybindButton,
+        removeActionKeybindButton = removeActionKeybindButton,
         shapeKeybindTextBox = shapeKeybindTextBox,
         setShapeKeybindButton = setShapeKeybindButton,
+        removeShapeKeybindButton = removeShapeKeybindButton,
         scrollWheelKeybindTextBox = scrollWheelKeybindTextBox,
         setScrollWheelKeybindButton = setScrollWheelKeybindButton,
+        removeScrollWheelKeybindButton = removeScrollWheelKeybindButton,
         shapeSizeLabel = shapeSizeLabel,
         shapeSizeSlider = shapeSizeSlider,
         shapeSizeFill = shapeSizeFill,
@@ -964,12 +992,16 @@ local restoreVolumeSlider = guiElements.restoreVolumeSlider
 local restoreVolumeFill = guiElements.restoreVolumeFill
 local toggleKeybindTextBox = guiElements.toggleKeybindTextBox
 local setToggleKeybindButton = guiElements.setToggleKeybindButton
+local removeToggleKeybindButton = guiElements.removeToggleKeybindButton
 local actionKeybindTextBox = guiElements.actionKeybindTextBox
 local setActionKeybindButton = guiElements.setActionKeybindButton
+local removeActionKeybindButton = guiElements.removeActionKeybindButton
 local shapeKeybindTextBox = guiElements.shapeKeybindTextBox
 local setShapeKeybindButton = guiElements.setShapeKeybindButton
+local removeShapeKeybindButton = guiElements.removeShapeKeybindButton
 local scrollWheelKeybindTextBox = guiElements.scrollWheelKeybindTextBox
 local setScrollWheelKeybindButton = guiElements.setScrollWheelKeybindButton
+local removeScrollWheelKeybindButton = guiElements.removeScrollWheelKeybindButton
 local shapeSizeLabel = guiElements.shapeSizeLabel
 local shapeSizeSlider = guiElements.shapeSizeSlider
 local shapeSizeFill = guiElements.shapeSizeFill
@@ -1014,7 +1046,8 @@ for _, btn in ipairs({
     restoreAllButton, audioToggleButton, setDeleteAudioIdButton, setRestoreAudioIdButton,
     mainTabButton, audioTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
     destroyMenuButton, destroyAndRevertButton, setToggleKeybindButton, setActionKeybindButton,
-    setShapeKeybindButton, shapeFloorButton, scrollWheelSizeButton, setScrollWheelKeybindButton
+    setShapeKeybindButton, setScrollWheelKeybindButton, removeToggleKeybindButton, removeActionKeybindButton,
+    removeShapeKeybindButton, removeScrollWheelKeybindButton, shapeFloorButton, scrollWheelSizeButton
 }) do
     applyHover(btn)
 end
@@ -1175,42 +1208,80 @@ local function setKeybind(textBox, stateKey, otherKeys)
     if inputKey == "" then
         StateManager[stateKey] = nil
         textBox.Text = ""
+        notify("Keybind", "Keybind for " .. stateKey .. " cleared")
         return
     end
     local keyCode = Enum.KeyCode[inputKey]
-    if keyCode and not table.find(otherKeys, keyCode) then
-        StateManager[stateKey] = keyCode
-        textBox.Text = inputKey
-    else
+    if not keyCode then
+        notify("Keybind", "Invalid key: " .. inputKey)
         textBox.Text = StateManager[stateKey] and StateManager[stateKey].Name or ""
+        return
     end
+    -- Check for conflicts
+    for _, otherKey in ipairs(otherKeys) do
+        if otherKey and keyCode == otherKey then
+            notify("Keybind", "Key " .. inputKey .. " is already assigned")
+            textBox.Text = StateManager[stateKey] and StateManager[stateKey].Name or ""
+            return
+        end
+    end
+    StateManager[stateKey] = keyCode
+    textBox.Text = inputKey
+    notify("Keybind", "Set " .. stateKey .. " to " .. inputKey)
+end
+
+local function removeKeybind(stateKey, textBox)
+    StateManager[stateKey] = nil
+    textBox.Text = ""
+    notify("Keybind", "Removed keybind for " .. stateKey)
 end
 
 setToggleKeybindButton.MouseButton1Click:Connect(function()
-    setKeybind(toggleKeybindTextBox, "toggleKeybind", { StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind })
+    local otherKeys = { StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind }
+    setKeybind(toggleKeybindTextBox, "toggleKeybind", otherKeys)
+end)
+
+removeToggleKeybindButton.MouseButton1Click:Connect(function()
+    removeKeybind("toggleKeybind", toggleKeybindTextBox)
 end)
 
 setActionKeybindButton.MouseButton1Click:Connect(function()
-    setKeybind(actionKeybindTextBox, "actionKeybind", { StateManager.toggleKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind })
+    local otherKeys = { StateManager.toggleKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind }
+    setKeybind(actionKeybindTextBox, "actionKeybind", otherKeys)
+end)
+
+removeActionKeybindButton.MouseButton1Click:Connect(function()
+    removeKeybind("actionKeybind", actionKeybindTextBox)
 end)
 
 setShapeKeybindButton.MouseButton1Click:Connect(function()
-    setKeybind(shapeKeybindTextBox, "shapeKeybind", { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.scrollWheelKeybind })
+    local otherKeys = { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.scrollWheelKeybind }
+    setKeybind(shapeKeybindTextBox, "shapeKeybind", otherKeys)
+end)
+
+removeShapeKeybindButton.MouseButton1Click:Connect(function()
+    removeKeybind("shapeKeybind", shapeKeybindTextBox)
 end)
 
 setScrollWheelKeybindButton.MouseButton1Click:Connect(function()
-    setKeybind(scrollWheelKeybindTextBox, "scrollWheelKeybind", { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.shapeKeybind, StateManager.guiToggleKeybind })
+    local otherKeys = { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.shapeKeybind, StateManager.guiToggleKeybind }
+    setKeybind(scrollWheelKeybindTextBox, "scrollWheelKeybind", otherKeys)
+end)
+
+removeScrollWheelKeybindButton.MouseButton1Click:Connect(function()
+    removeKeybind("scrollWheelKeybind", scrollWheelKeybindTextBox)
 end)
 
 restoreKeybindsButton.MouseButton1Click:Connect(function()
     StateManager.toggleKeybind = Enum.KeyCode.H
     StateManager.actionKeybind = Enum.KeyCode.T
     StateManager.shapeKeybind = Enum.KeyCode.C
-    StateManager.scrollWheelKeybind = nil -- Reset to empty
+    StateManager.scrollWheelKeybind = nil
     toggleKeybindTextBox.Text = "H"
     actionKeybindTextBox.Text = "T"
     shapeKeybindTextBox.Text = "C"
     scrollWheelKeybindTextBox.Text = ""
+    notify("Keybind", "Restored default keybinds")
 end)
 
 removeKeybindsButton.MouseButton1Click:Connect(function()
@@ -1223,42 +1294,41 @@ removeKeybindsButton.MouseButton1Click:Connect(function()
     actionKeybindTextBox.Text = ""
     shapeKeybindTextBox.Text = ""
     scrollWheelKeybindTextBox.Text = ""
+    notify("Keybind", "Removed all keybinds")
 end)
 
 -- Input Handling
 StateManager.connections.inputBegan = UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
-    if input.KeyCode == StateManager.guiToggleKeybind then
+    local keyCode = input.KeyCode
+    if keyCode == StateManager.guiToggleKeybind then
         StateManager.toggleGui(frame)
-    elseif input.KeyCode == StateManager.toggleKeybind then
+    elseif keyCode == StateManager.toggleKeybind then
         StateManager.toggleState(toggleButton, "isDeleteModeEnabled", "Delete Mode: ")
-    elseif input.KeyCode == StateManager.actionKeybind then
+    elseif keyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = true
-    elseif input.KeyCode == StateManager.shapeKeybind then
+    elseif keyCode == StateManager.shapeKeybind then
         StateManager.toggleShape(spawnShapeButton)
-    elseif input.KeyCode == StateManager.scrollWheelKeybind then
-        -- Toggle scroll wheel size feature
-        StateManager.isScrollWheelSizeEnabled = not StateManager.isScrollWheelSizeEnabled
-        scrollWheelSizeButton.Text = "Scroll Wheel Size: " .. (StateManager.isScrollWheelSizeEnabled and "On" or "Off")
-        if StateManager.isScrollWheelSizeEnabled then
-            -- Lock camera zoom
-            local camera = game.Workspace.CurrentCamera
-            if camera then
-                local cameraPos = camera.CFrame.Position
-                local focusPos = camera.Focus.Position
-                local distance = (cameraPos - focusPos).Magnitude
-                StateManager.lockedZoomDistance = distance
-                player.CameraMinZoomDistance = distance
-                player.CameraMaxZoomDistance = distance
-                print("Camera zoom locked at distance:", distance)
+    elseif keyCode == StateManager.scrollWheelKeybind then
+        StateManager.toggleState(scrollWheelSizeButton, "isScrollWheelSizeEnabled", "Scroll Wheel Size: ", function()
+            if StateManager.isScrollWheelSizeEnabled then
+                local camera = game.Workspace.CurrentCamera
+                if camera then
+                    local cameraPos = camera.CFrame.Position
+                    local focusPos = camera.Focus.Position
+                    local distance = (cameraPos - focusPos).Magnitude
+                    StateManager.lockedZoomDistance = distance
+                    player.CameraMinZoomDistance = distance
+                    player.CameraMaxZoomDistance = distance
+                    print("Camera zoom locked at distance:", distance)
+                end
+            else
+                StateManager.lockedZoomDistance = nil
+                player.CameraMinZoomDistance = StateManager.defaultMinZoomDistance
+                player.CameraMaxZoomDistance = StateManager.defaultMaxZoomDistance
+                print("Camera zoom restored to default limits")
             end
-        else
-            -- Restore default zoom limits
-            StateManager.lockedZoomDistance = nil
-            player.CameraMinZoomDistance = StateManager.defaultMinZoomDistance
-            player.CameraMaxZoomDistance = StateManager.defaultMaxZoomDistance
-            print("Camera zoom restored to default limits")
-        end
+        end)
     end
 end)
 
@@ -1272,7 +1342,7 @@ end)
 StateManager.connections.inputChanged = UserInputService.InputChanged:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent or not StateManager.isScrollWheelSizeEnabled then return end
     if input.UserInputType == Enum.UserInputType.MouseWheel then
-        local delta = input.Position.Z -- Positive for scroll up, negative for scroll down
+        local delta = input.Position.Z
         local sizeIncrement = 5
         local newSize = StateManager.shapeSize + (delta * sizeIncrement)
         newSize = math.clamp(newSize, 10, 355)
@@ -1280,7 +1350,6 @@ StateManager.connections.inputChanged = UserInputService.InputChanged:Connect(fu
         local fraction = (newSize - 10) / (355 - 10)
         shapeSizeFill.Size = UDim2.new(fraction, 0, 1, 0)
         shapeSizeLabel.Text = string.format("Shape Size: %d", newSize)
-        return -- Prevent default camera zoom behavior
     end
 end)
 
