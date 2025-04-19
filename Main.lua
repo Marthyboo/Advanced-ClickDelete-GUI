@@ -461,9 +461,6 @@ local function createGui()
     print("Creating shapeFloorButton")
     local shapeFloorButton = createButton(shapeToggleFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Shape Floor: Off")
 
-    print("Creating ringShapeButton")
-    local ringShapeButton = createButton(shapeToggleFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 135, 0, 0), "Ring Shape: Off")
-
     print("Creating destroyMenuFrame")
     local destroyMenuFrame = Instance.new("Frame")
     destroyMenuFrame.Size = UDim2.new(1, 0, 0, 25)
@@ -541,7 +538,6 @@ local function createGui()
         shapeThicknessSlider = shapeThicknessSlider,
         shapeThicknessFill = shapeThicknessFill,
         shapeFloorButton = shapeFloorButton,
-        ringShapeButton = ringShapeButton,
         shapeTransparencyLabel = shapeTransparencyLabel,
         shapeTransparencySlider = shapeTransparencySlider,
         shapeTransparencyFill = shapeTransparencyFill,
@@ -569,7 +565,6 @@ local StateManager = {
     shapeThickness = 1,
     shapeTransparency = 0.7,
     isShapeFloorEnabled = false,
-    isRingShapeEnabled = false,
     wallExtensionDelta = 5,
     connections = {}
 }
@@ -605,7 +600,7 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
     end)
 end
 
-local function createShapePart(shapeType, size, position, parent, props, orientation)
+local function createShapePart(size, position, parent, props)
     local part = Instance.new("Part")
     part.Size = size
     part.Position = position
@@ -613,10 +608,7 @@ local function createShapePart(shapeType, size, position, parent, props, orienta
     part.CanCollide = true
     part.Transparency = props.transparency
     part.BrickColor = props.brickColor
-    part.Shape = shapeType == "Cube" and Enum.PartType.Block or Enum.PartType.Cylinder
-    if orientation then
-        part.Orientation = orientation
-    end
+    part.Shape = Enum.PartType.Block
     part.Parent = parent
     return part
 end
@@ -639,65 +631,38 @@ function StateManager.toggleShape(spawnShapeButton)
             local shapeSize = StateManager.shapeSize
             local wallThickness = StateManager.shapeThickness
             local wallExtension = StateManager.wallExtensionDelta
-            local shapeType = StateManager.isRingShapeEnabled and "Torus" or "Cube"
             local shapeConfig = {
                 props = { transparency = StateManager.shapeTransparency, brickColor = BrickColor.new("Really red") },
                 parts = {}
             }
 
             local playerPos = player.Character.HumanoidRootPart.Position
-            local playerHeightOffset = shapeType == "Torus" and 0 or 2.5
+            local playerHeightOffset = 2.5
             local centerPos = playerPos + Vector3.new(0, wallThickness / 2 + wallExtension - playerHeightOffset, 0)
 
-            if shapeType == "Cube" then
-                local cubeSize = Vector3.new(shapeSize, shapeSize, shapeSize)
-                shapeConfig.parts = {
-                    { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, -wallExtension / 2, 0) },
-                    { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, -wallExtension / 2, 0) },
-                    { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, -cubeSize.Z / 2 + wallThickness / 2) },
-                    { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, cubeSize.Z / 2 - wallThickness / 2) },
-                    { name = "ceiling", size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z), offset = Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0) }
-                }
-                if StateManager.isShapeFloorEnabled then
-                    table.insert(shapeConfig.parts, {
-                        name = "floor",
-                        size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                        offset = Vector3.new(0, -cubeSize.Y / 2 - wallExtension + wallThickness / 2, 0)
-                    })
-                end
-            else
-                local outerRadius = shapeSize / 2
-                local tubeRadius = wallThickness / 2
-                local numSegments = 12
-                local segmentAngles = {}
-                for i = 1, numSegments do
-                    segmentAngles[i] = (i - 1) * (2 * math.pi / numSegments)
-                    table.insert(shapeConfig.parts, {
-                        name = "torusSegment" .. i,
-                        size = Vector3.new(wallThickness, wallThickness + wallExtension, wallThickness),
-                        offset = Vector3.new(0, 0, 0),
-                        orientation = Vector3.new(0, 0, 90)
-                    })
-                end
-                if StateManager.isShapeFloorEnabled then
-                    table.insert(shapeConfig.parts, {
-                        name = "floor",
-                        size = Vector3.new(shapeSize, wallThickness, shapeSize),
-                        offset = Vector3.new(0, -wallThickness / 2 - wallExtension, 0),
-                        orientation = Vector3.new(0, 0, 90)
-                    })
-                end
-                shapeConfig.segmentAngles = segmentAngles
-                shapeConfig.numSegments = numSegments
+            local cubeSize = Vector3.new(shapeSize, shapeSize, shapeSize)
+            shapeConfig.parts = {
+                { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, -wallExtension / 2, 0) },
+                { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, -wallExtension / 2, 0) },
+                { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, -cubeSize.Z / 2 + wallThickness / 2) },
+                { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, cubeSize.Z / 2 - wallThickness / 2) },
+                { name = "ceiling", size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z), offset = Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0) }
+            }
+            if StateManager.isShapeFloorEnabled then
+                table.insert(shapeConfig.parts, {
+                    name = "floor",
+                    size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
+                    offset = Vector3.new(0, -cubeSize.Y / 2 - wallExtension + wallThickness / 2, 0)
+                })
             end
 
             local parts = {}
             for _, partConfig in ipairs(shapeConfig.parts) do
-                parts[partConfig.name] = createShapePart(shapeType, partConfig.size, centerPos + partConfig.offset, shapeModel, shapeConfig.props, partConfig.orientation)
+                parts[partConfig.name] = createShapePart(partConfig.size, centerPos + partConfig.offset, shapeModel, shapeConfig.props)
             end
 
             shapeModel.Parent = game.Workspace
-            print(shapeType .. " spawned at:", centerPos)
+            print("Cube spawned at:", centerPos)
 
             if StateManager.shapeConnection then
                 StateManager.shapeConnection:Disconnect()
@@ -729,48 +694,30 @@ function StateManager.toggleShape(spawnShapeButton)
                     if part then
                         local size = partConfig.size
                         local offset = partConfig.offset
-                        local orientation = partConfig.orientation
-                        if shapeType == "Cube" then
-                            local cubeSize = Vector3.new(newShapeSize, newShapeSize, newShapeSize)
-                            if partConfig.name == "leftWall" or partConfig.name == "rightWall" then
-                                size = Vector3.new(newWallThickness, cubeSize.Y + newWallExtension, cubeSize.Z)
-                                offset = partConfig.name == "leftWall" and Vector3.new(-cubeSize.X / 2 + newWallThickness / 2, -newWallExtension / 2, 0) or
-                                         Vector3.new(cubeSize.X / 2 - newWallThickness / 2, -newWallExtension / 2, 0)
-                            elseif partConfig.name == "frontWall" or partConfig.name == "backWall" then
-                                size = Vector3.new(cubeSize.X, cubeSize.Y + newWallExtension, newWallThickness)
-                                offset = partConfig.name == "frontWall" and Vector3.new(0, -newWallExtension / 2, -cubeSize.Z / 2 + newWallThickness / 2) or
-                                         Vector3.new(0, -newWallExtension / 2, cubeSize.Z / 2 - newWallThickness / 2)
-                            elseif partConfig.name == "ceiling" then
-                                size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
-                                offset = Vector3.new(0, cubeSize.Y / 2 - newWallThickness / 2, 0)
-                            elseif partConfig.name == "floor" then
-                                size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
-                                offset = Vector3.new(0, -cubeSize.Y / 2 - newWallExtension + newWallThickness / 2, 0)
-                            end
-                        else
-                            local newOuterRadius = newShapeSize / 2
-                            local newTubeRadius = newWallThickness / 2
-                            if partConfig.name:match("torusSegment") then
-                                local i = tonumber(partConfig.name:match("%d+"))
-                                local angle = shapeConfig.segmentAngles[i]
-                                size = Vector3.new(newWallThickness, newWallThickness + newWallExtension, newWallThickness)
-                                offset = Vector3.new(math.cos(angle) * newOuterRadius, 0, math.sin(angle) * newOuterRadius)
-                                orientation = Vector3.new(0, 0, 90)
-                            elseif partConfig.name == "floor" then
-                                size = Vector3.new(newShapeSize, newWallThickness, newShapeSize)
-                                offset = Vector3.new(0, -newWallThickness / 2 - newWallExtension, 0)
-                                orientation = Vector3.new(0, 0, 90)
-                            end
+                        local cubeSize = Vector3.new(newShapeSize, newShapeSize, newShapeSize)
+                        if partConfig.name == "leftWall" or partConfig.name == "rightWall" then
+                            size = Vector3.new(newWallThickness, cubeSize.Y + newWallExtension, cubeSize.Z)
+                            offset = partConfig.name == "leftWall" and Vector3.new(-cubeSize.X / 2 + newWallThickness / 2, -newWallExtension / 2, 0) or
+                                     Vector3.new(cubeSize.X / 2 - newWallThickness / 2, -newWallExtension / 2, 0)
+                        elseif partConfig.name == "frontWall" or partConfig.name == "backWall" then
+                            size = Vector3.new(cubeSize.X, cubeSize.Y + newWallExtension, newWallThickness)
+                            offset = partConfig.name == "frontWall" and Vector3.new(0, -newWallExtension / 2, -cubeSize.Z / 2 + newWallThickness / 2) or
+                                     Vector3.new(0, -newWallExtension / 2, cubeSize.Z / 2 - newWallThickness / 2)
+                        elseif partConfig.name == "ceiling" then
+                            size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
+                            offset = Vector3.new(0, cubeSize.Y / 2 - newWallThickness / 2, 0)
+                        elseif partConfig.name == "floor" then
+                            size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
+                            offset = Vector3.new(0, -cubeSize.Y / 2 - newWallExtension + newWallThickness / 2, 0)
                         end
                         part.Size = size
                         part.Position = newCenterPos + offset
-                        part.Orientation = orientation or Vector3.new(0, 0, 0)
                         part.Transparency = newTransparency
                     end
                 end
             end)
 
-            notify('Shape', shapeType .. ' with ' .. (shapeType == "Cube" and "Separate Walls, Ceiling, " or "Torus Shape ") .. (StateManager.isShapeFloorEnabled and 'and Floor ' or 'No Floor ') .. 'Spawned, following player')
+            notify('Shape', 'Cube with Walls, Ceiling, ' .. (StateManager.isShapeFloorEnabled and 'and Floor ' or 'No Floor ') .. 'Spawned, following player')
         else
             if existingShape then
                 existingShape:Destroy()
@@ -986,7 +933,6 @@ local shapeThicknessLabel = guiElements.shapeThicknessLabel
 local shapeThicknessSlider = guiElements.shapeThicknessSlider
 local shapeThicknessFill = guiElements.shapeThicknessFill
 local shapeFloorButton = guiElements.shapeFloorButton
-local ringShapeButton = guiElements.ringShapeButton
 local shapeTransparencyLabel = guiElements.shapeTransparencyLabel
 local shapeTransparencySlider = guiElements.shapeTransparencySlider
 local shapeTransparencyFill = guiElements.shapeTransparencyFill
@@ -1019,7 +965,7 @@ for _, btn in ipairs({
     restoreAllButton, audioToggleButton, setDeleteAudioIdButton, setRestoreAudioIdButton,
     mainTabButton, audioTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
     destroyMenuButton, destroyAndRevertButton, setToggleKeybindButton, setActionKeybindButton,
-    setShapeKeybindButton, shapeFloorButton, ringShapeButton
+    setShapeKeybindButton, shapeFloorButton
 }) do
     applyHover(btn)
 end
@@ -1049,7 +995,7 @@ end)
 
 infiniteYieldButton.MouseButton1Click:Connect(function()
     local success, err = pcall(function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/RyXeleron/infiniteyield-reborn/refs/heads/master/source' or 'https://ryxeleron.github.io/storage/iyrbackup/legacy/master/source'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/RyXeleron/infiniteyield-reborn/refs/heads/master/source'))()
     end)
     if success then
         notify("Infinite Yield", "Successfully loaded Infinite Yield Reborn")
@@ -1086,15 +1032,6 @@ shapeFloorButton.MouseButton1Click:Connect(function()
     end)
 end)
 
-ringShapeButton.MouseButton1Click:Connect(function()
-    StateManager.toggleState(ringShapeButton, "isRingShapeEnabled", "Ring Shape: ", function()
-        if StateManager.isShapeSpawned then
-            StateManager.toggleShape(spawnShapeButton)
-            StateManager.toggleShape(spawnShapeButton)
-        end
-    end)
-end)
-
 -- AudioManager Connections
 setDeleteAudioIdButton.MouseButton1Click:Connect(function()
     AudioManager.setAudioId(deleteAudioIdTextBox, AudioManager.deleteSound)
@@ -1108,7 +1045,7 @@ AudioManager.setupVolumeSlider(deleteVolumeSlider, deleteVolumeFill, deleteVolum
 AudioManager.setupVolumeSlider(restoreVolumeSlider, restoreVolumeFill, restoreVolumeLabel, AudioManager.restoreSound)
 
 -- Slider Connections
-StateManager.setupSlider(shapeSizeSlider, shapeSizeFill, shapeSizeLabel, "shapeSize", 10, 50, "Shape Size: %d")
+StateManager.setupSlider(shapeSizeSlider, shapeSizeFill, shapeSizeLabel, "shapeSize", 10, 355, "Shape Size: %d")
 StateManager.setupSlider(shapeThicknessSlider, shapeThicknessFill, shapeThicknessLabel, "shapeThickness", 0.2, 25, "Shape Thickness: %.1f")
 StateManager.setupSlider(shapeTransparencySlider, shapeTransparencyFill, shapeTransparencyLabel, "shapeTransparency", 0, 1, "Shape Transparency: %.1f")
 StateManager.setupSlider(wallExtensionSlider, wallExtensionFill, wallExtensionLabel, "wallExtensionDelta", 0, 10, "Wall Extension: %.1f")
