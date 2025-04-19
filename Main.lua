@@ -93,8 +93,8 @@ local function createGui()
     print("GUI Created - Enabled:", gui.Enabled)
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 300, 0, 400)
-    frame.Position = UDim2.new(0.5, -150, 0.5, -200)
+    frame.Size = UDim2.new(0, 300, 0, 450) -- Increased parent frame height to match settingsTabFrame
+    frame.Position = UDim2.new(0.5, -150, 0.5, -225)
     frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     frame.BorderColor3 = Color3.fromRGB(150, 0, 0)
     frame.BorderSizePixel = 2
@@ -134,21 +134,21 @@ local function createGui()
 
     -- Tab Frames
     local mainTabFrame = Instance.new("Frame")
-    mainTabFrame.Size = UDim2.new(1, -10, 0, 280)
+    mainTabFrame.Size = UDim2.new(1, -10, 0, 330)
     mainTabFrame.Position = UDim2.new(0, 5, 0, 70)
     mainTabFrame.BackgroundTransparency = 1
     mainTabFrame.Visible = true
     mainTabFrame.Parent = frame
 
     local audioTabFrame = Instance.new("Frame")
-    audioTabFrame.Size = UDim2.new(1, -10, 0, 280)
+    audioTabFrame.Size = UDim2.new(1, -10, 0, 330)
     audioTabFrame.Position = UDim2.new(0, 5, 0, 70)
     audioTabFrame.BackgroundTransparency = 1
     audioTabFrame.Visible = false
     audioTabFrame.Parent = frame
 
     local settingsTabFrame = Instance.new("Frame")
-    settingsTabFrame.Size = UDim2.new(1, -10, 0, 280)
+    settingsTabFrame.Size = UDim2.new(1, -10, 0, 450) -- Increased from 400 to 450
     settingsTabFrame.Position = UDim2.new(0, 5, 0, 70)
     settingsTabFrame.BackgroundTransparency = 1
     settingsTabFrame.Visible = false
@@ -158,7 +158,7 @@ local function createGui()
     print("Creating settingsTabFrame UIListLayout")
     local settingsLayout = Instance.new("UIListLayout")
     settingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    settingsLayout.Padding = UDim.new(0, 3)
+    settingsLayout.Padding = UDim.new(0, 2) -- Reduced from 3 to 2
     settingsLayout.Parent = settingsTabFrame
 
     -- Main Tab Contents
@@ -171,7 +171,7 @@ local function createGui()
     local restoreAllButton = createButton(mainTabFrame, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 105), "Restore All")
 
     local logFrame = Instance.new("ScrollingFrame")
-    logFrame.Size = UDim2.new(1, 0, 0, 140)
+    logFrame.Size = UDim2.new(1, 0, 0, 190) -- Increased to fit larger mainTabFrame
     logFrame.Position = UDim2.new(0, 0, 0, 140)
     logFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     logFrame.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -278,20 +278,20 @@ local function createGui()
     -- Settings Tab Contents
     print("Creating toggleKeybindFrame")
     local toggleKeybindFrame = Instance.new("Frame")
-    toggleKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
+    toggleKeybindFrame.Size = UDim2.new(1, 0, 0, 22) -- Reduced from 25 to 22
     toggleKeybindFrame.BackgroundTransparency = 1
     toggleKeybindFrame.LayoutOrder = 1
     toggleKeybindFrame.Parent = settingsTabFrame
 
     print("Creating toggleKeybindLabel")
-    local toggleKeybindLabel = createLabel(toggleKeybindFrame, UDim2.new(0, 110, 0, 25), UDim2.new(0, 0, 0, 0), "Toggle Keybind:", {
+    local toggleKeybindLabel = createLabel(toggleKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Toggle Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
     print("Creating toggleKeybindTextBox")
     local toggleKeybindTextBox = Instance.new("TextBox")
-    toggleKeybindTextBox.Size = UDim2.new(0, 50, 0, 25)
+    toggleKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
     toggleKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
     toggleKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     toggleKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -304,27 +304,27 @@ local function createGui()
     toggleKeybindTextBox.Parent = toggleKeybindFrame
 
     print("Creating setToggleKeybindButton")
-    local setToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 170, 0, 0), "Set", {
+    local setToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
     print("Creating actionKeybindFrame")
     local actionKeybindFrame = Instance.new("Frame")
-    actionKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
+    actionKeybindFrame.Size = UDim2.new(1, 0, 0, 22) -- Reduced from 25 to 22
     actionKeybindFrame.BackgroundTransparency = 1
     actionKeybindFrame.LayoutOrder = 2
     actionKeybindFrame.Parent = settingsTabFrame
 
     print("Creating actionKeybindLabel")
-    local actionKeybindLabel = createLabel(actionKeybindFrame, UDim2.new(0, 110, 0, 25), UDim2.new(0, 0, 0, 0), "Action Keybind:", {
+    local actionKeybindLabel = createLabel(actionKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Action Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
     print("Creating actionKeybindTextBox")
     local actionKeybindTextBox = Instance.new("TextBox")
-    actionKeybindTextBox.Size = UDim2.new(0, 50, 0, 25)
+    actionKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
     actionKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
     actionKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     actionKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -337,27 +337,27 @@ local function createGui()
     actionKeybindTextBox.Parent = actionKeybindFrame
 
     print("Creating setActionKeybindButton")
-    local setActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 170, 0, 0), "Set", {
+    local setActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
     print("Creating cubeKeybindFrame")
     local cubeKeybindFrame = Instance.new("Frame")
-    cubeKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
+    cubeKeybindFrame.Size = UDim2.new(1, 0, 0, 22) -- Reduced from 25 to 22
     cubeKeybindFrame.BackgroundTransparency = 1
     cubeKeybindFrame.LayoutOrder = 3
     cubeKeybindFrame.Parent = settingsTabFrame
 
     print("Creating cubeKeybindLabel")
-    local cubeKeybindLabel = createLabel(cubeKeybindFrame, UDim2.new(0, 110, 0, 25), UDim2.new(0, 0, 0, 0), "Cube Keybind:", {
+    local cubeKeybindLabel = createLabel(cubeKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Cube Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
     print("Creating cubeKeybindTextBox")
     local cubeKeybindTextBox = Instance.new("TextBox")
-    cubeKeybindTextBox.Size = UDim2.new(0, 50, 0, 25)
+    cubeKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
     cubeKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
     cubeKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     cubeKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -370,7 +370,7 @@ local function createGui()
     cubeKeybindTextBox.Parent = cubeKeybindFrame
 
     print("Creating setCubeKeybindButton")
-    local setCubeKeybindButton = createButton(cubeKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 170, 0, 0), "Set", {
+    local setCubeKeybindButton = createButton(cubeKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
@@ -432,37 +432,54 @@ local function createGui()
     cubeTransparencyFill.BorderSizePixel = 0
     cubeTransparencyFill.Parent = cubeTransparencySlider
 
-    -- Cube Floor and Destroy Menu Frame
+    print("Creating wallExtensionLabel")
+    local wallExtensionLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Wall Extension: 5.0", {
+        TextColor3 = Color3.fromRGB(200, 200, 200),
+        Font = Enum.Font.SourceSansBold,
+        LayoutOrder = 10
+    })
+
+    print("Creating wallExtensionSlider")
+    local wallExtensionSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
+        BackgroundColor3 = Color3.fromRGB(50, 50, 50),
+        LayoutOrder = 11
+    })
+
+    local wallExtensionFill = Instance.new("Frame")
+    wallExtensionFill.Size = UDim2.new(0.5, 0, 1, 0)
+    wallExtensionFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    wallExtensionFill.BorderSizePixel = 0
+    wallExtensionFill.Parent = wallExtensionSlider
+
     print("Creating cubeFloorDestroyFrame")
     local cubeFloorDestroyFrame = Instance.new("Frame")
-    cubeFloorDestroyFrame.Size = UDim2.new(1, 0, 0, 30)
+    cubeFloorDestroyFrame.Size = UDim2.new(1, 0, 0, 25) -- Reduced from 30 to 25
     cubeFloorDestroyFrame.BackgroundTransparency = 1
-    cubeFloorDestroyFrame.LayoutOrder = 10
+    cubeFloorDestroyFrame.LayoutOrder = 12
     cubeFloorDestroyFrame.Parent = settingsTabFrame
 
     print("Creating cubeFloorButton")
-    local cubeFloorButton = createButton(cubeFloorDestroyFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 0), "Cube Floor: Off")
+    local cubeFloorButton = createButton(cubeFloorDestroyFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Cube Floor: Off")
 
     print("Creating destroyMenuButton")
-    local destroyMenuButton = createButton(cubeFloorDestroyFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 135, 0, 0), "Destroy Menu")
+    local destroyMenuButton = createButton(cubeFloorDestroyFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 135, 0, 0), "Destroy Menu")
 
-    -- Restore Keybinds and Destroy & Revert Frame
     print("Creating restoreDestroyRevertFrame")
     local restoreDestroyRevertFrame = Instance.new("Frame")
-    restoreDestroyRevertFrame.Size = UDim2.new(1, 0, 0, 30)
+    restoreDestroyRevertFrame.Size = UDim2.new(1, 0, 0, 25) -- Reduced from 30 to 25
     restoreDestroyRevertFrame.BackgroundTransparency = 1
-    restoreDestroyRevertFrame.LayoutOrder = 11
+    restoreDestroyRevertFrame.LayoutOrder = 13
     restoreDestroyRevertFrame.Parent = settingsTabFrame
 
     print("Creating restoreKeybindsButton")
-    local restoreKeybindsButton = createButton(restoreDestroyRevertFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 0), "Restore All Keybinds")
+    local restoreKeybindsButton = createButton(restoreDestroyRevertFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Restore All Keybinds")
 
     print("Creating destroyAndRevertButton")
-    local destroyAndRevertButton = createButton(restoreDestroyRevertFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 135, 0, 0), "Destroy & Revert")
+    local destroyAndRevertButton = createButton(restoreDestroyRevertFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 135, 0, 0), "Destroy & Revert")
 
     print("Creating removeKeybindsButton")
-    local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(), "Remove Every Keybind", {
-        LayoutOrder = 12
+    local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 25), UDim2.new(), "Remove Every Keybind", {
+        LayoutOrder = 14
     })
 
     print("GUI parenting to PlayerGui")
@@ -516,7 +533,10 @@ local function createGui()
         cubeFloorButton = cubeFloorButton,
         cubeTransparencyLabel = cubeTransparencyLabel,
         cubeTransparencySlider = cubeTransparencySlider,
-        cubeTransparencyFill = cubeTransparencyFill
+        cubeTransparencyFill = cubeTransparencyFill,
+        wallExtensionLabel = wallExtensionLabel,
+        wallExtensionSlider = wallExtensionSlider,
+        wallExtensionFill = wallExtensionFill
     }
 end
 
@@ -539,6 +559,7 @@ local StateManager = {
     cubeThickness = 1,
     cubeTransparency = 0.7,
     isCubeFloorEnabled = false,
+    wallExtensionDelta = 5,
     connections = {}
 }
 
@@ -602,13 +623,14 @@ function StateManager.toggleCube(spawnCubeButton)
             cubeModel.Name = cubeName
             local cubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
             local wallThickness = StateManager.cubeThickness
+            local wallExtension = StateManager.wallExtensionDelta
             local cubeConfig = {
                 props = { transparency = StateManager.cubeTransparency, brickColor = BrickColor.new("Really red") },
                 parts = {
-                    { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, 0, 0) },
-                    { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, 0, 0) },
-                    { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness), offset = Vector3.new(0, 0, -cubeSize.Z / 2 + wallThickness / 2) },
-                    { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y, wallThickness), offset = Vector3.new(0, 0, cubeSize.Z / 2 - wallThickness / 2) },
+                    { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, -wallExtension / 2, 0) },
+                    { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, -wallExtension / 2, 0) },
+                    { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, -cubeSize.Z / 2 + wallThickness / 2) },
+                    { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, cubeSize.Z / 2 - wallThickness / 2) },
                     { name = "ceiling", size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z), offset = Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0) }
                 }
             }
@@ -616,7 +638,7 @@ function StateManager.toggleCube(spawnCubeButton)
                 table.insert(cubeConfig.parts, {
                     name = "floor",
                     size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    offset = Vector3.new(0, -cubeSize.Y / 2 - 3 + wallThickness, 0)
+                    offset = Vector3.new(0, -cubeSize.Y / 2 - wallExtension + wallThickness / 2, 0)
                 })
             end
 
@@ -649,6 +671,7 @@ function StateManager.toggleCube(spawnCubeButton)
                 local newCubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
                 local newWallThickness = StateManager.cubeThickness
                 local newTransparency = StateManager.cubeTransparency
+                local newWallExtension = StateManager.wallExtensionDelta
                 local newPos = player.Character.HumanoidRootPart.Position
                 local newCenterPos = newPos + Vector3.new(0, newCubeSize.Y / 2 - playerHeightOffset, 0)
 
@@ -658,19 +681,19 @@ function StateManager.toggleCube(spawnCubeButton)
                         local size = partConfig.size
                         local offset = partConfig.offset
                         if partConfig.name == "leftWall" or partConfig.name == "rightWall" then
-                            size = Vector3.new(newWallThickness, newCubeSize.Y, newCubeSize.Z)
-                            offset = partConfig.name == "leftWall" and Vector3.new(-newCubeSize.X / 2 + newWallThickness / 2, 0, 0) or
-                                     Vector3.new(newCubeSize.X / 2 - newWallThickness / 2, 0, 0)
+                            size = Vector3.new(newWallThickness, newCubeSize.Y + newWallExtension, newCubeSize.Z)
+                            offset = partConfig.name == "leftWall" and Vector3.new(-newCubeSize.X / 2 + newWallThickness / 2, -newWallExtension / 2, 0) or
+                                     Vector3.new(newCubeSize.X / 2 - newWallThickness / 2, -newWallExtension / 2, 0)
                         elseif partConfig.name == "frontWall" or partConfig.name == "backWall" then
-                            size = Vector3.new(newCubeSize.X, newCubeSize.Y, newWallThickness)
-                            offset = partConfig.name == "frontWall" and Vector3.new(0, 0, -newCubeSize.Z / 2 + newWallThickness / 2) or
-                                     Vector3.new(0, 0, newCubeSize.Z / 2 - newWallThickness / 2)
+                            size = Vector3.new(newCubeSize.X, newCubeSize.Y + newWallExtension, newWallThickness)
+                            offset = partConfig.name == "frontWall" and Vector3.new(0, -newWallExtension / 2, -newCubeSize.Z / 2 + newWallThickness / 2) or
+                                     Vector3.new(0, -newWallExtension / 2, newCubeSize.Z / 2 - newWallThickness / 2)
                         elseif partConfig.name == "ceiling" then
                             size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
                             offset = Vector3.new(0, newCubeSize.Y / 2 - newWallThickness / 2, 0)
                         elseif partConfig.name == "floor" then
                             size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
-                            offset = Vector3.new(0, -newCubeSize.Y / 2 - 3 + newWallThickness, 0)
+                            offset = Vector3.new(0, -newCubeSize.Y / 2 - newWallExtension + newWallThickness / 2, 0)
                         end
                         part.Size = size
                         part.Position = newCenterPos + offset
@@ -934,6 +957,9 @@ local cubeFloorButton = guiElements.cubeFloorButton
 local cubeTransparencyLabel = guiElements.cubeTransparencyLabel
 local cubeTransparencySlider = guiElements.cubeTransparencySlider
 local cubeTransparencyFill = guiElements.cubeTransparencyFill
+local wallExtensionLabel = guiElements.wallExtensionLabel
+local wallExtensionSlider = guiElements.wallExtensionSlider
+local wallExtensionFill = guiElements.wallExtensionFill
 
 -- Visual feedback
 local selectionBox = Instance.new("SelectionBox", game.Workspace)
@@ -1035,14 +1061,13 @@ AudioManager.setupVolumeSlider(restoreVolumeSlider, restoreVolumeFill, restoreVo
 StateManager.setupSlider(cubeSizeSlider, cubeSizeFill, cubeSizeLabel, "cubeSize", 10, 50, "Cube Size: %d")
 StateManager.setupSlider(cubeThicknessSlider, cubeThicknessFill, cubeThicknessLabel, "cubeThickness", 0.2, 25, "Cube Thickness: %.1f")
 StateManager.setupSlider(cubeTransparencySlider, cubeTransparencyFill, cubeTransparencyLabel, "cubeTransparency", 0, 1, "Cube Transparency: %.1f")
+StateManager.setupSlider(wallExtensionSlider, wallExtensionFill, wallExtensionLabel, "wallExtensionDelta", 0, 10, "Wall Extension: %.1f")
 
 -- DeleteRestoreManager Connections
 restoreAllButton.MouseButton1Click:Connect(function()
     DeleteRestoreManager.restoreAll(StateManager.isAudioEnabled, AudioManager.restoreSound)
     DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
 end)
-
--- (Previous script content up to `cleanup` function is unchanged)
 
 local function cleanup()
     local cube = game.Workspace:FindFirstChild("PlayerCube_" .. player.Name)
