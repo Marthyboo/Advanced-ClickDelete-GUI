@@ -164,7 +164,7 @@ local function createGui()
     -- Main Tab Contents
     local toggleButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 0), "Delete Mode: Off")
     local protectButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 0), "Protect Character: Off")
-    local terrainButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 35), "Terrain Deletion: Off")
+    local infiniteYieldButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 35), "Run Infinite Yield")
     local outlineButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 35), "Outline: On")
     local rightClickRestoreButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 70), "Right-Click Restore: On")
     local spawnShapeButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 70), "Spawn Shape: Off")
@@ -507,7 +507,7 @@ local function createGui()
         settingsTabFrame = settingsTabFrame,
         toggleButton = toggleButton,
         protectButton = protectButton,
-        terrainButton = terrainButton,
+        infiniteYieldButton = infiniteYieldButton,
         outlineButton = outlineButton,
         rightClickRestoreButton = rightClickRestoreButton,
         restoreAllButton = restoreAllButton,
@@ -555,7 +555,6 @@ end
 local StateManager = {
     isDeleteModeEnabled = false,
     isCharacterProtected = false,
-    isTerrainDeletionEnabled = false,
     isOutlineEnabled = true,
     isRightClickRestoreEnabled = true,
     isAudioEnabled = true,
@@ -647,7 +646,7 @@ function StateManager.toggleShape(spawnShapeButton)
             }
 
             local playerPos = player.Character.HumanoidRootPart.Position
-            local playerHeightOffset = shapeType == "Torus" and 0 or 2.5 -- No vertical offset for torus to keep player in center
+            local playerHeightOffset = shapeType == "Torus" and 0 or 2.5
             local centerPos = playerPos + Vector3.new(0, wallThickness / 2 + wallExtension - playerHeightOffset, 0)
 
             if shapeType == "Cube" then
@@ -666,17 +665,17 @@ function StateManager.toggleShape(spawnShapeButton)
                         offset = Vector3.new(0, -cubeSize.Y / 2 - wallExtension + wallThickness / 2, 0)
                     })
                 end
-            else -- Torus
+            else
                 local outerRadius = shapeSize / 2
                 local tubeRadius = wallThickness / 2
                 local numSegments = 12
-                local segmentAngles = {} -- Precompute angles
+                local segmentAngles = {}
                 for i = 1, numSegments do
                     segmentAngles[i] = (i - 1) * (2 * math.pi / numSegments)
                     table.insert(shapeConfig.parts, {
                         name = "torusSegment" .. i,
                         size = Vector3.new(wallThickness, wallThickness + wallExtension, wallThickness),
-                        offset = Vector3.new(0, 0, 0), -- Will be updated in Heartbeat
+                        offset = Vector3.new(0, 0, 0),
                         orientation = Vector3.new(0, 0, 90)
                     })
                 end
@@ -748,7 +747,7 @@ function StateManager.toggleShape(spawnShapeButton)
                                 size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
                                 offset = Vector3.new(0, -cubeSize.Y / 2 - newWallExtension + newWallThickness / 2, 0)
                             end
-                        else -- Torus
+                        else
                             local newOuterRadius = newShapeSize / 2
                             local newTubeRadius = newWallThickness / 2
                             if partConfig.name:match("torusSegment") then
@@ -835,7 +834,6 @@ end
 -- DeleteRestoreManager
 local DeleteRestoreManager = {
     deletedObjects = {},
-    MAX_TERRAIN_BACKUPS = 5,
     deletedStorage = Instance.new("Folder", game.ReplicatedStorage),
     characterCache = {}
 }
@@ -859,28 +857,6 @@ function DeleteRestoreManager.isBodyPartOrCharacter(target, isCharacterProtected
         return true
     end
     return false
-end
-
-function DeleteRestoreManager.getTerrainRegion(position)
-    local terrain = game.Workspace.Terrain
-    local cellSize = 4
-    local regionSize = Vector3.new(32, 32, 32)
-    local cellPos = terrain:WorldToCell(position)
-    local minCell = cellPos - Vector3.new(regionSize.X / cellSize / 2, regionSize.Y / cellSize / 2, regionSize.Z / cellSize / 2)
-    local maxCell = cellPos + Vector3.new(regionSize.X / cellSize / 2, regionSize.Y / cellSize / 2, regionSize.Z / cellSize / 2)
-    local minWorld = terrain:CellToWorld(minCell.X, minCell.Y, minCell.Z)
-    local maxWorld = terrain:CellToWorld(maxCell.X, maxCell.Y, maxCell.Z)
-    return Region3.new(minWorld, maxWorld)
-end
-
-function DeleteRestoreManager.checkTerrain(mouse)
-    local terrain = game.Workspace.Terrain
-    local hitPosition = mouse.Hit.Position
-    local cellPos = terrain:WorldToCell(hitPosition)
-    if terrain:GetCell(cellPos.X, cellPos.Y, cellPos.Z) ~= Enum.Material.Air then
-        return hitPosition
-    end
-    return nil
 end
 
 function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
@@ -917,17 +893,6 @@ function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSoun
                 else
                     warn("Failed to restore object: " .. tostring(err))
                 end
-            elseif data.region then
-                local success, err = pcall(function()
-                    game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
-                end)
-                if success then
-                    table.remove(DeleteRestoreManager.deletedObjects, i)
-                    DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
-                    if isAudioEnabled then restoreSound:Play() end
-                else
-                    warn("Failed to restore terrain: " .. tostring(err))
-                end
             end
         end)
 
@@ -942,8 +907,6 @@ function DeleteRestoreManager.restoreAll(isAudioEnabled, restoreSound)
         local success, err = pcall(function()
             if data.object then
                 data.object.Parent = data.originalParent
-            elseif data.region then
-                game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
             end
             if isAudioEnabled then restoreSound:Play() end
         end)
@@ -989,7 +952,7 @@ local audioTabFrame = guiElements.audioTabFrame
 local settingsTabFrame = guiElements.settingsTabFrame
 local toggleButton = guiElements.toggleButton
 local protectButton = guiElements.protectButton
-local terrainButton = guiElements.terrainButton
+local infiniteYieldButton = guiElements.infiniteYieldButton
 local outlineButton = guiElements.outlineButton
 local rightClickRestoreButton = guiElements.rightClickRestoreButton
 local restoreAllButton = guiElements.restoreAllButton
@@ -1052,7 +1015,7 @@ local function applyHover(button)
     end)
 end
 for _, btn in ipairs({
-    toggleButton, protectButton, terrainButton, outlineButton, rightClickRestoreButton, spawnShapeButton,
+    toggleButton, protectButton, infiniteYieldButton, outlineButton, rightClickRestoreButton, spawnShapeButton,
     restoreAllButton, audioToggleButton, setDeleteAudioIdButton, setRestoreAudioIdButton,
     mainTabButton, audioTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
     destroyMenuButton, destroyAndRevertButton, setToggleKeybindButton, setActionKeybindButton,
@@ -1084,8 +1047,16 @@ protectButton.MouseButton1Click:Connect(function()
     StateManager.toggleState(protectButton, "isCharacterProtected", "Protect Character: ")
 end)
 
-terrainButton.MouseButton1Click:Connect(function()
-    StateManager.toggleState(terrainButton, "isTerrainDeletionEnabled", "Terrain Deletion: ")
+infiniteYieldButton.MouseButton1Click:Connect(function()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/RyXeleron/infiniteyield-reborn/refs/heads/master/source' or 'https://ryxeleron.github.io/storage/iyrbackup/legacy/master/source'))()
+    end)
+    if success then
+        notify("Infinite Yield", "Successfully loaded Infinite Yield Reborn")
+    else
+        warn("Failed to load Infinite Yield Reborn: " .. tostring(err))
+        notify("Infinite Yield", "Failed to load Infinite Yield Reborn")
+    end
 end)
 
 outlineButton.MouseButton1Click:Connect(function()
@@ -1260,7 +1231,7 @@ StateManager.connections.outline = RunService.Heartbeat:Connect(function()
     )
 end)
 
--- Delete Objects or Terrain
+-- Delete Objects
 local debounce = false
 StateManager.connections.delete = mouse.Button1Down:Connect(function()
     if debounce or not StateManager.isDeleteModeEnabled or not StateManager.isActionKeyHeld then
@@ -1268,43 +1239,6 @@ StateManager.connections.delete = mouse.Button1Down:Connect(function()
         return
     end
     debounce = true
-
-    if StateManager.isTerrainDeletionEnabled then
-        local hitPosition = DeleteRestoreManager.checkTerrain(mouse)
-        if hitPosition then
-            local terrain = game.Workspace.Terrain
-            local region = DeleteRestoreManager.getTerrainRegion(hitPosition)
-            local regionMin = region.CFrame.Position - region.Size / 2
-            local backup = terrain:CopyRegion(region)
-            table.insert(DeleteRestoreManager.deletedObjects, { region = backup, position = regionMin, name = "Terrain" })
-
-            local terrainCount = 0
-            for _, data in ipairs(DeleteRestoreManager.deletedObjects) do
-                if data.region then terrainCount = terrainCount + 1 end
-            end
-            while terrainCount > DeleteRestoreManager.MAX_TERRAIN_BACKUPS do
-                for i, data in ipairs(DeleteRestoreManager.deletedObjects) do
-                    if data.region then
-                        table.remove(DeleteRestoreManager.deletedObjects, i)
-                        terrainCount = terrainCount - 1
-                        break
-                    end
-                end
-            end
-
-            local success, err = pcall(function()
-                terrain:FillRegion(region, 4, Enum.Material.Air)
-                if StateManager.isAudioEnabled then AudioManager.deleteSound:Play() end
-            end)
-            if success then
-                DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
-            else
-                warn("Failed to clear terrain: " .. tostring(err))
-            end
-            debounce = false
-            return
-        end
-    end
 
     local target = mouse.Target
     if not target or target:IsA("Terrain") or DeleteRestoreManager.isBodyPartOrCharacter(target, StateManager.isCharacterProtected) then
@@ -1334,8 +1268,6 @@ StateManager.connections.restore = mouse.Button2Down:Connect(function()
     local success, err = pcall(function()
         if data.object then
             data.object.Parent = data.originalParent
-        elseif data.region then
-            game.Workspace.Terrain:PasteRegion(data.region, data.position, true)
         end
         if StateManager.isAudioEnabled then AudioManager.restoreSound:Play() end
     end)
