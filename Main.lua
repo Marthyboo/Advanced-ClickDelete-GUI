@@ -93,7 +93,7 @@ local function createGui()
     print("GUI Created - Enabled:", gui.Enabled)
 
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 300, 0, 450) -- Increased parent frame height to match settingsTabFrame
+    frame.Size = UDim2.new(0, 300, 0, 450)
     frame.Position = UDim2.new(0.5, -150, 0.5, -225)
     frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     frame.BorderColor3 = Color3.fromRGB(150, 0, 0)
@@ -148,7 +148,7 @@ local function createGui()
     audioTabFrame.Parent = frame
 
     local settingsTabFrame = Instance.new("Frame")
-    settingsTabFrame.Size = UDim2.new(1, -10, 0, 450) -- Increased from 400 to 450
+    settingsTabFrame.Size = UDim2.new(1, -10, 0, 450)
     settingsTabFrame.Position = UDim2.new(0, 5, 0, 70)
     settingsTabFrame.BackgroundTransparency = 1
     settingsTabFrame.Visible = false
@@ -158,7 +158,7 @@ local function createGui()
     print("Creating settingsTabFrame UIListLayout")
     local settingsLayout = Instance.new("UIListLayout")
     settingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    settingsLayout.Padding = UDim.new(0, 2) -- Reduced from 3 to 2
+    settingsLayout.Padding = UDim.new(0, 2)
     settingsLayout.Parent = settingsTabFrame
 
     -- Main Tab Contents
@@ -167,11 +167,11 @@ local function createGui()
     local terrainButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 35), "Terrain Deletion: Off")
     local outlineButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 35), "Outline: On")
     local rightClickRestoreButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 0, 0, 70), "Right-Click Restore: On")
-    local spawnCubeButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 70), "Spawn Cube: Off")
+    local spawnShapeButton = createButton(mainTabFrame, UDim2.new(0, 130, 0, 30), UDim2.new(0, 140, 0, 70), "Spawn Shape: Off")
     local restoreAllButton = createButton(mainTabFrame, UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 105), "Restore All")
 
     local logFrame = Instance.new("ScrollingFrame")
-    logFrame.Size = UDim2.new(1, 0, 0, 190) -- Increased to fit larger mainTabFrame
+    logFrame.Size = UDim2.new(1, 0, 0, 190)
     logFrame.Position = UDim2.new(0, 0, 0, 140)
     logFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     logFrame.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -278,7 +278,7 @@ local function createGui()
     -- Settings Tab Contents
     print("Creating toggleKeybindFrame")
     local toggleKeybindFrame = Instance.new("Frame")
-    toggleKeybindFrame.Size = UDim2.new(1, 0, 0, 22) -- Reduced from 25 to 22
+    toggleKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
     toggleKeybindFrame.BackgroundTransparency = 1
     toggleKeybindFrame.LayoutOrder = 1
     toggleKeybindFrame.Parent = settingsTabFrame
@@ -311,7 +311,7 @@ local function createGui()
 
     print("Creating actionKeybindFrame")
     local actionKeybindFrame = Instance.new("Frame")
-    actionKeybindFrame.Size = UDim2.new(1, 0, 0, 22) -- Reduced from 25 to 22
+    actionKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
     actionKeybindFrame.BackgroundTransparency = 1
     actionKeybindFrame.LayoutOrder = 2
     actionKeybindFrame.Parent = settingsTabFrame
@@ -342,95 +342,95 @@ local function createGui()
         TextSize = 14
     })
 
-    print("Creating cubeKeybindFrame")
-    local cubeKeybindFrame = Instance.new("Frame")
-    cubeKeybindFrame.Size = UDim2.new(1, 0, 0, 22) -- Reduced from 25 to 22
-    cubeKeybindFrame.BackgroundTransparency = 1
-    cubeKeybindFrame.LayoutOrder = 3
-    cubeKeybindFrame.Parent = settingsTabFrame
+    print("Creating shapeKeybindFrame")
+    local shapeKeybindFrame = Instance.new("Frame")
+    shapeKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
+    shapeKeybindFrame.BackgroundTransparency = 1
+    shapeKeybindFrame.LayoutOrder = 3
+    shapeKeybindFrame.Parent = settingsTabFrame
 
-    print("Creating cubeKeybindLabel")
-    local cubeKeybindLabel = createLabel(cubeKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Cube Keybind:", {
+    print("Creating shapeKeybindLabel")
+    local shapeKeybindLabel = createLabel(shapeKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Shape Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    print("Creating cubeKeybindTextBox")
-    local cubeKeybindTextBox = Instance.new("TextBox")
-    cubeKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
-    cubeKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
-    cubeKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    cubeKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
-    cubeKeybindTextBox.BorderSizePixel = 1
-    cubeKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    cubeKeybindTextBox.PlaceholderText = "e.g., C, V"
-    cubeKeybindTextBox.Text = "C"
-    cubeKeybindTextBox.Font = Enum.Font.SourceSans
-    cubeKeybindTextBox.TextSize = 14
-    cubeKeybindTextBox.Parent = cubeKeybindFrame
+    print("Creating shapeKeybindTextBox")
+    local shapeKeybindTextBox = Instance.new("TextBox")
+    shapeKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
+    shapeKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
+    shapeKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    shapeKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
+    shapeKeybindTextBox.BorderSizePixel = 1
+    shapeKeybindTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    shapeKeybindTextBox.PlaceholderText = "e.g., C, V"
+    shapeKeybindTextBox.Text = "C"
+    shapeKeybindTextBox.Font = Enum.Font.SourceSans
+    shapeKeybindTextBox.TextSize = 14
+    shapeKeybindTextBox.Parent = shapeKeybindFrame
 
-    print("Creating setCubeKeybindButton")
-    local setCubeKeybindButton = createButton(cubeKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
+    print("Creating setShapeKeybindButton")
+    local setShapeKeybindButton = createButton(shapeKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating cubeSizeLabel")
-    local cubeSizeLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Cube Size: 25", {
+    print("Creating shapeSizeLabel")
+    local shapeSizeLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Shape Size: 25", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold,
         LayoutOrder = 4
     })
 
-    print("Creating cubeSizeSlider")
-    local cubeSizeSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
+    print("Creating shapeSizeSlider")
+    local shapeSizeSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         LayoutOrder = 5
     })
 
-    local cubeSizeFill = Instance.new("Frame")
-    cubeSizeFill.Size = UDim2.new(0.5, 0, 1, 0)
-    cubeSizeFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    cubeSizeFill.BorderSizePixel = 0
-    cubeSizeFill.Parent = cubeSizeSlider
+    local shapeSizeFill = Instance.new("Frame")
+    shapeSizeFill.Size = UDim2.new(0.5, 0, 1, 0)
+    shapeSizeFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    shapeSizeFill.BorderSizePixel = 0
+    shapeSizeFill.Parent = shapeSizeSlider
 
-    print("Creating cubeThicknessLabel")
-    local cubeThicknessLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Cube Thickness: 1.0", {
+    print("Creating shapeThicknessLabel")
+    local shapeThicknessLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Shape Thickness: 1.0", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold,
         LayoutOrder = 6
     })
 
-    print("Creating cubeThicknessSlider")
-    local cubeThicknessSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
+    print("Creating shapeThicknessSlider")
+    local shapeThicknessSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         LayoutOrder = 7
     })
 
-    local cubeThicknessFill = Instance.new("Frame")
-    cubeThicknessFill.Size = UDim2.new(0.032, 0, 1, 0)
-    cubeThicknessFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    cubeThicknessFill.BorderSizePixel = 0
-    cubeThicknessFill.Parent = cubeThicknessSlider
+    local shapeThicknessFill = Instance.new("Frame")
+    shapeThicknessFill.Size = UDim2.new(0.032, 0, 1, 0)
+    shapeThicknessFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    shapeThicknessFill.BorderSizePixel = 0
+    shapeThicknessFill.Parent = shapeThicknessSlider
 
-    print("Creating cubeTransparencyLabel")
-    local cubeTransparencyLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Cube Transparency: 0.7", {
+    print("Creating shapeTransparencyLabel")
+    local shapeTransparencyLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Shape Transparency: 0.7", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold,
         LayoutOrder = 8
     })
 
-    print("Creating cubeTransparencySlider")
-    local cubeTransparencySlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
+    print("Creating shapeTransparencySlider")
+    local shapeTransparencySlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         LayoutOrder = 9
     })
 
-    local cubeTransparencyFill = Instance.new("Frame")
-    cubeTransparencyFill.Size = UDim2.new(0.7, 0, 1, 0)
-    cubeTransparencyFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    cubeTransparencyFill.BorderSizePixel = 0
-    cubeTransparencyFill.Parent = cubeTransparencySlider
+    local shapeTransparencyFill = Instance.new("Frame")
+    shapeTransparencyFill.Size = UDim2.new(0.7, 0, 1, 0)
+    shapeTransparencyFill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    shapeTransparencyFill.BorderSizePixel = 0
+    shapeTransparencyFill.Parent = shapeTransparencySlider
 
     print("Creating wallExtensionLabel")
     local wallExtensionLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Wall Extension: 5.0", {
@@ -451,24 +451,34 @@ local function createGui()
     wallExtensionFill.BorderSizePixel = 0
     wallExtensionFill.Parent = wallExtensionSlider
 
-    print("Creating cubeFloorDestroyFrame")
-    local cubeFloorDestroyFrame = Instance.new("Frame")
-    cubeFloorDestroyFrame.Size = UDim2.new(1, 0, 0, 25) -- Reduced from 30 to 25
-    cubeFloorDestroyFrame.BackgroundTransparency = 1
-    cubeFloorDestroyFrame.LayoutOrder = 12
-    cubeFloorDestroyFrame.Parent = settingsTabFrame
+    print("Creating shapeToggleFrame")
+    local shapeToggleFrame = Instance.new("Frame")
+    shapeToggleFrame.Size = UDim2.new(1, 0, 0, 25)
+    shapeToggleFrame.BackgroundTransparency = 1
+    shapeToggleFrame.LayoutOrder = 12
+    shapeToggleFrame.Parent = settingsTabFrame
 
-    print("Creating cubeFloorButton")
-    local cubeFloorButton = createButton(cubeFloorDestroyFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Cube Floor: Off")
+    print("Creating shapeFloorButton")
+    local shapeFloorButton = createButton(shapeToggleFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Shape Floor: Off")
+
+    print("Creating ringShapeButton")
+    local ringShapeButton = createButton(shapeToggleFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 135, 0, 0), "Ring Shape: Off")
+
+    print("Creating destroyMenuFrame")
+    local destroyMenuFrame = Instance.new("Frame")
+    destroyMenuFrame.Size = UDim2.new(1, 0, 0, 25)
+    destroyMenuFrame.BackgroundTransparency = 1
+    destroyMenuFrame.LayoutOrder = 13
+    destroyMenuFrame.Parent = settingsTabFrame
 
     print("Creating destroyMenuButton")
-    local destroyMenuButton = createButton(cubeFloorDestroyFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 135, 0, 0), "Destroy Menu")
+    local destroyMenuButton = createButton(destroyMenuFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Destroy Menu")
 
     print("Creating restoreDestroyRevertFrame")
     local restoreDestroyRevertFrame = Instance.new("Frame")
-    restoreDestroyRevertFrame.Size = UDim2.new(1, 0, 0, 25) -- Reduced from 30 to 25
+    restoreDestroyRevertFrame.Size = UDim2.new(1, 0, 0, 25)
     restoreDestroyRevertFrame.BackgroundTransparency = 1
-    restoreDestroyRevertFrame.LayoutOrder = 13
+    restoreDestroyRevertFrame.LayoutOrder = 14
     restoreDestroyRevertFrame.Parent = settingsTabFrame
 
     print("Creating restoreKeybindsButton")
@@ -479,7 +489,7 @@ local function createGui()
 
     print("Creating removeKeybindsButton")
     local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 25), UDim2.new(), "Remove Every Keybind", {
-        LayoutOrder = 14
+        LayoutOrder = 15
     })
 
     print("GUI parenting to PlayerGui")
@@ -521,19 +531,20 @@ local function createGui()
         removeKeybindsButton = removeKeybindsButton,
         destroyMenuButton = destroyMenuButton,
         destroyAndRevertButton = destroyAndRevertButton,
-        spawnCubeButton = spawnCubeButton,
-        cubeKeybindTextBox = cubeKeybindTextBox,
-        setCubeKeybindButton = setCubeKeybindButton,
-        cubeSizeLabel = cubeSizeLabel,
-        cubeSizeSlider = cubeSizeSlider,
-        cubeSizeFill = cubeSizeFill,
-        cubeThicknessLabel = cubeThicknessLabel,
-        cubeThicknessSlider = cubeThicknessSlider,
-        cubeThicknessFill = cubeThicknessFill,
-        cubeFloorButton = cubeFloorButton,
-        cubeTransparencyLabel = cubeTransparencyLabel,
-        cubeTransparencySlider = cubeTransparencySlider,
-        cubeTransparencyFill = cubeTransparencyFill,
+        spawnShapeButton = spawnShapeButton,
+        shapeKeybindTextBox = shapeKeybindTextBox,
+        setShapeKeybindButton = setShapeKeybindButton,
+        shapeSizeLabel = shapeSizeLabel,
+        shapeSizeSlider = shapeSizeSlider,
+        shapeSizeFill = shapeSizeFill,
+        shapeThicknessLabel = shapeThicknessLabel,
+        shapeThicknessSlider = shapeThicknessSlider,
+        shapeThicknessFill = shapeThicknessFill,
+        shapeFloorButton = shapeFloorButton,
+        ringShapeButton = ringShapeButton,
+        shapeTransparencyLabel = shapeTransparencyLabel,
+        shapeTransparencySlider = shapeTransparencySlider,
+        shapeTransparencyFill = shapeTransparencyFill,
         wallExtensionLabel = wallExtensionLabel,
         wallExtensionSlider = wallExtensionSlider,
         wallExtensionFill = wallExtensionFill
@@ -552,13 +563,14 @@ local StateManager = {
     actionKeybind = Enum.KeyCode.T,
     guiToggleKeybind = Enum.KeyCode.F1,
     isActionKeyHeld = false,
-    isCubeSpawned = false,
-    cubeKeybind = Enum.KeyCode.C,
-    cubeConnection = nil,
-    cubeSize = 25,
-    cubeThickness = 1,
-    cubeTransparency = 0.7,
-    isCubeFloorEnabled = false,
+    isShapeSpawned = false,
+    shapeKeybind = Enum.KeyCode.C,
+    shapeConnection = nil,
+    shapeSize = 25,
+    shapeThickness = 1,
+    shapeTransparency = 0.7,
+    isShapeFloorEnabled = false,
+    isRingShapeEnabled = false,
     wallExtensionDelta = 5,
     connections = {}
 }
@@ -594,7 +606,7 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
     end)
 end
 
-local function createCubePart(size, position, parent, props)
+local function createShapePart(shapeType, size, position, parent, props, orientation)
     local part = Instance.new("Part")
     part.Size = size
     part.Position = position
@@ -602,117 +614,174 @@ local function createCubePart(size, position, parent, props)
     part.CanCollide = true
     part.Transparency = props.transparency
     part.BrickColor = props.brickColor
+    part.Shape = shapeType == "Cube" and Enum.PartType.Block or Enum.PartType.Cylinder
+    if orientation then
+        part.Orientation = orientation
+    end
     part.Parent = parent
     return part
 end
 
-function StateManager.toggleCube(spawnCubeButton)
-    StateManager.toggleState(spawnCubeButton, "isCubeSpawned", "Spawn Cube: ", function()
-        local cubeName = "PlayerCube_" .. player.Name
-        local existingCube = game.Workspace:FindFirstChild(cubeName)
-        if StateManager.isCubeSpawned then
+function StateManager.toggleShape(spawnShapeButton)
+    StateManager.toggleState(spawnShapeButton, "isShapeSpawned", "Spawn Shape: ", function()
+        local shapeName = "PlayerShape_" .. player.Name
+        local existingShape = game.Workspace:FindFirstChild(shapeName)
+        if StateManager.isShapeSpawned then
             if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
-                print("Character or HumanoidRootPart not found, cannot spawn cube")
-                StateManager.isCubeSpawned = false
-                spawnCubeButton.Text = "Spawn Cube: Off"
+                print("Character or HumanoidRootPart not found, cannot spawn shape")
+                StateManager.isShapeSpawned = false
+                spawnShapeButton.Text = "Spawn Shape: Off"
                 return
             end
-            if existingCube then existingCube:Destroy() end
+            if existingShape then existingShape:Destroy() end
 
-            local cubeModel = Instance.new("Model")
-            cubeModel.Name = cubeName
-            local cubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
-            local wallThickness = StateManager.cubeThickness
+            local shapeModel = Instance.new("Model")
+            shapeModel.Name = shapeName
+            local shapeSize = StateManager.shapeSize
+            local wallThickness = StateManager.shapeThickness
             local wallExtension = StateManager.wallExtensionDelta
-            local cubeConfig = {
-                props = { transparency = StateManager.cubeTransparency, brickColor = BrickColor.new("Really red") },
-                parts = {
+            local shapeType = StateManager.isRingShapeEnabled and "Torus" or "Cube"
+            local shapeConfig = {
+                props = { transparency = StateManager.shapeTransparency, brickColor = BrickColor.new("Really red") },
+                parts = {}
+            }
+
+            local playerPos = player.Character.HumanoidRootPart.Position
+            local playerHeightOffset = shapeType == "Torus" and 0 or 2.5 -- No vertical offset for torus to keep player in center
+            local centerPos = playerPos + Vector3.new(0, wallThickness / 2 + wallExtension - playerHeightOffset, 0)
+
+            if shapeType == "Cube" then
+                local cubeSize = Vector3.new(shapeSize, shapeSize, shapeSize)
+                shapeConfig.parts = {
                     { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, -wallExtension / 2, 0) },
                     { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, -wallExtension / 2, 0) },
                     { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, -cubeSize.Z / 2 + wallThickness / 2) },
                     { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, cubeSize.Z / 2 - wallThickness / 2) },
                     { name = "ceiling", size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z), offset = Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0) }
                 }
-            }
-            if StateManager.isCubeFloorEnabled then
-                table.insert(cubeConfig.parts, {
-                    name = "floor",
-                    size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    offset = Vector3.new(0, -cubeSize.Y / 2 - wallExtension + wallThickness / 2, 0)
-                })
+                if StateManager.isShapeFloorEnabled then
+                    table.insert(shapeConfig.parts, {
+                        name = "floor",
+                        size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
+                        offset = Vector3.new(0, -cubeSize.Y / 2 - wallExtension + wallThickness / 2, 0)
+                    })
+                end
+            else -- Torus
+                local outerRadius = shapeSize / 2
+                local tubeRadius = wallThickness / 2
+                local numSegments = 12
+                local segmentAngles = {} -- Precompute angles
+                for i = 1, numSegments do
+                    segmentAngles[i] = (i - 1) * (2 * math.pi / numSegments)
+                    table.insert(shapeConfig.parts, {
+                        name = "torusSegment" .. i,
+                        size = Vector3.new(wallThickness, wallThickness + wallExtension, wallThickness),
+                        offset = Vector3.new(0, 0, 0), -- Will be updated in Heartbeat
+                        orientation = Vector3.new(0, 0, 90)
+                    })
+                end
+                if StateManager.isShapeFloorEnabled then
+                    table.insert(shapeConfig.parts, {
+                        name = "floor",
+                        size = Vector3.new(shapeSize, wallThickness, shapeSize),
+                        offset = Vector3.new(0, -wallThickness / 2 - wallExtension, 0),
+                        orientation = Vector3.new(0, 0, 90)
+                    })
+                end
+                shapeConfig.segmentAngles = segmentAngles
+                shapeConfig.numSegments = numSegments
             end
 
             local parts = {}
-            local playerPos = player.Character.HumanoidRootPart.Position
-            local playerHeightOffset = 2.5
-            local centerPos = playerPos + Vector3.new(0, cubeSize.Y / 2 - playerHeightOffset, 0)
-
-            for _, partConfig in ipairs(cubeConfig.parts) do
-                parts[partConfig.name] = createCubePart(partConfig.size, centerPos + partConfig.offset, cubeModel, cubeConfig.props)
+            for _, partConfig in ipairs(shapeConfig.parts) do
+                parts[partConfig.name] = createShapePart(shapeType, partConfig.size, centerPos + partConfig.offset, shapeModel, shapeConfig.props, partConfig.orientation)
             end
 
-            cubeModel.Parent = game.Workspace
-            print("Cube spawned at:", centerPos)
+            shapeModel.Parent = game.Workspace
+            print(shapeType .. " spawned at:", centerPos)
 
-            if StateManager.cubeConnection then
-                StateManager.cubeConnection:Disconnect()
+            if StateManager.shapeConnection then
+                StateManager.shapeConnection:Disconnect()
             end
-            StateManager.cubeConnection = RunService.Heartbeat:Connect(function()
-                if not StateManager.isCubeSpawned or not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
-                    if cubeModel then cubeModel:Destroy() end
-                    if StateManager.cubeConnection then
-                        StateManager.cubeConnection:Disconnect()
-                        StateManager.cubeConnection = nil
+            StateManager.shapeConnection = RunService.Heartbeat:Connect(function()
+                task.desynchronize()
+                if not StateManager.isShapeSpawned or not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
+                    task.synchronize()
+                    if shapeModel then shapeModel:Destroy() end
+                    if StateManager.shapeConnection then
+                        StateManager.shapeConnection:Disconnect()
+                        StateManager.shapeConnection = nil
                     end
-                    StateManager.isCubeSpawned = false
-                    spawnCubeButton.Text = "Spawn Cube: Off"
+                    StateManager.isShapeSpawned = false
+                    spawnShapeButton.Text = "Spawn Shape: Off"
                     return
                 end
-                local newCubeSize = Vector3.new(StateManager.cubeSize, StateManager.cubeSize, StateManager.cubeSize)
-                local newWallThickness = StateManager.cubeThickness
-                local newTransparency = StateManager.cubeTransparency
+
+                local newShapeSize = StateManager.shapeSize
+                local newWallThickness = StateManager.shapeThickness
+                local newTransparency = StateManager.shapeTransparency
                 local newWallExtension = StateManager.wallExtensionDelta
                 local newPos = player.Character.HumanoidRootPart.Position
-                local newCenterPos = newPos + Vector3.new(0, newCubeSize.Y / 2 - playerHeightOffset, 0)
+                local newCenterPos = newPos + Vector3.new(0, newWallThickness / 2 + newWallExtension - playerHeightOffset, 0)
 
-                for _, partConfig in ipairs(cubeConfig.parts) do
+                task.synchronize()
+                for _, partConfig in ipairs(shapeConfig.parts) do
                     local part = parts[partConfig.name]
                     if part then
                         local size = partConfig.size
                         local offset = partConfig.offset
-                        if partConfig.name == "leftWall" or partConfig.name == "rightWall" then
-                            size = Vector3.new(newWallThickness, newCubeSize.Y + newWallExtension, newCubeSize.Z)
-                            offset = partConfig.name == "leftWall" and Vector3.new(-newCubeSize.X / 2 + newWallThickness / 2, -newWallExtension / 2, 0) or
-                                     Vector3.new(newCubeSize.X / 2 - newWallThickness / 2, -newWallExtension / 2, 0)
-                        elseif partConfig.name == "frontWall" or partConfig.name == "backWall" then
-                            size = Vector3.new(newCubeSize.X, newCubeSize.Y + newWallExtension, newWallThickness)
-                            offset = partConfig.name == "frontWall" and Vector3.new(0, -newWallExtension / 2, -newCubeSize.Z / 2 + newWallThickness / 2) or
-                                     Vector3.new(0, -newWallExtension / 2, newCubeSize.Z / 2 - newWallThickness / 2)
-                        elseif partConfig.name == "ceiling" then
-                            size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
-                            offset = Vector3.new(0, newCubeSize.Y / 2 - newWallThickness / 2, 0)
-                        elseif partConfig.name == "floor" then
-                            size = Vector3.new(newCubeSize.X, newWallThickness, newCubeSize.Z)
-                            offset = Vector3.new(0, -newCubeSize.Y / 2 - newWallExtension + newWallThickness / 2, 0)
+                        local orientation = partConfig.orientation
+                        if shapeType == "Cube" then
+                            local cubeSize = Vector3.new(newShapeSize, newShapeSize, newShapeSize)
+                            if partConfig.name == "leftWall" or partConfig.name == "rightWall" then
+                                size = Vector3.new(newWallThickness, cubeSize.Y + newWallExtension, cubeSize.Z)
+                                offset = partConfig.name == "leftWall" and Vector3.new(-cubeSize.X / 2 + newWallThickness / 2, -newWallExtension / 2, 0) or
+                                         Vector3.new(cubeSize.X / 2 - newWallThickness / 2, -newWallExtension / 2, 0)
+                            elseif partConfig.name == "frontWall" or partConfig.name == "backWall" then
+                                size = Vector3.new(cubeSize.X, cubeSize.Y + newWallExtension, newWallThickness)
+                                offset = partConfig.name == "frontWall" and Vector3.new(0, -newWallExtension / 2, -cubeSize.Z / 2 + newWallThickness / 2) or
+                                         Vector3.new(0, -newWallExtension / 2, cubeSize.Z / 2 - newWallThickness / 2)
+                            elseif partConfig.name == "ceiling" then
+                                size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
+                                offset = Vector3.new(0, cubeSize.Y / 2 - newWallThickness / 2, 0)
+                            elseif partConfig.name == "floor" then
+                                size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
+                                offset = Vector3.new(0, -cubeSize.Y / 2 - newWallExtension + newWallThickness / 2, 0)
+                            end
+                        else -- Torus
+                            local newOuterRadius = newShapeSize / 2
+                            local newTubeRadius = newWallThickness / 2
+                            if partConfig.name:match("torusSegment") then
+                                local i = tonumber(partConfig.name:match("%d+"))
+                                local angle = shapeConfig.segmentAngles[i]
+                                size = Vector3.new(newWallThickness, newWallThickness + newWallExtension, newWallThickness)
+                                offset = Vector3.new(math.cos(angle) * newOuterRadius, 0, math.sin(angle) * newOuterRadius)
+                                orientation = Vector3.new(0, 0, 90)
+                            elseif partConfig.name == "floor" then
+                                size = Vector3.new(newShapeSize, newWallThickness, newShapeSize)
+                                offset = Vector3.new(0, -newWallThickness / 2 - newWallExtension, 0)
+                                orientation = Vector3.new(0, 0, 90)
+                            end
                         end
                         part.Size = size
                         part.Position = newCenterPos + offset
+                        part.Orientation = orientation or Vector3.new(0, 0, 0)
                         part.Transparency = newTransparency
                     end
                 end
             end)
 
-            notify('Cube', 'Cube with Separate Walls, Ceiling, ' .. (StateManager.isCubeFloorEnabled and 'and Floor ' or 'No Floor ') .. 'Spawned')
+            notify('Shape', shapeType .. ' with ' .. (shapeType == "Cube" and "Separate Walls, Ceiling, " or "Torus Shape ") .. (StateManager.isShapeFloorEnabled and 'and Floor ' or 'No Floor ') .. 'Spawned, following player')
         else
-            if existingCube then
-                existingCube:Destroy()
-                print("Cube despawned")
+            if existingShape then
+                existingShape:Destroy()
+                print("Shape despawned")
             end
-            if StateManager.cubeConnection then
-                StateManager.cubeConnection:Disconnect()
-                StateManager.cubeConnection = nil
+            if StateManager.shapeConnection then
+                StateManager.shapeConnection:Disconnect()
+                StateManager.shapeConnection = nil
             end
-            notify('Cube', 'Cube Despawned')
+            notify('Shape', 'Shape Despawned')
         end
     end)
 end
@@ -944,19 +1013,20 @@ local restoreKeybindsButton = guiElements.restoreKeybindsButton
 local removeKeybindsButton = guiElements.removeKeybindsButton
 local destroyMenuButton = guiElements.destroyMenuButton
 local destroyAndRevertButton = guiElements.destroyAndRevertButton
-local spawnCubeButton = guiElements.spawnCubeButton
-local cubeKeybindTextBox = guiElements.cubeKeybindTextBox
-local setCubeKeybindButton = guiElements.setCubeKeybindButton
-local cubeSizeLabel = guiElements.cubeSizeLabel
-local cubeSizeSlider = guiElements.cubeSizeSlider
-local cubeSizeFill = guiElements.cubeSizeFill
-local cubeThicknessLabel = guiElements.cubeThicknessLabel
-local cubeThicknessSlider = guiElements.cubeThicknessSlider
-local cubeThicknessFill = guiElements.cubeThicknessFill
-local cubeFloorButton = guiElements.cubeFloorButton
-local cubeTransparencyLabel = guiElements.cubeTransparencyLabel
-local cubeTransparencySlider = guiElements.cubeTransparencySlider
-local cubeTransparencyFill = guiElements.cubeTransparencyFill
+local spawnShapeButton = guiElements.spawnShapeButton
+local shapeKeybindTextBox = guiElements.shapeKeybindTextBox
+local setShapeKeybindButton = guiElements.setShapeKeybindButton
+local shapeSizeLabel = guiElements.shapeSizeLabel
+local shapeSizeSlider = guiElements.shapeSizeSlider
+local shapeSizeFill = guiElements.shapeSizeFill
+local shapeThicknessLabel = guiElements.shapeThicknessLabel
+local shapeThicknessSlider = guiElements.shapeThicknessSlider
+local shapeThicknessFill = guiElements.shapeThicknessFill
+local shapeFloorButton = guiElements.shapeFloorButton
+local ringShapeButton = guiElements.ringShapeButton
+local shapeTransparencyLabel = guiElements.shapeTransparencyLabel
+local shapeTransparencySlider = guiElements.shapeTransparencySlider
+local shapeTransparencyFill = guiElements.shapeTransparencyFill
 local wallExtensionLabel = guiElements.wallExtensionLabel
 local wallExtensionSlider = guiElements.wallExtensionSlider
 local wallExtensionFill = guiElements.wallExtensionFill
@@ -982,11 +1052,11 @@ local function applyHover(button)
     end)
 end
 for _, btn in ipairs({
-    toggleButton, protectButton, terrainButton, outlineButton, rightClickRestoreButton, spawnCubeButton,
+    toggleButton, protectButton, terrainButton, outlineButton, rightClickRestoreButton, spawnShapeButton,
     restoreAllButton, audioToggleButton, setDeleteAudioIdButton, setRestoreAudioIdButton,
     mainTabButton, audioTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
     destroyMenuButton, destroyAndRevertButton, setToggleKeybindButton, setActionKeybindButton,
-    setCubeKeybindButton, cubeFloorButton
+    setShapeKeybindButton, shapeFloorButton, ringShapeButton
 }) do
     applyHover(btn)
 end
@@ -1032,15 +1102,24 @@ audioToggleButton.MouseButton1Click:Connect(function()
     StateManager.toggleState(audioToggleButton, "isAudioEnabled", "Audio: ")
 end)
 
-spawnCubeButton.MouseButton1Click:Connect(function()
-    StateManager.toggleCube(spawnCubeButton)
+spawnShapeButton.MouseButton1Click:Connect(function()
+    StateManager.toggleShape(spawnShapeButton)
 end)
 
-cubeFloorButton.MouseButton1Click:Connect(function()
-    StateManager.toggleState(cubeFloorButton, "isCubeFloorEnabled", "Cube Floor: ", function()
-        if StateManager.isCubeSpawned then
-            StateManager.toggleCube(spawnCubeButton)
-            StateManager.toggleCube(spawnCubeButton)
+shapeFloorButton.MouseButton1Click:Connect(function()
+    StateManager.toggleState(shapeFloorButton, "isShapeFloorEnabled", "Shape Floor: ", function()
+        if StateManager.isShapeSpawned then
+            StateManager.toggleShape(spawnShapeButton)
+            StateManager.toggleShape(spawnShapeButton)
+        end
+    end)
+end)
+
+ringShapeButton.MouseButton1Click:Connect(function()
+    StateManager.toggleState(ringShapeButton, "isRingShapeEnabled", "Ring Shape: ", function()
+        if StateManager.isShapeSpawned then
+            StateManager.toggleShape(spawnShapeButton)
+            StateManager.toggleShape(spawnShapeButton)
         end
     end)
 end)
@@ -1058,9 +1137,9 @@ AudioManager.setupVolumeSlider(deleteVolumeSlider, deleteVolumeFill, deleteVolum
 AudioManager.setupVolumeSlider(restoreVolumeSlider, restoreVolumeFill, restoreVolumeLabel, AudioManager.restoreSound)
 
 -- Slider Connections
-StateManager.setupSlider(cubeSizeSlider, cubeSizeFill, cubeSizeLabel, "cubeSize", 10, 50, "Cube Size: %d")
-StateManager.setupSlider(cubeThicknessSlider, cubeThicknessFill, cubeThicknessLabel, "cubeThickness", 0.2, 25, "Cube Thickness: %.1f")
-StateManager.setupSlider(cubeTransparencySlider, cubeTransparencyFill, cubeTransparencyLabel, "cubeTransparency", 0, 1, "Cube Transparency: %.1f")
+StateManager.setupSlider(shapeSizeSlider, shapeSizeFill, shapeSizeLabel, "shapeSize", 10, 50, "Shape Size: %d")
+StateManager.setupSlider(shapeThicknessSlider, shapeThicknessFill, shapeThicknessLabel, "shapeThickness", 0.2, 25, "Shape Thickness: %.1f")
+StateManager.setupSlider(shapeTransparencySlider, shapeTransparencyFill, shapeTransparencyLabel, "shapeTransparency", 0, 1, "Shape Transparency: %.1f")
 StateManager.setupSlider(wallExtensionSlider, wallExtensionFill, wallExtensionLabel, "wallExtensionDelta", 0, 10, "Wall Extension: %.1f")
 
 -- DeleteRestoreManager Connections
@@ -1070,11 +1149,11 @@ restoreAllButton.MouseButton1Click:Connect(function()
 end)
 
 local function cleanup()
-    local cube = game.Workspace:FindFirstChild("PlayerCube_" .. player.Name)
-    if cube then cube:Destroy() end
-    if StateManager.cubeConnection then
-        StateManager.cubeConnection:Disconnect()
-        StateManager.cubeConnection = nil
+    local shape = game.Workspace:FindFirstChild("PlayerShape_" .. player.Name)
+    if shape then shape:Destroy() end
+    if StateManager.shapeConnection then
+        StateManager.shapeConnection:Disconnect()
+        StateManager.shapeConnection = nil
     end
     for _, connection in ipairs(StateManager.connections) do
         connection:Disconnect()
@@ -1082,11 +1161,11 @@ local function cleanup()
     StateManager.connections = {}
     StateManager.toggleKeybind = nil
     StateManager.actionKeybind = nil
-    StateManager.cubeKeybind = nil
+    StateManager.shapeKeybind = nil
     StateManager.guiToggleKeybind = nil
     StateManager.isDeleteModeEnabled = false
     StateManager.isActionKeyHeld = false
-    StateManager.isCubeSpawned = false
+    StateManager.isShapeSpawned = false
     gui:Destroy()
     selectionBox:Destroy()
     AudioManager.deleteSound:Destroy()
@@ -1118,34 +1197,34 @@ local function setKeybind(textBox, stateKey, otherKeys)
 end
 
 setToggleKeybindButton.MouseButton1Click:Connect(function()
-    setKeybind(toggleKeybindTextBox, "toggleKeybind", { StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.cubeKeybind })
+    setKeybind(toggleKeybindTextBox, "toggleKeybind", { StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind })
 end)
 
 setActionKeybindButton.MouseButton1Click:Connect(function()
-    setKeybind(actionKeybindTextBox, "actionKeybind", { StateManager.toggleKeybind, StateManager.guiToggleKeybind, StateManager.cubeKeybind })
+    setKeybind(actionKeybindTextBox, "actionKeybind", { StateManager.toggleKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind })
 end)
 
-setCubeKeybindButton.MouseButton1Click:Connect(function()
-    setKeybind(cubeKeybindTextBox, "cubeKeybind", { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.guiToggleKeybind })
+setShapeKeybindButton.MouseButton1Click:Connect(function()
+    setKeybind(shapeKeybindTextBox, "shapeKeybind", { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.guiToggleKeybind })
 end)
 
 restoreKeybindsButton.MouseButton1Click:Connect(function()
     StateManager.toggleKeybind = Enum.KeyCode.H
     StateManager.actionKeybind = Enum.KeyCode.T
-    StateManager.cubeKeybind = Enum.KeyCode.C
+    StateManager.shapeKeybind = Enum.KeyCode.C
     toggleKeybindTextBox.Text = "H"
     actionKeybindTextBox.Text = "T"
-    cubeKeybindTextBox.Text = "C"
+    shapeKeybindTextBox.Text = "C"
 end)
 
 removeKeybindsButton.MouseButton1Click:Connect(function()
     StateManager.toggleKeybind = nil
     StateManager.actionKeybind = nil
     StateManager.guiToggleKeybind = nil
-    StateManager.cubeKeybind = nil
+    StateManager.shapeKeybind = nil
     toggleKeybindTextBox.Text = ""
     actionKeybindTextBox.Text = ""
-    cubeKeybindTextBox.Text = ""
+    shapeKeybindTextBox.Text = ""
 end)
 
 -- Input Handling
@@ -1157,8 +1236,8 @@ StateManager.connections.inputBegan = UserInputService.InputBegan:Connect(functi
         StateManager.toggleState(toggleButton, "isDeleteModeEnabled", "Delete Mode: ")
     elseif input.KeyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = true
-    elseif input.KeyCode == StateManager.cubeKeybind then
-        StateManager.toggleCube(spawnCubeButton)
+    elseif input.KeyCode == StateManager.shapeKeybind then
+        StateManager.toggleShape(spawnShapeButton)
     end
 end)
 
@@ -1170,7 +1249,7 @@ StateManager.connections.inputEnded = UserInputService.InputEnded:Connect(functi
 end)
 
 -- Outline Handling
-StateManager.connections.outline = RunService.RenderStepped:Connect(function()
+StateManager.connections.outline = RunService.Heartbeat:Connect(function()
     DeleteRestoreManager.handleOutline(
         mouse,
         selectionBox,
@@ -1271,8 +1350,8 @@ end)
 player.CharacterAdded:Connect(function(character)
     print("Character respawned:", character.Name)
     DeleteRestoreManager.characterCache = {}
-    if StateManager.isCubeSpawned then
-        StateManager.toggleCube(spawnCubeButton)
-        StateManager.toggleCube(spawnCubeButton)
+    if StateManager.isShapeSpawned then
+        StateManager.toggleShape(spawnShapeButton)
+        StateManager.toggleShape(spawnShapeButton)
     end
 end)
