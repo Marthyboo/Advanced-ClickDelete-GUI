@@ -461,11 +461,21 @@ local function createGui()
     print("Creating shapeFloorButton")
     local shapeFloorButton = createButton(shapeToggleFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Shape Floor: Off")
 
+    print("Creating scrollWheelSizeFrame")
+    local scrollWheelSizeFrame = Instance.new("Frame")
+    scrollWheelSizeFrame.Size = UDim2.new(1, 0, 0, 25)
+    scrollWheelSizeFrame.BackgroundTransparency = 1
+    scrollWheelSizeFrame.LayoutOrder = 13
+    scrollWheelSizeFrame.Parent = settingsTabFrame
+
+    print("Creating scrollWheelSizeButton")
+    local scrollWheelSizeButton = createButton(scrollWheelSizeFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Scroll Wheel Size: Off")
+
     print("Creating destroyMenuFrame")
     local destroyMenuFrame = Instance.new("Frame")
     destroyMenuFrame.Size = UDim2.new(1, 0, 0, 25)
     destroyMenuFrame.BackgroundTransparency = 1
-    destroyMenuFrame.LayoutOrder = 13
+    destroyMenuFrame.LayoutOrder = 14
     destroyMenuFrame.Parent = settingsTabFrame
 
     print("Creating destroyMenuButton")
@@ -475,7 +485,7 @@ local function createGui()
     local restoreDestroyRevertFrame = Instance.new("Frame")
     restoreDestroyRevertFrame.Size = UDim2.new(1, 0, 0, 25)
     restoreDestroyRevertFrame.BackgroundTransparency = 1
-    restoreDestroyRevertFrame.LayoutOrder = 14
+    restoreDestroyRevertFrame.LayoutOrder = 15
     restoreDestroyRevertFrame.Parent = settingsTabFrame
 
     print("Creating restoreKeybindsButton")
@@ -486,7 +496,7 @@ local function createGui()
 
     print("Creating removeKeybindsButton")
     local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 25), UDim2.new(), "Remove Every Keybind", {
-        LayoutOrder = 15
+        LayoutOrder = 16
     })
 
     print("GUI parenting to PlayerGui")
@@ -543,7 +553,8 @@ local function createGui()
         shapeTransparencyFill = shapeTransparencyFill,
         wallExtensionLabel = wallExtensionLabel,
         wallExtensionSlider = wallExtensionSlider,
-        wallExtensionFill = wallExtensionFill
+        wallExtensionFill = wallExtensionFill,
+        scrollWheelSizeButton = scrollWheelSizeButton
     }
 end
 
@@ -566,6 +577,7 @@ local StateManager = {
     shapeTransparency = 0.7,
     isShapeFloorEnabled = false,
     wallExtensionDelta = 5,
+    isScrollWheelSizeEnabled = false,
     connections = {}
 }
 
@@ -633,29 +645,24 @@ function StateManager.toggleShape(spawnShapeButton)
             local wallExtension = StateManager.wallExtensionDelta
             local shapeConfig = {
                 props = { transparency = StateManager.shapeTransparency, brickColor = BrickColor.new("Really red") },
-                parts = {}
-            }
-
-            local playerPos = player.Character.HumanoidRootPart.Position
-            local playerHeightOffset = 2.5
-            local centerPos = playerPos + Vector3.new(0, wallThickness / 2 + wallExtension - playerHeightOffset, 0)
-
-            local cubeSize = Vector3.new(shapeSize, shapeSize, shapeSize)
-            shapeConfig.parts = {
-                { name = "leftWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(-cubeSize.X / 2 + wallThickness / 2, -wallExtension / 2, 0) },
-                { name = "rightWall", size = Vector3.new(wallThickness, cubeSize.Y + wallExtension, cubeSize.Z), offset = Vector3.new(cubeSize.X / 2 - wallThickness / 2, -wallExtension / 2, 0) },
-                { name = "frontWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, -cubeSize.Z / 2 + wallThickness / 2) },
-                { name = "backWall", size = Vector3.new(cubeSize.X, cubeSize.Y + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, cubeSize.Z / 2 - wallThickness / 2) },
-                { name = "ceiling", size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z), offset = Vector3.new(0, cubeSize.Y / 2 - wallThickness / 2, 0) }
+                parts = {
+                    { name = "leftWall", size = Vector3.new(wallThickness, shapeSize + wallExtension, shapeSize), offset = Vector3.new(-shapeSize / 2 + wallThickness / 2, -wallExtension / 2, 0) },
+                    { name = "rightWall", size = Vector3.new(wallThickness, shapeSize + wallExtension, shapeSize), offset = Vector3.new(shapeSize / 2 - wallThickness / 2, -wallExtension / 2, 0) },
+                    { name = "frontWall", size = Vector3.new(shapeSize, shapeSize + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, -shapeSize / 2 + wallThickness / 2) },
+                    { name = "backWall", size = Vector3.new(shapeSize, shapeSize + wallExtension, wallThickness), offset = Vector3.new(0, -wallExtension / 2, shapeSize / 2 - wallThickness / 2) },
+                    { name = "ceiling", size = Vector3.new(shapeSize, wallThickness, shapeSize), offset = Vector3.new(0, shapeSize / 2 - wallThickness / 2, 0) }
+                }
             }
             if StateManager.isShapeFloorEnabled then
                 table.insert(shapeConfig.parts, {
                     name = "floor",
-                    size = Vector3.new(cubeSize.X, wallThickness, cubeSize.Z),
-                    offset = Vector3.new(0, -cubeSize.Y / 2 - wallExtension + wallThickness / 2, 0)
+                    size = Vector3.new(shapeSize, wallThickness, shapeSize),
+                    offset = Vector3.new(0, -shapeSize / 2 - wallExtension + wallThickness / 2, 0)
                 })
             end
 
+            local playerPos = player.Character.HumanoidRootPart.Position
+            local centerPos = playerPos + Vector3.new(0, wallThickness / 2 + wallExtension - 2.5, 0)
             local parts = {}
             for _, partConfig in ipairs(shapeConfig.parts) do
                 parts[partConfig.name] = createShapePart(partConfig.size, centerPos + partConfig.offset, shapeModel, shapeConfig.props)
@@ -686,7 +693,7 @@ function StateManager.toggleShape(spawnShapeButton)
                 local newTransparency = StateManager.shapeTransparency
                 local newWallExtension = StateManager.wallExtensionDelta
                 local newPos = player.Character.HumanoidRootPart.Position
-                local newCenterPos = newPos + Vector3.new(0, newWallThickness / 2 + newWallExtension - playerHeightOffset, 0)
+                local newCenterPos = newPos + Vector3.new(0, newWallThickness / 2 + newWallExtension - 2.5, 0)
 
                 task.synchronize()
                 for _, partConfig in ipairs(shapeConfig.parts) do
@@ -708,7 +715,7 @@ function StateManager.toggleShape(spawnShapeButton)
                             offset = Vector3.new(0, cubeSize.Y / 2 - newWallThickness / 2, 0)
                         elseif partConfig.name == "floor" then
                             size = Vector3.new(cubeSize.X, newWallThickness, cubeSize.Z)
-                            offset = Vector3.new(0, -cubeSize.Y / 2 - newWallExtension + newWallThickness / 2, 0)
+                            offset = Vector3.new(0, -cubeSize.Y / 2 -newWallExtension + newWallThickness / 2, 0)
                         end
                         part.Size = size
                         part.Position = newCenterPos + offset
@@ -717,7 +724,7 @@ function StateManager.toggleShape(spawnShapeButton)
                 end
             end)
 
-            notify('Shape', 'Cube with Walls, Ceiling, ' .. (StateManager.isShapeFloorEnabled and 'and Floor ' or 'No Floor ') .. 'Spawned, following player')
+            notify('Shape', 'Cube with Separate Walls, Ceiling, ' .. (StateManager.isShapeFloorEnabled and 'and Floor ' or 'No Floor ') .. 'Spawned, following player')
         else
             if existingShape then
                 existingShape:Destroy()
@@ -939,6 +946,7 @@ local shapeTransparencyFill = guiElements.shapeTransparencyFill
 local wallExtensionLabel = guiElements.wallExtensionLabel
 local wallExtensionSlider = guiElements.wallExtensionSlider
 local wallExtensionFill = guiElements.wallExtensionFill
+local scrollWheelSizeButton = guiElements.scrollWheelSizeButton
 
 -- Visual feedback
 local selectionBox = Instance.new("SelectionBox", game.Workspace)
@@ -965,7 +973,7 @@ for _, btn in ipairs({
     restoreAllButton, audioToggleButton, setDeleteAudioIdButton, setRestoreAudioIdButton,
     mainTabButton, audioTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
     destroyMenuButton, destroyAndRevertButton, setToggleKeybindButton, setActionKeybindButton,
-    setShapeKeybindButton, shapeFloorButton
+    setShapeKeybindButton, shapeFloorButton, scrollWheelSizeButton
 }) do
     applyHover(btn)
 end
@@ -1030,6 +1038,10 @@ shapeFloorButton.MouseButton1Click:Connect(function()
             StateManager.toggleShape(spawnShapeButton)
         end
     end)
+end)
+
+scrollWheelSizeButton.MouseButton1Click:Connect(function()
+    StateManager.toggleState(scrollWheelSizeButton, "isScrollWheelSizeEnabled", "Scroll Wheel Size: ")
 end)
 
 -- AudioManager Connections
@@ -1153,6 +1165,20 @@ StateManager.connections.inputEnded = UserInputService.InputEnded:Connect(functi
     if gameProcessedEvent then return end
     if input.KeyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = false
+    end
+end)
+
+StateManager.connections.inputChanged = UserInputService.InputChanged:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent or not StateManager.isScrollWheelSizeEnabled then return end
+    if input.UserInputType == Enum.UserInputType.MouseWheel then
+        local delta = input.Position.Z -- Positive for scroll up, negative for scroll down
+        local sizeIncrement = 5
+        local newSize = StateManager.shapeSize + (delta * sizeIncrement)
+        newSize = math.clamp(newSize, 10, 355)
+        StateManager.shapeSize = newSize
+        local fraction = (newSize - 10) / (355 - 10)
+        shapeSizeFill.Size = UDim2.new(fraction, 0, 1, 0)
+        shapeSizeLabel.Text = string.format("Shape Size: %d", newSize)
     end
 end)
 
