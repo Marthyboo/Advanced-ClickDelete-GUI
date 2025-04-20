@@ -158,7 +158,7 @@ local function createGui()
     print("Creating settingsTabFrame UIListLayout")
     local settingsLayout = Instance.new("UIListLayout")
     settingsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    settingsLayout.Padding = UDim.new(0, 2)
+    settingsLayout.Padding = UDim.new(0, 5) -- Increased padding for clarity
     settingsLayout.Parent = settingsTabFrame
 
     -- Main Tab Contents
@@ -276,22 +276,19 @@ local function createGui()
     restoreVolumeFill.Parent = restoreVolumeSlider
 
     -- Settings Tab Contents
-    print("Creating toggleKeybindFrame")
     local toggleKeybindFrame = Instance.new("Frame")
-    toggleKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
+    toggleKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
     toggleKeybindFrame.BackgroundTransparency = 1
     toggleKeybindFrame.LayoutOrder = 1
     toggleKeybindFrame.Parent = settingsTabFrame
 
-    print("Creating toggleKeybindLabel")
-    local toggleKeybindLabel = createLabel(toggleKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Toggle Keybind:", {
+    local toggleKeybindLabel = createLabel(toggleKeybindFrame, UDim2.new(0, 110, 0, 25), UDim2.new(0, 0, 0, 0), "Toggle Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    print("Creating toggleKeybindTextBox")
     local toggleKeybindTextBox = Instance.new("TextBox")
-    toggleKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
+    toggleKeybindTextBox.Size = UDim2.new(0, 50, 0, 25)
     toggleKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
     toggleKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     toggleKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -303,34 +300,29 @@ local function createGui()
     toggleKeybindTextBox.TextSize = 14
     toggleKeybindTextBox.Parent = toggleKeybindFrame
 
-    print("Creating setToggleKeybindButton")
-    local setToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
+    local setToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating removeToggleKeybindButton")
-    local removeToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
+    local removeToggleKeybindButton = createButton(toggleKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 225, 0, 0), "Remove", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating actionKeybindFrame")
     local actionKeybindFrame = Instance.new("Frame")
-    actionKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
+    actionKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
     actionKeybindFrame.BackgroundTransparency = 1
     actionKeybindFrame.LayoutOrder = 2
     actionKeybindFrame.Parent = settingsTabFrame
 
-    print("Creating actionKeybindLabel")
-    local actionKeybindLabel = createLabel(actionKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Action Keybind:", {
+    local actionKeybindLabel = createLabel(actionKeybindFrame, UDim2.new(0, 110, 0, 25), UDim2.new(0, 0, 0, 0), "Action Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    print("Creating actionKeybindTextBox")
     local actionKeybindTextBox = Instance.new("TextBox")
-    actionKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
+    actionKeybindTextBox.Size = UDim2.new(0, 50, 0, 25)
     actionKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
     actionKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     actionKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -342,34 +334,29 @@ local function createGui()
     actionKeybindTextBox.TextSize = 14
     actionKeybindTextBox.Parent = actionKeybindFrame
 
-    print("Creating setActionKeybindButton")
-    local setActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
+    local setActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating removeActionKeybindButton")
-    local removeActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
+    local removeActionKeybindButton = createButton(actionKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 225, 0, 0), "Remove", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating shapeKeybindFrame")
     local shapeKeybindFrame = Instance.new("Frame")
-    shapeKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
+    shapeKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
     shapeKeybindFrame.BackgroundTransparency = 1
     shapeKeybindFrame.LayoutOrder = 3
     shapeKeybindFrame.Parent = settingsTabFrame
 
-    print("Creating shapeKeybindLabel")
-    local shapeKeybindLabel = createLabel(shapeKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Shape Keybind:", {
+    local shapeKeybindLabel = createLabel(shapeKeybindFrame, UDim2.new(0, 110, 0, 25), UDim2.new(0, 0, 0, 0), "Shape Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    print("Creating shapeKeybindTextBox")
     local shapeKeybindTextBox = Instance.new("TextBox")
-    shapeKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
+    shapeKeybindTextBox.Size = UDim2.new(0, 50, 0, 25)
     shapeKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
     shapeKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     shapeKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -381,34 +368,29 @@ local function createGui()
     shapeKeybindTextBox.TextSize = 14
     shapeKeybindTextBox.Parent = shapeKeybindFrame
 
-    print("Creating setShapeKeybindButton")
-    local setShapeKeybindButton = createButton(shapeKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
+    local setShapeKeybindButton = createButton(shapeKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating removeShapeKeybindButton")
-    local removeShapeKeybindButton = createButton(shapeKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
+    local removeShapeKeybindButton = createButton(shapeKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 225, 0, 0), "Remove", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating scrollWheelKeybindFrame")
     local scrollWheelKeybindFrame = Instance.new("Frame")
-    scrollWheelKeybindFrame.Size = UDim2.new(1, 0, 0, 22)
+    scrollWheelKeybindFrame.Size = UDim2.new(1, 0, 0, 25)
     scrollWheelKeybindFrame.BackgroundTransparency = 1
     scrollWheelKeybindFrame.LayoutOrder = 4
     scrollWheelKeybindFrame.Parent = settingsTabFrame
 
-    print("Creating scrollWheelKeybindLabel")
-    local scrollWheelKeybindLabel = createLabel(scrollWheelKeybindFrame, UDim2.new(0, 110, 0, 22), UDim2.new(0, 0, 0, 0), "Scroll Wheel Keybind:", {
+    local scrollWheelKeybindLabel = createLabel(scrollWheelKeybindFrame, UDim2.new(0, 110, 0, 25), UDim2.new(0, 0, 0, 0), "Scroll Wheel Keybind:", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold
     })
 
-    print("Creating scrollWheelKeybindTextBox")
     local scrollWheelKeybindTextBox = Instance.new("TextBox")
-    scrollWheelKeybindTextBox.Size = UDim2.new(0, 50, 0, 22)
+    scrollWheelKeybindTextBox.Size = UDim2.new(0, 50, 0, 25)
     scrollWheelKeybindTextBox.Position = UDim2.new(0, 115, 0, 0)
     scrollWheelKeybindTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     scrollWheelKeybindTextBox.BorderColor3 = Color3.fromRGB(100, 0, 0)
@@ -420,26 +402,22 @@ local function createGui()
     scrollWheelKeybindTextBox.TextSize = 14
     scrollWheelKeybindTextBox.Parent = scrollWheelKeybindFrame
 
-    print("Creating setScrollWheelKeybindButton")
-    local setScrollWheelKeybindButton = createButton(scrollWheelKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 170, 0, 0), "Set", {
+    local setScrollWheelKeybindButton = createButton(scrollWheelKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 170, 0, 0), "Set", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating removeScrollWheelKeybindButton")
-    local removeScrollWheelKeybindButton = createButton(scrollWheelKeybindFrame, UDim2.new(0, 50, 0, 22), UDim2.new(0, 225, 0, 0), "Remove", {
+    local removeScrollWheelKeybindButton = createButton(scrollWheelKeybindFrame, UDim2.new(0, 50, 0, 25), UDim2.new(0, 225, 0, 0), "Remove", {
         Font = Enum.Font.SourceSansBold,
         TextSize = 14
     })
 
-    print("Creating shapeSizeLabel")
     local shapeSizeLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Shape Size: 25", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold,
         LayoutOrder = 5
     })
 
-    print("Creating shapeSizeSlider")
     local shapeSizeSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         LayoutOrder = 6
@@ -451,14 +429,12 @@ local function createGui()
     shapeSizeFill.BorderSizePixel = 0
     shapeSizeFill.Parent = shapeSizeSlider
 
-    print("Creating shapeThicknessLabel")
     local shapeThicknessLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Shape Thickness: 1.0", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold,
         LayoutOrder = 7
     })
 
-    print("Creating shapeThicknessSlider")
     local shapeThicknessSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         LayoutOrder = 8
@@ -470,14 +446,12 @@ local function createGui()
     shapeThicknessFill.BorderSizePixel = 0
     shapeThicknessFill.Parent = shapeThicknessSlider
 
-    print("Creating shapeTransparencyLabel")
     local shapeTransparencyLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Shape Transparency: 0.7", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold,
         LayoutOrder = 9
     })
 
-    print("Creating shapeTransparencySlider")
     local shapeTransparencySlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         LayoutOrder = 10
@@ -489,14 +463,12 @@ local function createGui()
     shapeTransparencyFill.BorderSizePixel = 0
     shapeTransparencyFill.Parent = shapeTransparencySlider
 
-    print("Creating wallExtensionLabel")
     local wallExtensionLabel = createLabel(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "Wall Extension: 5.0", {
         TextColor3 = Color3.fromRGB(200, 200, 200),
         Font = Enum.Font.SourceSansBold,
         LayoutOrder = 11
     })
 
-    print("Creating wallExtensionSlider")
     local wallExtensionSlider = createButton(settingsTabFrame, UDim2.new(1, 0, 0, 20), UDim2.new(), "", {
         BackgroundColor3 = Color3.fromRGB(50, 50, 50),
         LayoutOrder = 12
@@ -508,55 +480,52 @@ local function createGui()
     wallExtensionFill.BorderSizePixel = 0
     wallExtensionFill.Parent = wallExtensionSlider
 
-    print("Creating shapeToggleFrame")
     local shapeToggleFrame = Instance.new("Frame")
     shapeToggleFrame.Size = UDim2.new(1, 0, 0, 25)
     shapeToggleFrame.BackgroundTransparency = 1
     shapeToggleFrame.LayoutOrder = 13
     shapeToggleFrame.Parent = settingsTabFrame
 
-    print("Creating shapeFloorButton")
     local shapeFloorButton = createButton(shapeToggleFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Shape Floor: Off")
 
-    print("Creating scrollWheelSizeFrame")
     local scrollWheelSizeFrame = Instance.new("Frame")
     scrollWheelSizeFrame.Size = UDim2.new(1, 0, 0, 25)
     scrollWheelSizeFrame.BackgroundTransparency = 1
     scrollWheelSizeFrame.LayoutOrder = 14
     scrollWheelSizeFrame.Parent = settingsTabFrame
 
-    print("Creating scrollWheelSizeButton")
     local scrollWheelSizeButton = createButton(scrollWheelSizeFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Scroll Wheel Size: Off")
 
-    print("Creating destroyMenuFrame")
+    local autoAdjustFrame = Instance.new("Frame")
+    autoAdjustFrame.Size = UDim2.new(1, 0, 0, 25)
+    autoAdjustFrame.BackgroundTransparency = 1
+    autoAdjustFrame.LayoutOrder = 15
+    autoAdjustFrame.Parent = settingsTabFrame
+
+    local autoAdjustButton = createButton(autoAdjustFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Auto Adjust Thickness: Off")
+
     local destroyMenuFrame = Instance.new("Frame")
     destroyMenuFrame.Size = UDim2.new(1, 0, 0, 25)
     destroyMenuFrame.BackgroundTransparency = 1
-    destroyMenuFrame.LayoutOrder = 15
+    destroyMenuFrame.LayoutOrder = 16
     destroyMenuFrame.Parent = settingsTabFrame
 
-    print("Creating destroyMenuButton")
     local destroyMenuButton = createButton(destroyMenuFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Destroy Menu")
 
-    print("Creating restoreDestroyRevertFrame")
     local restoreDestroyRevertFrame = Instance.new("Frame")
     restoreDestroyRevertFrame.Size = UDim2.new(1, 0, 0, 25)
     restoreDestroyRevertFrame.BackgroundTransparency = 1
-    restoreDestroyRevertFrame.LayoutOrder = 16
+    restoreDestroyRevertFrame.LayoutOrder = 17
     restoreDestroyRevertFrame.Parent = settingsTabFrame
 
-    print("Creating restoreKeybindsButton")
     local restoreKeybindsButton = createButton(restoreDestroyRevertFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 0, 0, 0), "Restore All Keybinds")
 
-    print("Creating destroyAndRevertButton")
     local destroyAndRevertButton = createButton(restoreDestroyRevertFrame, UDim2.new(0, 130, 0, 25), UDim2.new(0, 135, 0, 0), "Destroy & Revert")
 
-    print("Creating removeKeybindsButton")
     local removeKeybindsButton = createButton(settingsTabFrame, UDim2.new(0, 130, 0, 25), UDim2.new(), "Remove Every Keybind", {
-        LayoutOrder = 17
+        LayoutOrder = 18
     })
 
-    print("GUI parenting to PlayerGui")
     gui.Parent = playerGui
     print("DeleteGui successfully parented to PlayerGui")
 
@@ -614,6 +583,7 @@ local function createGui()
         wallExtensionSlider = wallExtensionSlider,
         wallExtensionFill = wallExtensionFill,
         scrollWheelSizeButton = scrollWheelSizeButton,
+        autoAdjustButton = autoAdjustButton,
         restoreKeybindsButton = restoreKeybindsButton,
         removeKeybindsButton = removeKeybindsButton,
         destroyMenuButton = destroyMenuButton,
@@ -634,7 +604,7 @@ local StateManager = {
     isActionKeyHeld = false,
     isShapeSpawned = false,
     shapeKeybind = Enum.KeyCode.C,
-    scrollWheelKeybind = nil, -- Empty by default
+    scrollWheelKeybind = nil,
     shapeConnection = nil,
     shapeSize = 25,
     shapeThickness = 1,
@@ -642,6 +612,7 @@ local StateManager = {
     isShapeFloorEnabled = false,
     wallExtensionDelta = 5,
     isScrollWheelSizeEnabled = false,
+    isAutoAdjustEnabled = false,
     defaultMinZoomDistance = 0.5,
     defaultMaxZoomDistance = 400,
     lockedZoomDistance = nil,
@@ -651,21 +622,25 @@ local StateManager = {
 function StateManager.toggleState(button, stateKey, label, callback)
     StateManager[stateKey] = not StateManager[stateKey]
     button.Text = label .. (StateManager[stateKey] and "On" or "Off")
+    print("Toggled", stateKey, "to", StateManager[stateKey])
     if callback then callback() end
 end
 
 function StateManager.toggleGui(frame)
     frame.Visible = not frame.Visible
+    print("GUI visibility toggled to", frame.Visible)
 end
 
 function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal, formatStr)
     local dragging = false
     slider.MouseButton1Down:Connect(function()
         dragging = true
+        print("Slider", stateKey, "drag started")
     end)
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
+            print("Slider", stateKey, "drag ended")
         end
     end)
     slider.MouseMoved:Connect(function(x)
@@ -675,8 +650,43 @@ function StateManager.setupSlider(slider, fill, label, stateKey, minVal, maxVal,
             fill.Size = UDim2.new(fraction, 0, 1, 0)
             StateManager[stateKey] = minVal + fraction * (maxVal - minVal)
             label.Text = string.format(formatStr, StateManager[stateKey])
+            print("Slider", stateKey, "set to", StateManager[stateKey])
+            if stateKey == "shapeSize" then
+                updateShapeThickness()
+            end
         end
     end)
+end
+
+local minSize = 10
+local maxSize = 355
+local minThickness = 0.5
+local maxThickness = 10
+
+local function calculateAutoThickness(size)
+    if size <= minSize then
+        return minThickness
+    elseif size >= maxSize then
+        return maxThickness
+    else
+        local fraction = (size - minSize) / (maxSize - minSize)
+        return minThickness + fraction * (maxThickness - minThickness)
+    end
+end
+
+local shapeThicknessLabel, shapeThicknessSlider, shapeThicknessFill
+
+local function updateShapeThickness()
+    if StateManager.isAutoAdjustEnabled then
+        StateManager.shapeThickness = calculateAutoThickness(StateManager.shapeSize)
+        local sliderMin = 0.2
+        local sliderMax = 25
+        local fraction = (StateManager.shapeThickness - sliderMin) / (sliderMax - sliderMin)
+        fraction = math.clamp(fraction, 0, 1)
+        shapeThicknessFill.Size = UDim2.new(fraction, 0, 1, 0)
+        shapeThicknessLabel.Text = string.format("Shape Thickness: %.1f", StateManager.shapeThickness)
+        print("Auto-adjusted thickness to", StateManager.shapeThickness, "for size", StateManager.shapeSize)
+    end
 end
 
 local function createShapePart(size, position, parent, props)
@@ -825,6 +835,8 @@ function AudioManager.setAudioId(textBox, sound)
         if not success then
             warn("Failed to set audio ID: " .. tostring(err))
             textBox.Text = sound.SoundId:match("%d+") or ""
+        else
+            print("Set audio ID for", sound.Name, "to", audioId)
         end
     else
         textBox.Text = sound.SoundId:match("%d+") or ""
@@ -835,10 +847,12 @@ function AudioManager.setupVolumeSlider(slider, fill, label, sound)
     local dragging = false
     slider.MouseButton1Down:Connect(function()
         dragging = true
+        print("Volume slider drag started for", sound.Name)
     end)
     UserInputService.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
+            print("Volume slider drag ended for", sound.Name)
         end
     end)
     slider.MouseMoved:Connect(function(x)
@@ -848,6 +862,7 @@ function AudioManager.setupVolumeSlider(slider, fill, label, sound)
             fill.Size = UDim2.new(fraction, 0, 1, 0)
             sound.Volume = fraction
             label.Text = string.format("%s Volume: %.1f", label.Text:match("^(.-) Volume"), fraction)
+            print("Set volume for", sound.Name, "to", fraction)
         end
     end)
 end
@@ -911,6 +926,7 @@ function DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSoun
                     table.remove(DeleteRestoreManager.deletedObjects, i)
                     DeleteRestoreManager.updateLogbox(logFrame, isAudioEnabled, restoreSound)
                     if isAudioEnabled then restoreSound:Play() end
+                    print("Restored object:", data.name)
                 else
                     warn("Failed to restore object: " .. tostring(err))
                 end
@@ -936,6 +952,7 @@ function DeleteRestoreManager.restoreAll(isAudioEnabled, restoreSound)
         end
     end
     DeleteRestoreManager.deletedObjects = {}
+    print("Restored all deleted objects")
 end
 
 function DeleteRestoreManager.handleOutline(mouse, selectionBox, isDeleteModeEnabled, isActionKeyHeld, isOutlineEnabled, isCharacterProtected)
@@ -1005,9 +1022,9 @@ local removeScrollWheelKeybindButton = guiElements.removeScrollWheelKeybindButto
 local shapeSizeLabel = guiElements.shapeSizeLabel
 local shapeSizeSlider = guiElements.shapeSizeSlider
 local shapeSizeFill = guiElements.shapeSizeFill
-local shapeThicknessLabel = guiElements.shapeThicknessLabel
-local shapeThicknessSlider = guiElements.shapeThicknessSlider
-local shapeThicknessFill = guiElements.shapeThicknessFill
+shapeThicknessLabel = guiElements.shapeThicknessLabel
+shapeThicknessSlider = guiElements.shapeThicknessSlider
+shapeThicknessFill = guiElements.shapeThicknessFill
 local shapeFloorButton = guiElements.shapeFloorButton
 local shapeTransparencyLabel = guiElements.shapeTransparencyLabel
 local shapeTransparencySlider = guiElements.shapeTransparencySlider
@@ -1016,6 +1033,7 @@ local wallExtensionLabel = guiElements.wallExtensionLabel
 local wallExtensionSlider = guiElements.wallExtensionSlider
 local wallExtensionFill = guiElements.wallExtensionFill
 local scrollWheelSizeButton = guiElements.scrollWheelSizeButton
+local autoAdjustButton = guiElements.autoAdjustButton
 local restoreKeybindsButton = guiElements.restoreKeybindsButton
 local removeKeybindsButton = guiElements.removeKeybindsButton
 local destroyMenuButton = guiElements.destroyMenuButton
@@ -1047,7 +1065,8 @@ for _, btn in ipairs({
     mainTabButton, audioTabButton, settingsTabButton, restoreKeybindsButton, removeKeybindsButton,
     destroyMenuButton, destroyAndRevertButton, setToggleKeybindButton, setActionKeybindButton,
     setShapeKeybindButton, setScrollWheelKeybindButton, removeToggleKeybindButton, removeActionKeybindButton,
-    removeShapeKeybindButton, removeScrollWheelKeybindButton, shapeFloorButton, scrollWheelSizeButton
+    removeShapeKeybindButton, removeScrollWheelKeybindButton, shapeFloorButton, scrollWheelSizeButton,
+    autoAdjustButton
 }) do
     applyHover(btn)
 end
@@ -1060,6 +1079,7 @@ local function switchTab(activeButton, activeFrame)
     mainTabButton.BackgroundColor3 = activeButton == mainTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
     audioTabButton.BackgroundColor3 = activeButton == audioTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
     settingsTabButton.BackgroundColor3 = activeButton == settingsTabButton and Color3.fromRGB(200, 0, 0) or Color3.fromRGB(30, 30, 30)
+    print("Switched to tab:", activeButton.Text)
 end
 
 mainTabButton.MouseButton1Click:Connect(function() switchTab(mainTabButton, mainTabFrame) end)
@@ -1117,7 +1137,6 @@ end)
 scrollWheelSizeButton.MouseButton1Click:Connect(function()
     StateManager.toggleState(scrollWheelSizeButton, "isScrollWheelSizeEnabled", "Scroll Wheel Size: ", function()
         if StateManager.isScrollWheelSizeEnabled then
-            -- Lock camera zoom
             local camera = game.Workspace.CurrentCamera
             if camera then
                 local cameraPos = camera.CFrame.Position
@@ -1129,11 +1148,20 @@ scrollWheelSizeButton.MouseButton1Click:Connect(function()
                 print("Camera zoom locked at distance:", distance)
             end
         else
-            -- Restore default zoom limits
             StateManager.lockedZoomDistance = nil
             player.CameraMinZoomDistance = StateManager.defaultMinZoomDistance
             player.CameraMaxZoomDistance = StateManager.defaultMaxZoomDistance
             print("Camera zoom restored to default limits")
+        end
+    end)
+end)
+
+autoAdjustButton.MouseButton1Click:Connect(function()
+    StateManager.toggleState(autoAdjustButton, "isAutoAdjustEnabled", "Auto Adjust Thickness: ", function()
+        shapeThicknessSlider.Active = not StateManager.isAutoAdjustEnabled
+        shapeThicknessSlider.Interactable = not StateManager.isAutoAdjustEnabled
+        if StateManager.isAutoAdjustEnabled then
+            updateShapeThickness()
         end
     end)
 end)
@@ -1169,7 +1197,7 @@ local function cleanup()
         StateManager.shapeConnection:Disconnect()
         StateManager.shapeConnection = nil
     end
-    for _, connection in ipairs(StateManager.connections) do
+    for _, connection in pairs(StateManager.connections) do
         connection:Disconnect()
     end
     StateManager.connections = {}
@@ -1181,7 +1209,6 @@ local function cleanup()
     StateManager.isDeleteModeEnabled = false
     StateManager.isActionKeyHeld = false
     StateManager.isShapeSpawned = false
-    -- Restore camera zoom limits on cleanup
     if StateManager.isScrollWheelSizeEnabled then
         player.CameraMinZoomDistance = StateManager.defaultMinZoomDistance
         player.CameraMaxZoomDistance = StateManager.defaultMaxZoomDistance
@@ -1194,9 +1221,13 @@ local function cleanup()
     AudioManager.deleteSound:Destroy()
     AudioManager.restoreSound:Destroy()
     DeleteRestoreManager.deletedStorage:Destroy()
+    print("Cleaned up all resources")
 end
 
-destroyMenuButton.MouseButton1Click:Connect(cleanup)
+destroyMenuButton.MouseButton1Click:Connect(function()
+    cleanup()
+end)
+
 destroyAndRevertButton.MouseButton1Click:Connect(function()
     DeleteRestoreManager.restoreAll(StateManager.isAudioEnabled, AudioManager.restoreSound)
     cleanup()
@@ -1208,68 +1239,58 @@ local function setKeybind(textBox, stateKey, otherKeys)
     if inputKey == "" then
         StateManager[stateKey] = nil
         textBox.Text = ""
-        notify("Keybind", "Keybind for " .. stateKey .. " cleared")
+        print("Cleared keybind for", stateKey)
         return
     end
     local keyCode = Enum.KeyCode[inputKey]
-    if not keyCode then
-        notify("Keybind", "Invalid key: " .. inputKey)
+    if keyCode and not table.find(otherKeys, keyCode) then
+        StateManager[stateKey] = keyCode
+        textBox.Text = inputKey
+        print("Set keybind for", stateKey, "to", inputKey)
+    else
         textBox.Text = StateManager[stateKey] and StateManager[stateKey].Name or ""
-        return
+        print("Invalid or conflicting keybind for", stateKey)
     end
-    -- Check for conflicts
-    for _, otherKey in ipairs(otherKeys) do
-        if otherKey and keyCode == otherKey then
-            notify("Keybind", "Key " .. inputKey .. " is already assigned")
-            textBox.Text = StateManager[stateKey] and StateManager[stateKey].Name or ""
-            return
-        end
-    end
-    StateManager[stateKey] = keyCode
-    textBox.Text = inputKey
-    notify("Keybind", "Set " .. stateKey .. " to " .. inputKey)
-end
-
-local function removeKeybind(stateKey, textBox)
-    StateManager[stateKey] = nil
-    textBox.Text = ""
-    notify("Keybind", "Removed keybind for " .. stateKey)
 end
 
 setToggleKeybindButton.MouseButton1Click:Connect(function()
-    local otherKeys = { StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind }
-    setKeybind(toggleKeybindTextBox, "toggleKeybind", otherKeys)
+    setKeybind(toggleKeybindTextBox, "toggleKeybind", { StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind })
 end)
 
 removeToggleKeybindButton.MouseButton1Click:Connect(function()
-    removeKeybind("toggleKeybind", toggleKeybindTextBox)
+    StateManager.toggleKeybind = nil
+    toggleKeybindTextBox.Text = ""
+    print("Removed toggle keybind")
 end)
 
 setActionKeybindButton.MouseButton1Click:Connect(function()
-    local otherKeys = { StateManager.toggleKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind }
-    setKeybind(actionKeybindTextBox, "actionKeybind", otherKeys)
+    setKeybind(actionKeybindTextBox, "actionKeybind", { StateManager.toggleKeybind, StateManager.guiToggleKeybind, StateManager.shapeKeybind, StateManager.scrollWheelKeybind })
 end)
 
 removeActionKeybindButton.MouseButton1Click:Connect(function()
-    removeKeybind("actionKeybind", actionKeybindTextBox)
+    StateManager.actionKeybind = nil
+    actionKeybindTextBox.Text = ""
+    print("Removed action keybind")
 end)
 
 setShapeKeybindButton.MouseButton1Click:Connect(function()
-    local otherKeys = { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.scrollWheelKeybind }
-    setKeybind(shapeKeybindTextBox, "shapeKeybind", otherKeys)
+    setKeybind(shapeKeybindTextBox, "shapeKeybind", { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.guiToggleKeybind, StateManager.scrollWheelKeybind })
 end)
 
 removeShapeKeybindButton.MouseButton1Click:Connect(function()
-    removeKeybind("shapeKeybind", shapeKeybindTextBox)
+    StateManager.shapeKeybind = nil
+    shapeKeybindTextBox.Text = ""
+    print("Removed shape keybind")
 end)
 
 setScrollWheelKeybindButton.MouseButton1Click:Connect(function()
-    local otherKeys = { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.shapeKeybind, StateManager.guiToggleKeybind }
-    setKeybind(scrollWheelKeybindTextBox, "scrollWheelKeybind", otherKeys)
+    setKeybind(scrollWheelKeybindTextBox, "scrollWheelKeybind", { StateManager.toggleKeybind, StateManager.actionKeybind, StateManager.shapeKeybind, StateManager.guiToggleKeybind })
 end)
 
 removeScrollWheelKeybindButton.MouseButton1Click:Connect(function()
-    removeKeybind("scrollWheelKeybind", scrollWheelKeybindTextBox)
+    StateManager.scrollWheelKeybind = nil
+    scrollWheelKeybindTextBox.Text = ""
+    print("Removed scroll wheel keybind")
 end)
 
 restoreKeybindsButton.MouseButton1Click:Connect(function()
@@ -1281,7 +1302,7 @@ restoreKeybindsButton.MouseButton1Click:Connect(function()
     actionKeybindTextBox.Text = "T"
     shapeKeybindTextBox.Text = "C"
     scrollWheelKeybindTextBox.Text = ""
-    notify("Keybind", "Restored default keybinds")
+    print("Restored all keybinds")
 end)
 
 removeKeybindsButton.MouseButton1Click:Connect(function()
@@ -1294,22 +1315,22 @@ removeKeybindsButton.MouseButton1Click:Connect(function()
     actionKeybindTextBox.Text = ""
     shapeKeybindTextBox.Text = ""
     scrollWheelKeybindTextBox.Text = ""
-    notify("Keybind", "Removed all keybinds")
+    print("Removed all keybinds")
 end)
 
 -- Input Handling
 StateManager.connections.inputBegan = UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
-    local keyCode = input.KeyCode
-    if keyCode == StateManager.guiToggleKeybind then
+    if input.KeyCode == StateManager.guiToggleKeybind then
         StateManager.toggleGui(frame)
-    elseif keyCode == StateManager.toggleKeybind then
+    elseif input.KeyCode == StateManager.toggleKeybind then
         StateManager.toggleState(toggleButton, "isDeleteModeEnabled", "Delete Mode: ")
-    elseif keyCode == StateManager.actionKeybind then
+    elseif input.KeyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = true
-    elseif keyCode == StateManager.shapeKeybind then
+        print("Action key held")
+    elseif input.KeyCode == StateManager.shapeKeybind then
         StateManager.toggleShape(spawnShapeButton)
-    elseif keyCode == StateManager.scrollWheelKeybind then
+    elseif input.KeyCode == StateManager.scrollWheelKeybind then
         StateManager.toggleState(scrollWheelSizeButton, "isScrollWheelSizeEnabled", "Scroll Wheel Size: ", function()
             if StateManager.isScrollWheelSizeEnabled then
                 local camera = game.Workspace.CurrentCamera
@@ -1336,6 +1357,7 @@ StateManager.connections.inputEnded = UserInputService.InputEnded:Connect(functi
     if gameProcessedEvent then return end
     if input.KeyCode == StateManager.actionKeybind then
         StateManager.isActionKeyHeld = false
+        print("Action key released")
     end
 end)
 
@@ -1350,6 +1372,8 @@ StateManager.connections.inputChanged = UserInputService.InputChanged:Connect(fu
         local fraction = (newSize - 10) / (355 - 10)
         shapeSizeFill.Size = UDim2.new(fraction, 0, 1, 0)
         shapeSizeLabel.Text = string.format("Shape Size: %d", newSize)
+        print("Scroll wheel adjusted size to", newSize)
+        updateShapeThickness()
     end
 end)
 
@@ -1387,6 +1411,7 @@ StateManager.connections.delete = mouse.Button1Down:Connect(function()
     end)
     if success then
         DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
+        print("Deleted object:", target.Name)
     else
         warn("Failed to delete object: " .. tostring(err))
     end
@@ -1407,6 +1432,7 @@ StateManager.connections.restore = mouse.Button2Down:Connect(function()
     end)
     if success then
         DeleteRestoreManager.updateLogbox(logFrame, StateManager.isAudioEnabled, AudioManager.restoreSound)
+        print("Restored object:", data.name)
     else
         warn("Failed to restore: " .. tostring(err))
     end
